@@ -62,8 +62,24 @@
     
     .login-box { max-width: 350px; margin: 100px auto; background: #1e293b; padding: 25px; border-radius: 10px; text-align: center; }
     .hidden { display: none; }
-    .movie-list { margin-top: 30px; }
-    .movie-item { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 10px; margin-top: 8px; border-radius: 6px; border: 1px solid #334155; }
+    
+    /* Published Items & Search Styling */
+    .movie-list { margin-top: 30px; border-top: 2px dashed #334155; padding-top: 20px; }
+    .admin-search-input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #38bdf8;
+      background: #0f172a;
+      color: #fff;
+      font-size: 14px;
+      margin-bottom: 15px;
+      outline: none;
+    }
+    .admin-search-input:focus {
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+    }
+    .movie-item { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 12px; margin-top: 8px; border-radius: 8px; border: 1px solid #334155; }
     .action-btns { display: flex; gap: 6px; }
     .btn-edit { background: #d97706; padding: 6px 12px; font-size: 12px; width: auto; margin: 0; }
     .btn-delete { background: #dc2626; padding: 6px 12px; font-size: 12px; width: auto; margin: 0; }
@@ -157,9 +173,13 @@
       <button type="button" id="cancel-edit-btn" class="btn-cancel hidden" onclick="resetForm()">Cancel Editing</button>
     </form>
 
-    <!-- পোস্ট করা এনিমেশনের তালিকা -->
+    <!-- পোস্ট করা এনিমেশনের তালিকা ও সার্চ ব্যবস্থা -->
     <div class="movie-list">
-      <h3 style="color: #38bdf8; margin-bottom: 10px;">সাম্প্রতিক পোস্টসমূহ</h3>
+      <h3 style="color: #38bdf8; margin-bottom: 12px;">🔍 পোস্ট করা এনিমেশন এডিট বা খুজুন</h3>
+      
+      <!-- এডমিন সার্চ ইনপুট -->
+      <input type="text" id="admin-search-input" class="admin-search-input" placeholder="এনিমেশনের নাম লিখে খুঁজুন..." oninput="filterAdminMovies()">
+      
       <div id="movie-items"></div>
     </div>
   </div>
@@ -186,6 +206,7 @@
     const SECRET_PASS = "arafat01721313101";
     let editingId = null;
     let moviesCache = {};
+    let allAdminMoviesList = [];
 
     window.login = function() {
       const pass = document.getElementById('admin-pass').value;
@@ -266,7 +287,6 @@
     document.getElementById('movie-form').addEventListener('submit', function(e) {
       e.preventDefault();
       
-      // Get selected multiple categories
       const selectedCategories = [];
       document.querySelectorAll('.cat-checkbox:checked').forEach(cb => {
         selectedCategories.push(cb.value);
@@ -338,29 +358,54 @@
 
     function loadMovies() {
       onValue(ref(db, 'movies'), (snapshot) => {
-        const itemsDiv = document.getElementById('movie-items');
-        itemsDiv.innerHTML = "";
+        allAdminMoviesList = [];
         moviesCache = {};
 
         snapshot.forEach((child) => {
           const movie = child.val();
           const id = child.key;
           moviesCache[id] = movie;
-
-          const catDisplay = Array.isArray(movie.category) ? movie.category.join(', ') : (movie.category || '');
-
-          itemsDiv.innerHTML += `
-            <div class="movie-item">
-              <div>
-                <strong>${movie.title}</strong> <br><small style="color:#38bdf8;">[${catDisplay}]</small>
-              </div>
-              <div class="action-btns">
-                <button class="btn-edit" onclick="editMovie('${id}')">Edit</button>
-                <button class="btn-delete" onclick="deleteMovie('${id}')">Delete</button>
-              </div>
-            </div>
-          `;
+          allAdminMoviesList.push({ id, ...movie });
         });
+
+        allAdminMoviesList.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        renderAdminList(allAdminMoviesList);
+      });
+    }
+
+    // Admin Search Filter Function
+    window.filterAdminMovies = function() {
+      const q = document.getElementById('admin-search-input').value.toLowerCase().trim();
+      const filtered = allAdminMoviesList.filter(m => 
+        m.title.toLowerCase().includes(q) ||
+        (m.keywords && m.keywords.toLowerCase().includes(q))
+      );
+      renderAdminList(filtered);
+    };
+
+    function renderAdminList(list) {
+      const itemsDiv = document.getElementById('movie-items');
+      itemsDiv.innerHTML = "";
+
+      if (list.length === 0) {
+        itemsDiv.innerHTML = `<p style="color:#8b949e; text-align:center; padding:15px;">কোনো এনিমেশন খুঁজে পাওয়া যায়নি!</p>`;
+        return;
+      }
+
+      list.forEach(movie => {
+        const catDisplay = Array.isArray(movie.category) ? movie.category.join(', ') : (movie.category || '');
+
+        itemsDiv.innerHTML += `
+          <div class="movie-item">
+            <div>
+              <strong>${movie.title}</strong> <br><small style="color:#38bdf8;">[${catDisplay}]</small>
+            </div>
+            <div class="action-btns">
+              <button class="btn-edit" onclick="editMovie('${movie.id}')">Edit</button>
+              <button class="btn-delete" onclick="deleteMovie('${movie.id}')">Delete</button>
+            </div>
+          </div>
+        `;
       });
     }
 
@@ -373,7 +418,6 @@
       document.getElementById('title').value = movie.title || '';
       document.getElementById('poster').value = movie.poster || '';
       
-      // Select checked categories
       document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = false);
       if (movie.category) {
         let cats = Array.isArray(movie.category) ? movie.category : movie.category.split(',').map(s => s.trim());
@@ -417,4 +461,4 @@
     addEpisodeBox();
   </script>
 </body>
-  </html>
+        </html>
