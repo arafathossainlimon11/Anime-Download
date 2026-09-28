@@ -43,6 +43,22 @@
     .header-logo-img { width: 34px; height: 34px; border-radius: 6px; object-fit: cover; }
     .logo { color: #38bdf8; font-size: 22px; font-weight: 800; text-decoration: none; letter-spacing: 1px; }
 
+    /* Blue Tick Icon */
+    .blue-tick {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      background: #38bdf8;
+      color: #0d1117;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 900;
+      margin-left: 5px;
+      vertical-align: middle;
+    }
+
     /* Facebook Group Join Banner */
     .fb-banner {
       display: inline-flex;
@@ -65,14 +81,14 @@
     .cat-btn { background: #0284c7; color: #fff; text-align: center; padding: 8px 4px; border-radius: 6px; font-weight: bold; font-size: 12px; text-decoration: none; cursor: pointer; transition: 0.2s; border: none; }
     .cat-btn:active, .cat-btn.active { background: #0369a1; transform: scale(0.96); }
 
-    /* Search Bar Layout with Button (Exempted from Popunder Ads) */
+    /* Search Bar Layout */
     .search-box { padding: 0 12px 12px 12px; display: flex; gap: 8px; }
     .search-input { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #30363d; background: #21262d; color: #fff; font-size: 14px; outline: none; }
     .search-input:focus { border-color: #38bdf8; }
     .search-btn { background: #0284c7; color: #fff; border: none; padding: 0 16px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 13px; white-space: nowrap; transition: 0.2s; }
     .search-btn:active { background: #0369a1; transform: scale(0.95); }
 
-    /* Single Column (1 Card Per Row) Anime Layout */
+    /* Single Column Anime Layout */
     .movie-container { display: grid; grid-template-columns: 1fr; gap: 12px; padding: 12px; }
     
     .movie-card { background: #161b22; border-radius: 12px; overflow: hidden; border: 1px solid #30363d; cursor: pointer; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease; position: relative; display: flex; flex-direction: column; }
@@ -111,6 +127,9 @@
       color: #f0f6fc; 
       margin-bottom: 6px; 
       line-height: 1.35; 
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
     .movie-meta { font-size: 12px; color: #8b949e; display: flex; justify-content: space-between; margin-top: 6px; }
 
@@ -237,7 +256,7 @@
       <div class="cat-btn" onclick="popAd(); filterCategory('Drama', this)">Drama</div>
     </div>
 
-    <!-- Search Box (Exempted from Popunder Ads so user can search smoothly) -->
+    <!-- Search Box (Exempted from Popunder Ads) -->
     <div class="search-box" onclick="event.stopPropagation()">
       <input type="text" id="search-input" class="search-input" placeholder="Anime-এর English নাম লিখুন..." oninput="handleSearch()" onkeypress="if(event.key==='Enter') handleSearch()" onclick="event.stopPropagation()">
       <button class="search-btn" onclick="event.stopPropagation(); handleSearch();">🔍 Search</button>
@@ -272,19 +291,17 @@
   <div id="download-view" class="view-section" style="text-align: center;">
     <h2 id="dl-title" style="color: #f0f6fc; margin-bottom: 20px; line-height: 1.3;">Choose Server</h2>
     
-    <!-- Sponsor Download Button with Ads Option Name -->
     <a id="ad-dl-btn" href="#" target="_blank" class="glow-btn" style="background: linear-gradient(135deg, #dc2626, #f59e0b);" onclick="popAd()">[⚡ FAST SPONSOR SERVER DOWNLOAD (ADS OPTION)]</a>
     
     <div id="ad-300-slot-p4" style="margin: 20px 0; background: #161b22; padding: 10px; border-radius: 8px; display: flex; justify-content: center; min-height: 250px; align-items: center;"></div>
 
-    <!-- Main Direct Download Button with Bounce / Jump Animation -->
     <a id="real-dl-btn" href="#" target="_blank" class="jump-dl-btn" onclick="handleRealDownloadClick(event)">[⬇ ORIGINAL DIRECT SERVER DOWNLOAD]</a>
   </div>
 
   <!-- Firebase Integration Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, push, set, onValue, runTransaction, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBZPX85Wl0-vBE7Vm1NBuVoiBzVmp9xU0o",
@@ -316,6 +333,33 @@
         window.open(DIRECT_AD_LINK, '_blank');
       }
     };
+
+    // Tracker & Presence System (Only if NOT Admin Phone)
+    function initVisitorTracking() {
+      if (localStorage.getItem('isAdminDevice') === 'true') {
+        console.log("Admin device detected - Skipping view count tracking.");
+        return;
+      }
+
+      // 1. Live presence
+      const sessionRef = push(ref(db, 'analytics/liveUsers'));
+      set(sessionRef, { timestamp: serverTimestamp() });
+      onDisconnect(sessionRef).remove();
+
+      // 2. Increment Total Views
+      runTransaction(ref(db, 'analytics/totalViews'), (current) => (current || 0) + 1);
+
+      // 3. Increment Daily Views
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      const todayStr = `${yyyy}-${mm}-${dd}`;
+
+      runTransaction(ref(db, `analytics/daily/${todayStr}`), (current) => (current || 0) + 1);
+    }
+
+    initVisitorTracking();
 
     window.handleCardClick = function(id) {
       popAd();
@@ -376,7 +420,7 @@
       }
     };
 
-    // Realtime Database fetching
+    // Fetch Anime from Database
     onValue(ref(db, 'movies'), (snapshot) => {
       allMovies = [];
       snapshot.forEach((child) => {
@@ -388,7 +432,6 @@
       renderGrid();
     });
 
-    // Multi-Category Filtering Logic
     window.filterCategory = function(cat, el) {
       document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
       if(el) el.classList.add('active');
@@ -453,6 +496,7 @@
         const loadingAttr = isFirstFew ? '' : 'loading="lazy"';
         const priorityAttr = isFirstFew ? 'fetchpriority="high"' : '';
         const catDisplay = Array.isArray(movie.category) ? movie.category.join(', ') : (movie.category || '');
+        const tickBadge = movie.isVerified ? `<span class="blue-tick" title="External Link Marked">✓</span>` : '';
 
         grid.innerHTML += `
           <div class="movie-card" onclick="handleCardClick('${movie.id}')">
@@ -469,7 +513,9 @@
               <span class="badge badge-quality">${movie.year}</span>
             </div>
             <div class="movie-info">
-              <div class="movie-title">${movie.title}</div>
+              <div class="movie-title">
+                <span>${movie.title}</span> ${tickBadge}
+              </div>
               <div class="movie-meta">
                 <span>${movie.language}</span>
                 <span style="color:#38bdf8; font-weight:bold;">${catDisplay}</span>
@@ -478,7 +524,6 @@
           </div>
         `;
 
-        // MANDATORY 320x50 Banner Ad placed under EVERY SINGLE CARD
         const adId = `ad-banner-mandatory-${index}`;
         grid.innerHTML += `<div id="${adId}" class="ad-container-mandatory"></div>`;
         setTimeout(() => {
@@ -516,9 +561,10 @@
       }
 
       const catDisplay = Array.isArray(movie.category) ? movie.category.join(', ') : (movie.category || '');
+      const tickBadge = movie.isVerified ? `<span class="blue-tick">✓</span>` : '';
 
       document.getElementById('det-poster').src = movie.poster;
-      document.getElementById('det-title').innerText = movie.title;
+      document.getElementById('det-title').innerHTML = `${movie.title} ${tickBadge}`;
       document.getElementById('det-meta').innerText = `⭐ ${movie.rating} | ${movie.year} | ${movie.language} | ${catDisplay}`;
       document.getElementById('det-synopsis').innerText = movie.synopsis || "No synopsis available.";
 
@@ -606,4 +652,4 @@
     history.replaceState({ view: 'home-view' }, '', '#home-view');
   </script>
 </body>
-      </html>
+  </html>
