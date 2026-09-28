@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secret Admin Panel - Anime Download</title>
+  <style>
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
+    body { background: #0f172a; color: #f8fafc; padding: 15px; }
+    .container { max-width: 650px; margin: auto; background: #1e293b; padding: 20px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+    h2 { text-align: center; margin-bottom: 20px; color: #38bdf8; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-size: 14px; color: #cbd5e1; font-weight: 600; }
+    input, select, textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #fff; font-size: 14px; }
+    button { width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+    button:hover { background: #1d4ed8; }
+    
+    /* Multiple Category Checkbox Grid */
+    .category-checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      background: #0f172a;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+    }
+    .cat-check-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #cbd5e1;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .cat-check-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #0284c7;
+      cursor: pointer;
+    }
+
+    /* Episode Box Styling */
+    .ep-box { background: #0f172a; border: 1px solid #38bdf8; border-radius: 10px; padding: 15px; margin-top: 15px; }
+    .ep-header-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+    .ep-header-row input[type="text"] { flex: 2; font-weight: bold; color: #38bdf8; }
+    .checkbox-label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #ef4444; cursor: pointer; white-space: nowrap; font-weight: bold; }
+    .checkbox-label input { width: auto; }
+
+    /* Quality Row Styling */
+    .quality-container { background: #1e293b; border-radius: 8px; padding: 10px; margin-top: 10px; }
+    .quality-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+    .quality-row input { flex: 1; }
+    .btn-remove-q { background: #dc2626; color: #fff; border: none; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 12px; width: auto; margin: 0; }
+    
+    .btn-add-q { background: #0284c7; font-size: 12px; padding: 8px 12px; width: auto; margin-top: 5px; }
+    .btn-add-ep { background: #059669; margin-top: 15px; }
+    .btn-add-ep:hover { background: #047857; }
+    .btn-remove-ep { background: #b91c1c; font-size: 12px; padding: 6px 12px; width: auto; margin-top: 10px; }
+    .btn-cancel { background: #64748b; margin-top: 5px; }
+    
+    .login-box { max-width: 350px; margin: 100px auto; background: #1e293b; padding: 25px; border-radius: 10px; text-align: center; }
+    .hidden { display: none; }
+    .movie-list { margin-top: 30px; }
+    .movie-item { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 10px; margin-top: 8px; border-radius: 6px; border: 1px solid #334155; }
+    .action-btns { display: flex; gap: 6px; }
+    .btn-edit { background: #d97706; padding: 6px 12px; font-size: 12px; width: auto; margin: 0; }
+    .btn-delete { background: #dc2626; padding: 6px 12px; font-size: 12px; width: auto; margin: 0; }
+  </style>
+</head>
+<body>
+
+  <!-- গোপন লগইন সেকশন -->
+  <div id="login-section" class="login-box">
+    <h2>Anime Admin Login</h2>
+    <div class="form-group">
+      <input type="password" id="admin-pass" placeholder="পাসওয়ার্ড লিখুন" autocomplete="off">
+    </div>
+    <button onclick="login()">Login</button>
+  </div>
+
+  <!-- মূল এডমিন ড্যাশবোর্ড -->
+  <div id="admin-dashboard" class="container hidden">
+    <h2>Anime Download Admin Panel</h2>
+    
+    <form id="movie-form">
+      <div class="form-group">
+        <label>টাইপ (Type)</label>
+        <select id="type">
+          <option value="Anime Series">Anime Series</option>
+          <option value="Anime Movie">Anime Movie</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>এনিমেশনের নাম (Title)</label>
+        <input type="text" id="title" placeholder="যেমন: Solo Leveling Season 01" required>
+      </div>
+
+      <div class="form-group">
+        <label>ImgBB পোস্টার / ব্যানার ডাইরেক্ট লিংক</label>
+        <input type="url" id="poster" placeholder="https://i.ibb.co/..." required>
+      </div>
+
+      <!-- একাধিক ক্যাটাগরি সিলেক্ট করার জন্য চেকবাক্স সেকশন -->
+      <div class="form-group">
+        <label>ক্যাটাগরি / Genre (একাধিক সিলেক্ট করুন):</label>
+        <div class="category-checkbox-grid">
+          <label class="cat-check-item"><input type="checkbox" value="Hindi Dub" class="cat-checkbox"> Hindi Dub</label>
+          <label class="cat-check-item"><input type="checkbox" value="English Dub" class="cat-checkbox"> English Dub</label>
+          <label class="cat-check-item"><input type="checkbox" value="Action" class="cat-checkbox"> Action</label>
+          <label class="cat-check-item"><input type="checkbox" value="Romance" class="cat-checkbox"> Romance</label>
+          <label class="cat-check-item"><input type="checkbox" value="Adventure" class="cat-checkbox"> Adventure</label>
+          <label class="cat-check-item"><input type="checkbox" value="Fantasy" class="cat-checkbox"> Fantasy</label>
+          <label class="cat-check-item"><input type="checkbox" value="Ecchi/18+" class="cat-checkbox"> Ecchi/18+</label>
+          <label class="cat-check-item"><input type="checkbox" value="Sci-Fi" class="cat-checkbox"> Sci-Fi</label>
+          <label class="cat-check-item"><input type="checkbox" value="Supernatural" class="cat-checkbox"> Supernatural</label>
+          <label class="cat-check-item"><input type="checkbox" value="Drama" class="cat-checkbox"> Drama</label>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <div class="form-group" style="flex: 1;">
+          <label>রেটিং (Rating)</label>
+          <input type="text" id="rating" placeholder="⭐ 9.5">
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label>রিলিজ বছর (Year)</label>
+          <input type="text" id="year" placeholder="2026">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>অডিও ট্র্যাক / ভাষা (Audio Language)</label>
+        <input type="text" id="language" placeholder="Hindi, Japanese, English">
+      </div>
+
+      <div class="form-group">
+        <label>SEO Keywords (Google Search Console-এর জন্য)</label>
+        <textarea id="keywords" rows="2" placeholder="কমা দিয়ে আলাদা করে কিওয়ার্ড লিখুন... যেমন: solo leveling episode 1 hindi, solo leveling download 720p"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>গল্প / বিবরণ (Synopsis)</label>
+        <textarea id="synopsis" rows="3" placeholder="সংক্ষিপ্ত বিবরণ..."></textarea>
+      </div>
+
+      <!-- এপিসোড ও কোয়ালিটি লিংক সেকশন -->
+      <div class="form-group">
+        <label style="font-size: 16px; color: #38bdf8;">এপিসোড ও ডাউনলোড লিংকসমূহ</label>
+        <div id="episodes-container"></div>
+        <button type="button" class="btn-add-ep" onclick="addEpisodeBox()">+ নতুন এপিসোড বক্স যোগ করুন</button>
+      </div>
+
+      <button type="submit" id="submit-btn">Publish Anime</button>
+      <button type="button" id="cancel-edit-btn" class="btn-cancel hidden" onclick="resetForm()">Cancel Editing</button>
+    </form>
+
+    <!-- পোস্ট করা এনিমেশনের তালিকা -->
+    <div class="movie-list">
+      <h3 style="color: #38bdf8; margin-bottom: 10px;">সাম্প্রতিক পোস্টসমূহ</h3>
+      <div id="movie-items"></div>
+    </div>
+  </div>
+
+  <!-- Firebase Scripts -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBZPX85Wl0-vBE7Vm1NBuVoiBzVmp9xU0o",
+      authDomain: "moviebox-6dca4.firebaseapp.com",
+      databaseURL: "https://moviebox-6dca4-default-rtdb.firebaseio.com",
+      projectId: "moviebox-6dca4",
+      storageBucket: "moviebox-6dca4.firebasestorage.app",
+      messagingSenderId: "573703773546",
+      appId: "1:573703773546:web:04f01416cba5ff483ad913",
+      measurementId: "G-1KR5NJ9T61"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const SECRET_PASS = "arafat01721313101";
+    let editingId = null;
+    let moviesCache = {};
+
+    window.login = function() {
+      const pass = document.getElementById('admin-pass').value;
+      if (pass === SECRET_PASS) {
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('admin-dashboard').classList.remove('hidden');
+        loadMovies();
+      } else {
+        alert("ভুল পাসওয়ার্ড!");
+      }
+    };
+
+    window.addEpisodeBox = function(epName = "", isNew = false, epDate = "", qualities = []) {
+      const container = document.getElementById('episodes-container');
+      const epDiv = document.createElement('div');
+      epDiv.className = 'ep-box';
+
+      const defaultDate = epDate || "28/09/2026";
+      const defaultName = epName || `Episode: 0${container.children.length + 1}`;
+
+      epDiv.innerHTML = `
+        <div class="ep-header-row">
+          <input type="text" placeholder="এপিসোড নাম (যেমন: Episode: 01)" class="ep-name" value="${defaultName}" required>
+          <label class="checkbox-label">
+            <input type="checkbox" class="ep-is-new" ${isNew ? 'checked' : ''}> [New] Tag
+          </label>
+        </div>
+        <div class="ep-header-row">
+          <input type="text" placeholder="আপলোড তারিখ (যেমন: 28/09/2026)" class="ep-date" value="${defaultDate}">
+        </div>
+        
+        <div class="quality-container">
+          <label style="font-size:12px; color:#94a3b8; margin-bottom:5px;">ডাউনলোড লিংক ও কোয়ালিটিসমূহ:</label>
+          <div class="qualities-list"></div>
+          <button type="button" class="btn-add-q" onclick="addQualityRow(this)">+ কোয়ালিটি লিংক যোগ করুন</button>
+        </div>
+        
+        <button type="button" class="btn-remove-ep" onclick="this.parentElement.remove()">🗑️ এই এপিসোড বক্স মুছুন</button>
+      `;
+
+      container.appendChild(epDiv);
+
+      const qList = epDiv.querySelector('.qualities-list');
+      if (qualities && qualities.length > 0) {
+        qualities.forEach(q => addQualityRowDirect(qList, q.label, q.url));
+      } else {
+        addQualityRowDirect(qList, "720p x264 [Size: 242mb]", "");
+        addQualityRowDirect(qList, "1080p x265 [Size: 460mb]", "");
+      }
+    };
+
+    window.addQualityRow = function(btn) {
+      const qList = btn.previousElementSibling;
+      addQualityRowDirect(qList, "", "");
+    };
+
+    function addQualityRowDirect(qListElement, labelVal = "", urlVal = "") {
+      const qRow = document.createElement('div');
+      qRow.className = 'quality-row';
+      qRow.innerHTML = `
+        <input type="text" placeholder="কোয়ালিটি/সাইজ (যেমন: 720p 250MB)" class="q-label" value="${labelVal}" required>
+        <input type="url" placeholder="আসল ডাউনলোড লিংক" class="q-url" value="${urlVal}" required>
+        <button type="button" class="btn-remove-q" onclick="this.parentElement.remove()">✕</button>
+      `;
+      qListElement.appendChild(qRow);
+    }
+
+    window.resetForm = function() {
+      editingId = null;
+      document.getElementById('movie-form').reset();
+      document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = false);
+      document.getElementById('submit-btn').innerText = "Publish Anime";
+      document.getElementById('cancel-edit-btn').classList.add('hidden');
+      document.getElementById('episodes-container').innerHTML = '';
+      addEpisodeBox();
+    };
+
+    document.getElementById('movie-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Get selected multiple categories
+      const selectedCategories = [];
+      document.querySelectorAll('.cat-checkbox:checked').forEach(cb => {
+        selectedCategories.push(cb.value);
+      });
+
+      if (selectedCategories.length === 0) {
+        alert("অনুগহ করে কমপক্ষে একটি ক্যাটাগরি সিলেক্ট করুন!");
+        return;
+      }
+
+      const epBoxes = document.querySelectorAll('.ep-box');
+      const episodes = [];
+
+      epBoxes.forEach(box => {
+        const epName = box.querySelector('.ep-name').value;
+        const isNew = box.querySelector('.ep-is-new').checked;
+        const epDate = box.querySelector('.ep-date').value || "28/09/2026";
+        
+        const qLabels = box.querySelectorAll('.q-label');
+        const qUrls = box.querySelectorAll('.q-url');
+        const qualities = [];
+
+        qLabels.forEach((lbl, idx) => {
+          if (lbl.value && qUrls[idx].value) {
+            qualities.push({
+              label: lbl.value,
+              url: qUrls[idx].value
+            });
+          }
+        });
+
+        if (epName && qualities.length > 0) {
+          episodes.push({
+            episodeName: epName,
+            isNew: isNew,
+            date: epDate,
+            qualities: qualities
+          });
+        }
+      });
+
+      const movieData = {
+        type: document.getElementById('type').value,
+        title: document.getElementById('title').value,
+        poster: document.getElementById('poster').value,
+        category: selectedCategories,
+        rating: document.getElementById('rating').value || "N/A",
+        year: document.getElementById('year').value || "2026",
+        language: document.getElementById('language').value || "Dual Audio",
+        keywords: document.getElementById('keywords').value || "",
+        synopsis: document.getElementById('synopsis').value || "",
+        episodes: episodes,
+        timestamp: Date.now()
+      };
+
+      if (editingId) {
+        set(ref(db, 'movies/' + editingId), movieData).then(() => {
+          alert("সফলভাবে আপডেট করা হয়েছে!");
+          resetForm();
+        });
+      } else {
+        const newRef = push(ref(db, 'movies'));
+        set(newRef, movieData).then(() => {
+          alert("সফলভাবে পোস্ট করা হয়েছে!");
+          resetForm();
+        });
+      }
+    });
+
+    function loadMovies() {
+      onValue(ref(db, 'movies'), (snapshot) => {
+        const itemsDiv = document.getElementById('movie-items');
+        itemsDiv.innerHTML = "";
+        moviesCache = {};
+
+        snapshot.forEach((child) => {
+          const movie = child.val();
+          const id = child.key;
+          moviesCache[id] = movie;
+
+          const catDisplay = Array.isArray(movie.category) ? movie.category.join(', ') : (movie.category || '');
+
+          itemsDiv.innerHTML += `
+            <div class="movie-item">
+              <div>
+                <strong>${movie.title}</strong> <br><small style="color:#38bdf8;">[${catDisplay}]</small>
+              </div>
+              <div class="action-btns">
+                <button class="btn-edit" onclick="editMovie('${id}')">Edit</button>
+                <button class="btn-delete" onclick="deleteMovie('${id}')">Delete</button>
+              </div>
+            </div>
+          `;
+        });
+      });
+    }
+
+    window.editMovie = function(id) {
+      const movie = moviesCache[id];
+      if (!movie) return;
+
+      editingId = id;
+      document.getElementById('type').value = movie.type || 'Anime Series';
+      document.getElementById('title').value = movie.title || '';
+      document.getElementById('poster').value = movie.poster || '';
+      
+      // Select checked categories
+      document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = false);
+      if (movie.category) {
+        let cats = Array.isArray(movie.category) ? movie.category : movie.category.split(',').map(s => s.trim());
+        document.querySelectorAll('.cat-checkbox').forEach(cb => {
+          if (cats.includes(cb.value)) {
+            cb.checked = true;
+          }
+        });
+      }
+
+      document.getElementById('rating').value = movie.rating || '';
+      document.getElementById('year').value = movie.year || '';
+      document.getElementById('language').value = movie.language || '';
+      document.getElementById('keywords').value = movie.keywords || '';
+      document.getElementById('synopsis').value = movie.synopsis || '';
+
+      const container = document.getElementById('episodes-container');
+      container.innerHTML = '';
+      
+      if (movie.episodes && movie.episodes.length > 0) {
+        movie.episodes.forEach(ep => {
+          addEpisodeBox(ep.episodeName, ep.isNew, ep.date, ep.qualities);
+        });
+      } else if (movie.links && movie.links.length > 0) {
+        addEpisodeBox("Episode: 01", false, "28/09/2026", movie.links);
+      } else {
+        addEpisodeBox();
+      }
+
+      document.getElementById('submit-btn').innerText = "Update Content (Bump to Top)";
+      document.getElementById('cancel-edit-btn').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.deleteMovie = function(id) {
+      if(confirm("সত্যিই মুছে ফেলতে চান?")) {
+        remove(ref(db, 'movies/' + id));
+      }
+    };
+
+    addEpisodeBox();
+  </script>
+</body>
+  </html>
