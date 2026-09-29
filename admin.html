@@ -110,14 +110,14 @@
       box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
     }
     
-    /* Movie Item with Poster Thumbnail placed in the middle (Red Box Position) */
+    /* Movie Item with Thumbnail */
     .movie-item { 
       display: flex; 
       align-items: center; 
       justify-content: space-between;
-      gap: 10px; 
+      gap: 8px; 
       background: #0f172a; 
-      padding: 10px 12px; 
+      padding: 10px; 
       margin-top: 8px; 
       border-radius: 8px; 
       border: 1px solid #334155; 
@@ -136,11 +136,12 @@
       border: 1px solid #38bdf8;
       background: #1e293b;
     }
-    .action-btns { display: flex; gap: 6px; flex-shrink: 0; }
-    .btn-edit { background: #d97706; padding: 6px 12px; font-size: 12px; width: auto; margin: 0; }
-    .btn-delete { background: #dc2626; padding: 6px 12px; font-size: 12px; width: auto; margin: 0; }
+    .action-btns { display: flex; gap: 4px; flex-shrink: 0; }
+    .btn-bump { background: #0284c7; padding: 6px 8px; font-size: 11px; width: auto; margin: 0; }
+    .btn-edit { background: #d97706; padding: 6px 8px; font-size: 11px; width: auto; margin: 0; }
+    .btn-delete { background: #dc2626; padding: 6px 8px; font-size: 11px; width: auto; margin: 0; }
 
-    /* Blue Tick Icon */
+    /* Blue Tick & Pin Badge */
     .blue-tick {
       display: inline-block;
       width: 16px;
@@ -152,7 +153,13 @@
       line-height: 16px;
       font-size: 11px;
       font-weight: bold;
-      margin-left: 4px;
+      margin-left: 2px;
+    }
+    .pin-tag {
+      color: #f59e0b;
+      font-weight: bold;
+      font-size: 12px;
+      margin-left: 2px;
     }
   </style>
 </head>
@@ -218,7 +225,7 @@
         <input type="url" id="poster" placeholder="https://i.ibb.co/..." required>
       </div>
 
-      <!-- Multiple Category Checkbox Section -->
+      <!-- Multiple Category Checkbox Section (Updated Adult 18+) -->
       <div class="form-group">
         <label>ক্যাটাগরি / Genre (একাধিক সিলেক্ট করুন):</label>
         <div class="category-checkbox-grid">
@@ -228,17 +235,20 @@
           <label class="cat-check-item"><input type="checkbox" value="Romance" class="cat-checkbox"> Romance</label>
           <label class="cat-check-item"><input type="checkbox" value="Adventure" class="cat-checkbox"> Adventure</label>
           <label class="cat-check-item"><input type="checkbox" value="Fantasy" class="cat-checkbox"> Fantasy</label>
-          <label class="cat-check-item"><input type="checkbox" value="Ecchi/18+" class="cat-checkbox"> Ecchi/18+</label>
+          <label class="cat-check-item"><input type="checkbox" value="Adult 18+" class="cat-checkbox"> Adult 18+</label>
           <label class="cat-check-item"><input type="checkbox" value="Sci-Fi" class="cat-checkbox"> Sci-Fi</label>
           <label class="cat-check-item"><input type="checkbox" value="Supernatural" class="cat-checkbox"> Supernatural</label>
           <label class="cat-check-item"><input type="checkbox" value="Drama" class="cat-checkbox"> Drama</label>
         </div>
       </div>
 
-      <!-- Verified Blue Tick Badge Option -->
-      <div class="form-group" style="background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid #38bdf8;">
+      <!-- Options: Verified Blue Tick & Pin to Top -->
+      <div class="form-group" style="background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid #38bdf8; display: flex; flex-direction: column; gap: 8px;">
         <label class="cat-check-item" style="color: #38bdf8; font-weight: bold;">
           <input type="checkbox" id="is-verified"> 🟦 External Link Badge (Blue Tick চিহ্নিত করুন)
+        </label>
+        <label class="cat-check-item" style="color: #f59e0b; font-weight: bold;">
+          <input type="checkbox" id="is-pinned"> 📌 Pin to Top (ইউজার প্যানেলে সবার উপরে পিন রাখুন)
         </label>
       </div>
 
@@ -292,9 +302,9 @@
   <!-- Firebase Scripts -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, push, set, update, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // AUTOMATICALLY MARK THIS DEVICE AS ADMIN AS SOON AS ADMIN.HTML LOADS
+    // AUTOMATICALLY MARK THIS DEVICE AS ADMIN
     try {
       localStorage.setItem('isAdminDevice', 'true');
     } catch(e) { console.error(e); }
@@ -331,19 +341,15 @@
       }
     };
 
-    // Analytics Realtime Fetcher
     function loadAnalytics() {
-      // 1. Live Users
       onValue(ref(db, 'analytics/liveUsers'), (snapshot) => {
         document.getElementById('stat-live').innerText = snapshot.exists() ? Object.keys(snapshot.val()).length : 0;
       });
 
-      // 2. Total Views
       onValue(ref(db, 'analytics/totalViews'), (snapshot) => {
         document.getElementById('stat-total').innerText = snapshot.exists() ? snapshot.val() : 0;
       });
 
-      // 3. Daily / 7-Days / 30-Days Analytics
       onValue(ref(db, 'analytics/daily'), (snapshot) => {
         if (!snapshot.exists()) return;
         const data = snapshot.val();
@@ -439,6 +445,7 @@
       document.getElementById('movie-form').reset();
       document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = false);
       document.getElementById('is-verified').checked = false;
+      document.getElementById('is-pinned').checked = false;
       document.getElementById('submit-btn').innerText = "Publish Anime";
       document.getElementById('cancel-edit-btn').classList.add('hidden');
       document.getElementById('episodes-container').innerHTML = '';
@@ -495,6 +502,7 @@
         poster: document.getElementById('poster').value,
         category: selectedCategories,
         isVerified: document.getElementById('is-verified').checked,
+        isPinned: document.getElementById('is-pinned').checked,
         rating: document.getElementById('rating').value || "N/A",
         year: document.getElementById('year').value || "2026",
         language: document.getElementById('language').value || "Dual Audio",
@@ -530,7 +538,13 @@
           allAdminMoviesList.push({ id, ...movie });
         });
 
-        allAdminMoviesList.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        allAdminMoviesList.sort((a, b) => {
+          if ((b.isPinned ? 1 : 0) !== (a.isPinned ? 1 : 0)) {
+            return (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0);
+          }
+          return (b.timestamp || 0) - (a.timestamp || 0);
+        });
+
         renderAdminList(allAdminMoviesList);
       });
     }
@@ -556,15 +570,17 @@
       list.forEach(movie => {
         const catDisplay = Array.isArray(movie.category) ? movie.category.join(', ') : (movie.category || '');
         const tickBadge = movie.isVerified ? `<span class="blue-tick" title="External Link Marked">✓</span>` : '';
+        const pinBadge = movie.isPinned ? `<span class="pin-tag" title="Pinned to Top">📌</span>` : '';
         const posterUrl = movie.poster || 'https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png';
 
         itemsDiv.innerHTML += `
           <div class="movie-item">
             <div class="admin-item-info">
-              <strong>${movie.title}</strong> ${tickBadge} <br><small style="color:#38bdf8;">[${catDisplay}]</small>
+              <strong>${movie.title}</strong> ${pinBadge} ${tickBadge} <br><small style="color:#38bdf8;">[${catDisplay}]</small>
             </div>
             <img src="${posterUrl}" alt="Poster" class="admin-thumb-img" onerror="this.onerror=null;this.src='https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png';">
             <div class="action-btns">
+              <button class="btn-bump" title="সবচেয়ে উপরে নিয়ে আসুন" onclick="bumpToTop('${movie.id}')">⬆️ Bump</button>
               <button class="btn-edit" onclick="editMovie('${movie.id}')">Edit</button>
               <button class="btn-delete" onclick="deleteMovie('${movie.id}')">Delete</button>
             </div>
@@ -572,6 +588,15 @@
         `;
       });
     }
+
+    // Quick Bump to Top Function
+    window.bumpToTop = function(id) {
+      update(ref(db, 'movies/' + id), {
+        timestamp: Date.now()
+      }).then(() => {
+        alert("পোস্টটি সফলভাবে সবার উপরে নিয়ে আসা হয়েছে!");
+      });
+    };
 
     window.editMovie = function(id) {
       const movie = moviesCache[id];
@@ -582,12 +607,13 @@
       document.getElementById('title').value = movie.title || '';
       document.getElementById('poster').value = movie.poster || '';
       document.getElementById('is-verified').checked = !!movie.isVerified;
+      document.getElementById('is-pinned').checked = !!movie.isPinned;
 
       document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = false);
       if (movie.category) {
         let cats = Array.isArray(movie.category) ? movie.category : movie.category.split(',').map(s => s.trim());
         document.querySelectorAll('.cat-checkbox').forEach(cb => {
-          if (cats.includes(cb.value)) {
+          if (cats.includes(cb.value) || (cb.value === "Adult 18+" && cats.includes("Ecchi/18+"))) {
             cb.checked = true;
           }
         });
@@ -626,4 +652,4 @@
     addEpisodeBox();
   </script>
 </body>
-  </html>
+                                                 </html>
