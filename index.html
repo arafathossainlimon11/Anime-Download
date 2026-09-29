@@ -4,27 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
+  <!-- Preconnect & DNS Prefetch -->
   <link rel="preconnect" href="https://i.ibb.co.com" crossorigin>
   <link rel="dns-prefetch" href="https://i.ibb.co.com">
   <link rel="preconnect" href="https://i.ibb.co" crossorigin>
   <link rel="dns-prefetch" href="https://i.ibb.co">
 
+  <!-- Google Search Console Verification Tag -->
   <meta name="google-site-verification" content="ihjoW37gTzmEshVOHUNdxKuq4Yj0Zwq0rp4yZm9QGR4" />
 
+  <!-- Favicon Logo -->
   <link rel="icon" type="image/png" href="https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png">
 
+  <!-- Advanced Anime SEO Meta Tags -->
   <title>Anime Download — Free HD Anime Series, Anime Movies & Hindi Dubbed Anime</title>
   <meta name="description" content="Watch & Download latest Anime Series, Anime Movies, Hindi Dubbed Anime, English Subbed Anime in 480p, 720p, 1080p HD quality for free on Anime Download. Daily fast direct download links.">
   <meta name="keywords" content="anime download, hindi dubbed anime, english dubbed anime, anime series download, solo leveling hindi, Jujutsu Kaisen 720p, crunchyroll dub, anime download bd">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta id="dynamic-seo-keywords" name="keywords" content="">
   
+  <!-- OpenGraph Tags -->
   <meta property="og:site_name" content="Anime Download">
   <meta property="og:title" content="Anime Download — Free HD Anime Streaming & Download Hub">
   <meta property="og:description" content="Download latest Anime Series & Episode-wise Anime in high speed direct server links.">
   <meta property="og:image" content="https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png">
   <meta property="og:type" content="website">
 
+  <!-- Adsterra Social Bar Script -->
   <script src="https://pl31546344.profitableratecpmnetwork.com/23/ef/b4/23efb4974d3d62e221330bc4702e2749.js"></script>
 
   <style>
@@ -37,7 +43,7 @@
     .header-logo-img { width: 34px; height: 34px; border-radius: 6px; object-fit: cover; }
     .logo { color: #38bdf8; font-size: 22px; font-weight: 800; text-decoration: none; letter-spacing: 1px; }
 
-    /* Blue Tick Icon */
+    /* Blue Tick & Pin Badge */
     .blue-tick {
       display: inline-flex;
       align-items: center;
@@ -52,8 +58,21 @@
       margin-left: 5px;
       vertical-align: middle;
     }
+    .badge-pin {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: #dc2626;
+      color: #fff;
+      font-weight: bold;
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      z-index: 3;
+      box-shadow: 0 0 8px rgba(220, 38, 38, 0.6);
+    }
 
-    /* Facebook Group Join Banner */
+    /* Facebook Group Banner */
     .fb-banner {
       display: inline-flex;
       align-items: center;
@@ -82,7 +101,7 @@
     .search-btn { background: #0284c7; color: #fff; border: none; padding: 0 16px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 13px; white-space: nowrap; transition: 0.2s; }
     .search-btn:active { background: #0369a1; transform: scale(0.95); }
 
-    /* Single Column Anime Layout */
+    /* Single Column Layout */
     .movie-container { display: grid; grid-template-columns: 1fr; gap: 12px; padding: 12px; }
     
     .movie-card { background: #161b22; border-radius: 12px; overflow: hidden; border: 1px solid #30363d; cursor: pointer; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease; position: relative; display: flex; flex-direction: column; }
@@ -111,6 +130,7 @@
 
     .badge { position: absolute; top: 8px; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; color: #fff; z-index: 2; }
     .badge-rating { left: 8px; background: #d97706; }
+    .badge-rating.has-pin { left: 75px; }
     .badge-quality { right: 8px; background: #2563eb; }
 
     .movie-info { padding: 12px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
@@ -130,7 +150,7 @@
     /* Search Not Found Card */
     .not-found-card { grid-column: span 1; background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 25px 15px; text-align: center; margin-top: 10px; }
 
-    /* Mandatory Ad Container under EVERY Card */
+    /* Mandatory Ad Container */
     .ad-container-mandatory { 
       grid-column: span 1; 
       background: #161b22; 
@@ -146,20 +166,80 @@
       margin-bottom: 4px;
     }
 
-    /* Pagination */
-    .pagination { display: flex; justify-content: center; gap: 6px; padding: 20px 12px; }
-    .page-btn { padding: 8px 14px; background: #21262d; color: #c9d1d9; border-radius: 6px; cursor: pointer; border: 1px solid #30363d; }
-    .page-btn.active { background: #0284c7; color: #fff; font-weight: bold; }
+    /* Custom Circular Pagination matching Screenshot 1000001854.png */
+    .pagination-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 25px 12px;
+      width: 100%;
+      max-width: 400px;
+      margin: auto;
+    }
+    .pagination-numbers {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .page-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid #0284c7;
+      background: transparent;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .page-circle.active {
+      background: #0284c7;
+      color: #ffffff;
+      border-color: #0284c7;
+      box-shadow: 0 0 10px rgba(2, 132, 199, 0.5);
+    }
+    .page-circle.dots {
+      border: none;
+      color: #38bdf8;
+      cursor: default;
+    }
+    .page-next-pill {
+      width: 100%;
+      padding: 12px 20px;
+      border-radius: 25px;
+      border: 1px solid #0284c7;
+      background: transparent;
+      color: #38bdf8;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .page-next-pill:active {
+      background: #0284c7;
+      color: #fff;
+    }
 
     /* Views Layout */
     .view-section { padding: 15px; max-width: 600px; margin: auto; display: none; }
     .view-section.active { display: block; }
     .details-poster { width: 100%; max-height: 380px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; }
 
-    /* Standard Glowing Button */
+    /* Glowing Buttons */
     .glow-btn { width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 8px; font-weight: bold; color: #fff; background: linear-gradient(135deg, #0284c7, #06b6d4); cursor: pointer; text-align: center; text-decoration: none; display: block; font-size: 15px; }
 
-    /* JUMPING / BOUNCING ANIMATION BUTTON for Main Direct Download */
+    /* Jumping Download Button */
     .jump-dl-btn {
       width: 100%;
       padding: 16px 10px;
@@ -190,7 +270,7 @@
       100% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
     }
 
-    /* Episode Template Card Styling */
+    /* Episode Template Card */
     .episode-card { 
       background: #161b22; 
       border: 1px solid #30363d; 
@@ -227,12 +307,14 @@
       <a href="#" class="logo">ANIME DOWNLOAD</a>
     </div>
 
+    <!-- Facebook Group Join Banner -->
     <a href="https://facebook.com/groups/1825203915487489/" target="_blank" class="fb-banner" onclick="popAd()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
       <span>Join Facebook Group for Anime Requests</span>
     </a>
   </header>
 
+  <!-- PAGE 1: Home View -->
   <div id="home-view" class="view-section active">
     <div class="category-grid">
       <div class="cat-btn active" onclick="popAd(); filterCategory('All', this)">Home</div>
@@ -242,21 +324,23 @@
       <div class="cat-btn" onclick="popAd(); filterCategory('Romance', this)">Romance</div>
       <div class="cat-btn" onclick="popAd(); filterCategory('Adventure', this)">Adventure</div>
       <div class="cat-btn" onclick="popAd(); filterCategory('Fantasy', this)">Fantasy</div>
-      <div class="cat-btn" onclick="popAd(); filterCategory('Ecchi/18+', this)">Ecchi/18+</div>
+      <div class="cat-btn" onclick="popAd(); filterCategory('Adult 18+', this)">Adult 18+</div>
       <div class="cat-btn" onclick="popAd(); filterCategory('Sci-Fi', this)">Sci-Fi</div>
       <div class="cat-btn" onclick="popAd(); filterCategory('Supernatural', this)">Supernatural</div>
       <div class="cat-btn" onclick="popAd(); filterCategory('Drama', this)">Drama</div>
     </div>
 
+    <!-- Search Box -->
     <div class="search-box" onclick="event.stopPropagation()">
       <input type="text" id="search-input" class="search-input" placeholder="Anime-এর English নাম লিখুন..." oninput="handleSearch()" onkeypress="if(event.key==='Enter') handleSearch()" onclick="event.stopPropagation()">
       <button class="search-btn" onclick="event.stopPropagation(); handleSearch();">🔍 Search</button>
     </div>
 
     <div id="movie-grid" class="movie-container"></div>
-    <div id="pagination" class="pagination"></div>
+    <div id="pagination" class="pagination-container"></div>
   </div>
 
+  <!-- PAGE 2: Details View -->
   <div id="details-view" class="view-section">
     <img id="det-poster" class="details-poster" src="" alt="Poster" decoding="async">
     <h2 id="det-title" style="color: #f0f6fc; margin-bottom: 8px; line-height: 1.3;"></h2>
@@ -267,6 +351,7 @@
     <div id="det-links-container"></div>
   </div>
 
+  <!-- PAGE 3: Buffer Page -->
   <div id="buffer-view" class="view-section" style="text-align: center;">
     <h2 id="buf-title" style="color: #f0f6fc; margin-bottom: 15px; line-height: 1.3;"></h2>
     <p style="color: #10b981; font-weight: bold; font-size: 18px; margin-bottom: 15px;">Your download link is ready!</p>
@@ -276,6 +361,7 @@
     <div id="ad-300-slot-p3" style="margin: 20px 0; background: #161b22; padding: 10px; border-radius: 8px; display: flex; justify-content: center; min-height: 250px; align-items: center;"></div>
   </div>
 
+  <!-- PAGE 4: Final Gateway Page -->
   <div id="download-view" class="view-section" style="text-align: center;">
     <h2 id="dl-title" style="color: #f0f6fc; margin-bottom: 20px; line-height: 1.3;">Choose Server</h2>
     
@@ -286,18 +372,18 @@
     <a id="real-dl-btn" href="#" target="_blank" class="jump-dl-btn" onclick="handleRealDownloadClick(event)">[⬇ ORIGINAL DIRECT SERVER DOWNLOAD]</a>
   </div>
 
+  <!-- Firebase Integration Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, push, set, onValue, runTransaction, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // 1. Check Secret Query Param (?admin=1)
+    // Admin secret flag
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('admin') === '1') {
       localStorage.setItem('isAdminDevice', 'true');
       alert("🛡️ Admin Mode Activated! আপনার মোবাইল সফলভাবে ভিজিটর কাউন্ট থেকে বাদ দেওয়া হয়েছে।");
     }
 
-    // 2. Secret Logo Triple Click
     let logoClickCount = 0;
     let clickTimer = null;
     window.handleHeaderLogoClick = function() {
@@ -310,10 +396,10 @@
         logoClickCount = 0;
         if (localStorage.getItem('isAdminDevice') === 'true') {
           localStorage.removeItem('isAdminDevice');
-          alert("⚠️ Admin Device Mode OFF: এখন থেকে এই মোবাইলের ট্রাফিক কাউন্ট হবে।");
+          alert("⚠️ Admin Device Mode OFF");
         } else {
           localStorage.setItem('isAdminDevice', 'true');
-          alert("🛡️ Admin Device Mode ON: এখন থেকে এই মোবাইল কাউন্ট থেকে বাদ দেওয়া হলো!");
+          alert("🛡️ Admin Device Mode ON");
         }
       } else {
         clickTimer = setTimeout(() => { logoClickCount = 0; }, 1500);
@@ -337,12 +423,11 @@
     let allMovies = [];
     let filteredMovies = [];
     let currentPage = 1;
-    const itemsPerPage = 15;
+    const itemsPerPage = 10; // Exactly 10 Anime per page
     let selectedLink = "";
     let selectedTitle = "";
     let realDlAdClicked = false;
 
-    // Adsterra Direct Smartlink
     const DIRECT_AD_LINK = "https://www.profitableratecpmnetwork.com/ug9nqqybq?key=9f2fdc24609da9c7f62de27790487d6c";
 
     window.popAd = function() {
@@ -351,22 +436,17 @@
       }
     };
 
-    // Strict Visitor Analytics Excluder
     function initVisitorTracking() {
       if (localStorage.getItem('isAdminDevice') === 'true') {
-        console.log("Admin device excluded from analytics.");
         return;
       }
 
-      // 1. Live presence
       const sessionRef = push(ref(db, 'analytics/liveUsers'));
       set(sessionRef, { timestamp: serverTimestamp() });
       onDisconnect(sessionRef).remove();
 
-      // 2. Increment Total Views
       runTransaction(ref(db, 'analytics/totalViews'), (current) => (current || 0) + 1);
 
-      // 3. Increment Daily Views
       const d = new Date();
       const yyyy = d.getFullYear();
       const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -437,14 +517,20 @@
       }
     };
 
-    // Fetch Anime from Database
+    // Fetch Anime from Database & Sort (Pinned items stay ALWAYS at the top)
     onValue(ref(db, 'movies'), (snapshot) => {
       allMovies = [];
       snapshot.forEach((child) => {
         allMovies.push({ id: child.key, ...child.val() });
       });
 
-      allMovies.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+      allMovies.sort((a, b) => {
+        if ((b.isPinned ? 1 : 0) !== (a.isPinned ? 1 : 0)) {
+          return (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0);
+        }
+        return (b.timestamp || 0) - (a.timestamp || 0);
+      });
+
       filteredMovies = [...allMovies];
       renderGrid();
     });
@@ -458,13 +544,11 @@
       } else {
         filteredMovies = allMovies.filter(m => {
           if (!m.category) return false;
-          if (Array.isArray(m.category)) {
-            return m.category.includes(cat);
+          let catArray = Array.isArray(m.category) ? m.category : m.category.split(',').map(s => s.trim());
+          if (cat === "Adult 18+") {
+            return catArray.includes("Adult 18+") || catArray.includes("Ecchi/18+");
           }
-          if (typeof m.category === 'string') {
-            return m.category.split(',').map(s => s.trim()).includes(cat) || m.category === cat;
-          }
-          return false;
+          return catArray.includes(cat);
         });
       }
       currentPage = 1;
@@ -514,10 +598,12 @@
         const priorityAttr = isFirstFew ? 'fetchpriority="high"' : '';
         const catDisplay = Array.isArray(movie.category) ? movie.category.join(', ') : (movie.category || '');
         const tickBadge = movie.isVerified ? `<span class="blue-tick" title="External Link Marked">✓</span>` : '';
+        const pinBadge = movie.isPinned ? `<span class="badge-pin">📌 Pinned</span>` : '';
 
         grid.innerHTML += `
           <div class="movie-card" onclick="handleCardClick('${movie.id}')">
             <div class="poster-wrapper">
+              ${pinBadge}
               <img class="poster-img" 
                    src="${movie.poster}" 
                    alt="${movie.title}" 
@@ -526,7 +612,7 @@
                    ${priorityAttr} 
                    onload="onImgLoad(this)" 
                    onerror="this.onerror=null;this.src='https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png';onImgLoad(this);">
-              <span class="badge badge-rating">${movie.rating}</span>
+              <span class="badge badge-rating ${movie.isPinned ? 'has-pin' : ''}">${movie.rating}</span>
               <span class="badge badge-quality">${movie.year}</span>
             </div>
             <div class="movie-info">
@@ -551,16 +637,45 @@
       renderPagination();
     }
 
+    // Circular Page Numbers & Next Pill Button (Matching Screenshot 1000001854.png)
     function renderPagination() {
       const totalPages = Math.ceil(filteredMovies.length / itemsPerPage);
       const container = document.getElementById('pagination');
       container.innerHTML = "";
 
-      for(let i=1; i<=totalPages; i++) {
-        container.innerHTML += `
-          <div class="page-btn ${i === currentPage ? 'active' : ''}" onclick="popAd(); goToPage(${i})">${i}</div>
-        `;
+      if (totalPages <= 1) return;
+
+      let navHtml = '<div class="pagination-numbers">';
+
+      let pages = [];
+      if (totalPages <= 5) {
+        for (let i = 1; i <= totalPages; i++) pages.push(i);
+      } else {
+        if (currentPage <= 3) {
+          pages = [1, 2, 3, '...', totalPages];
+        } else if (currentPage >= totalPages - 2) {
+          pages = [1, '...', totalPages - 2, totalPages - 1, totalPages];
+        } else {
+          pages = [1, '...', currentPage, '...', totalPages];
+        }
       }
+
+      pages.forEach(p => {
+        if (p === '...') {
+          navHtml += `<div class="page-circle dots">...</div>`;
+        } else {
+          navHtml += `<div class="page-circle ${p === currentPage ? 'active' : ''}" onclick="popAd(); goToPage(${p})">${p}</div>`;
+        }
+      });
+      navHtml += '</div>';
+
+      if (currentPage < totalPages) {
+        navHtml += `<button class="page-next-pill" onclick="popAd(); goToPage(${currentPage + 1})">Next →</button>`;
+      } else if (currentPage > 1) {
+        navHtml += `<button class="page-next-pill" onclick="popAd(); goToPage(${currentPage - 1})">← Previous</button>`;
+      }
+
+      container.innerHTML = navHtml;
     }
 
     window.goToPage = function(p) {
