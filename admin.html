@@ -109,8 +109,32 @@
     .admin-search-input:focus {
       box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
     }
-    .movie-item { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 12px; margin-top: 8px; border-radius: 8px; border: 1px solid #334155; }
-    .action-btns { display: flex; gap: 6px; }
+    
+    /* Movie Item with Poster Thumbnail */
+    .movie-item { 
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+      background: #0f172a; 
+      padding: 10px; 
+      margin-top: 8px; 
+      border-radius: 8px; 
+      border: 1px solid #334155; 
+    }
+    .admin-thumb-img {
+      width: 50px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 6px;
+      flex-shrink: 0;
+      border: 1px solid #334155;
+      background: #1e293b;
+    }
+    .admin-item-info {
+      flex-grow: 1;
+      overflow: hidden;
+    }
+    .action-btns { display: flex; gap: 6px; flex-shrink: 0; }
     .btn-edit { background: #d97706; padding: 6px 12px; font-size: 12px; width: auto; margin: 0; }
     .btn-delete { background: #dc2626; padding: 6px 12px; font-size: 12px; width: auto; margin: 0; }
 
@@ -132,6 +156,7 @@
 </head>
 <body>
 
+  <!-- গোপন লগইন সেকশন -->
   <div id="login-section" class="login-box">
     <h2>Anime Admin Login</h2>
     <div class="form-group">
@@ -140,6 +165,7 @@
     <button onclick="login()">Login</button>
   </div>
 
+  <!-- মূল এডমিন ড্যাশবোর্ড -->
   <div id="admin-dashboard" class="container hidden">
     <h2>Anime Download Admin Panel</h2>
     
@@ -147,6 +173,7 @@
       🛡️ আপনার এই মোবাইলটি ভিজিটর গণনা থেকে ১০০% মুক্ত (Excluded from Analytics)
     </div>
 
+    <!-- Realtime Analytics Dashboard -->
     <div class="analytics-grid">
       <div class="stat-card full-width">
         <div class="stat-label">🟢 বর্তমানে লাইভ অনলাইন ইউজার</div>
@@ -189,6 +216,7 @@
         <input type="url" id="poster" placeholder="https://i.ibb.co/..." required>
       </div>
 
+      <!-- Multiple Category Checkbox Section -->
       <div class="form-group">
         <label>ক্যাটাগরি / Genre (একাধিক সিলেক্ট করুন):</label>
         <div class="category-checkbox-grid">
@@ -205,6 +233,7 @@
         </div>
       </div>
 
+      <!-- Verified Blue Tick Badge Option -->
       <div class="form-group" style="background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid #38bdf8;">
         <label class="cat-check-item" style="color: #38bdf8; font-weight: bold;">
           <input type="checkbox" id="is-verified"> 🟦 External Link Badge (Blue Tick চিহ্নিত করুন)
@@ -237,6 +266,7 @@
         <textarea id="synopsis" rows="3" placeholder="সংক্ষিপ্ত বিবরণ..."></textarea>
       </div>
 
+      <!-- Episode Box Section -->
       <div class="form-group">
         <label style="font-size: 16px; color: #38bdf8;">এপিসোড ও ডাউনলোড লিংকসমূহ</label>
         <div id="episodes-container"></div>
@@ -247,6 +277,7 @@
       <button type="button" id="cancel-edit-btn" class="btn-cancel hidden" onclick="resetForm()">Cancel Editing</button>
     </form>
 
+    <!-- Published Anime Items & Search -->
     <div class="movie-list">
       <h3 style="color: #38bdf8; margin-bottom: 12px;">🔍 পোস্ট করা এনিমেশন এডিট বা খুজুন</h3>
       
@@ -256,6 +287,7 @@
     </div>
   </div>
 
+  <!-- Firebase Scripts -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -522,10 +554,12 @@
       list.forEach(movie => {
         const catDisplay = Array.isArray(movie.category) ? movie.category.join(', ') : (movie.category || '');
         const tickBadge = movie.isVerified ? `<span class="blue-tick" title="External Link Marked">✓</span>` : '';
+        const posterUrl = movie.poster || 'https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png';
 
         itemsDiv.innerHTML += `
           <div class="movie-item">
-            <div>
+            <img src="${posterUrl}" alt="Poster" class="admin-thumb-img" onerror="this.onerror=null;this.src='https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png';">
+            <div class="admin-item-info">
               <strong>${movie.title}</strong> ${tickBadge} <br><small style="color:#38bdf8;">[${catDisplay}]</small>
             </div>
             <div class="action-btns">
@@ -590,4 +624,4 @@
     addEpisodeBox();
   </script>
 </body>
-  </html>
+        </html>
