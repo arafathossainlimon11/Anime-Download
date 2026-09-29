@@ -110,29 +110,31 @@
       box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
     }
     
-    /* Movie Item with Poster Thumbnail */
+    /* Movie Item with Poster Thumbnail placed in the middle (Red Box Position) */
     .movie-item { 
       display: flex; 
       align-items: center; 
-      gap: 12px; 
+      justify-content: space-between;
+      gap: 10px; 
       background: #0f172a; 
-      padding: 10px; 
+      padding: 10px 12px; 
       margin-top: 8px; 
       border-radius: 8px; 
       border: 1px solid #334155; 
     }
+    .admin-item-info {
+      flex: 1;
+      overflow: hidden;
+      padding-right: 4px;
+    }
     .admin-thumb-img {
-      width: 50px;
-      height: 70px;
+      width: 45px;
+      height: 60px;
       object-fit: cover;
       border-radius: 6px;
       flex-shrink: 0;
-      border: 1px solid #334155;
+      border: 1px solid #38bdf8;
       background: #1e293b;
-    }
-    .admin-item-info {
-      flex-grow: 1;
-      overflow: hidden;
     }
     .action-btns { display: flex; gap: 6px; flex-shrink: 0; }
     .btn-edit { background: #d97706; padding: 6px 12px; font-size: 12px; width: auto; margin: 0; }
@@ -558,10 +560,10 @@
 
         itemsDiv.innerHTML += `
           <div class="movie-item">
-            <img src="${posterUrl}" alt="Poster" class="admin-thumb-img" onerror="this.onerror=null;this.src='https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png';">
             <div class="admin-item-info">
               <strong>${movie.title}</strong> ${tickBadge} <br><small style="color:#38bdf8;">[${catDisplay}]</small>
             </div>
+            <img src="${posterUrl}" alt="Poster" class="admin-thumb-img" onerror="this.onerror=null;this.src='https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png';">
             <div class="action-btns">
               <button class="btn-edit" onclick="editMovie('${movie.id}')">Edit</button>
               <button class="btn-delete" onclick="deleteMovie('${movie.id}')">Delete</button>
@@ -624,4 +626,4 @@
     addEpisodeBox();
   </script>
 </body>
-        </html>
+  </html>
