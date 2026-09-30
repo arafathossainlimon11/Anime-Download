@@ -27,6 +27,7 @@
     .stat-card.full-width { grid-column: span 2; border-color: #38bdf8; background: #111e38; }
     .stat-num { font-size: 20px; font-weight: bold; color: #38bdf8; margin-top: 4px; }
     .stat-label { font-size: 12px; color: #94a3b8; font-weight: 600; }
+    .stat-details { font-size: 12px; color: #cbd5e1; margin-top: 6px; text-align: left; line-height: 1.5; max-height: 100px; overflow-y: auto; background: #0f172a; padding: 8px; border-radius: 6px; }
 
     /* AI Processor Box */
     .ai-box { background: #091e3a; border: 1px dashed #38bdf8; border-radius: 10px; padding: 15px; margin-bottom: 20px; }
@@ -123,9 +124,21 @@
         <div class="stat-label">📅 গত ৩০ দিন (১ মাস)</div>
         <div class="stat-num" id="stat-30days">0</div>
       </div>
-      <div class="stat-card full-width">
+      <div class="stat-card">
         <div class="stat-label">🌐 সর্বমোট ভিজিটর</div>
         <div class="stat-num" id="stat-total">0</div>
+      </div>
+
+      <!-- Traffic Source Breakdown -->
+      <div class="stat-card full-width">
+        <div class="stat-label">🚀 ট্রাফিক সোর্স (ভিজিটর কোথা থেকে আসছে)</div>
+        <div id="stat-sources" class="stat-details">লোডিং...</div>
+      </div>
+
+      <!-- Country Breakdown -->
+      <div class="stat-card full-width">
+        <div class="stat-label">🌍 কান্ট্রি ট্র্যাকিং (কোন দেশ থেকে আসছে)</div>
+        <div id="stat-countries" class="stat-details">লোডিং...</div>
       </div>
     </div>
 
@@ -146,7 +159,7 @@
         </select>
       </div>
       <div class="form-group">
-        <label>📋 একসাথে সব ডাউনলোড লিংক পেস্ট করুন (নিচে নিচে বা এক লাইনে):</label>
+        <label>📋 একসাথে সব ডাউনলোড লিংক পেস্ট করুন (নিচে নিচে বা এক লাইনে জোড়া লাগা):</label>
         <textarea id="ai-raw-links" rows="5" placeholder="https://hubcloud.ist/drive/svob4vgbmvsvnq3
 https://hubcloud.ist/drive/llv4alnpqt7qqpa
 https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
@@ -374,9 +387,39 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
         }
         document.getElementById('stat-30days').innerText = last30Total;
       });
+
+      // Fetch Country Tracking
+      onValue(ref(db, 'analytics/countries'), (snapshot) => {
+        const div = document.getElementById('stat-countries');
+        if (!snapshot.exists()) {
+          div.innerHTML = "এখনো কোনো কান্ট্রি ডেটা নেই।";
+          return;
+        }
+        let html = "";
+        const data = snapshot.val();
+        for (let country in data) {
+          html += `<div>• <strong>${country}:</strong> ${data[country]} জন</div>`;
+        }
+        div.innerHTML = html;
+      });
+
+      // Fetch Traffic Sources Tracking
+      onValue(ref(db, 'analytics/sources'), (snapshot) => {
+        const div = document.getElementById('stat-sources');
+        if (!snapshot.exists()) {
+          div.innerHTML = "এখনো কোনো সোর্স ডেটা নেই।";
+          return;
+        }
+        let html = "";
+        const data = snapshot.val();
+        for (let src in data) {
+          html += `<div>• <strong>${src}:</strong> ${data[src]} জন</div>`;
+        }
+        div.innerHTML = html;
+      });
     }
 
-    // Advanced Link Parsing: Handles newlines AND concatenated links (like ...abchttps://...)
+    // Advanced Link Parsing: Handles newlines AND concatenated links
     window.processAILinks = function() {
       const prefix = document.getElementById('ai-prefix').value.trim() || "https://";
       const qualityTag = document.getElementById('ai-quality-tag').value;
@@ -435,7 +478,7 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       if (specificEpName) {
         captionText = `🔥 <b>NEW EPISODE RELEASED!</b> 🔥\n\n📌 <b>Anime:</b> ${movieData.title}\n🎉 <b>Episode:</b> ${specificEpName}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️ <b>Download Episode Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
       } else if (isEditMode) {
-        captionText = `🎬 <b>ANIME UPDATED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️ <b>Watch & Download Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+        captionText = `🎬 <b>ANIME UPDATED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️️ <b>Watch & Download Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
       } else {
         captionText = `🎬 <b>NEW ANIME UPLOADED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n✨ Watch & Download in HD Quality (480p, 720p, 1080p)\n\n⬇️ <b>Watch & Download Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
       }
@@ -801,4 +844,4 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
     addEpisodeBox();
   </script>
 </body>
-              </html>
+          </html>
