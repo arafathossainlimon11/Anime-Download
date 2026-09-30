@@ -352,9 +352,9 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // TELEGRAM CONFIGURATION
-    const TELEGRAM_BOT_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN_HERE"; // BotFather এর দেয়া Token বসাবেন
-    const TELEGRAM_CHAT_ID = "@animedownloadweb"; // টেলিগ্রাম চ্যানেল ইউজারনেম
+    // EXACT EMBEDDED TELEGRAM BOT CONFIGURATION
+    const TELEGRAM_BOT_TOKEN = "8841045606:AAFmQGtoc7yylALdEyDFvOGCi72TVB16mkY";
+    const TELEGRAM_CHAT_ID = "@animedownloadweb";
 
     const SECRET_PASS = "arafat01721313101";
     let editingId = null;
@@ -421,7 +421,6 @@
     // Auto Telegram Notification Sender
     function sendTelegramNotification(movieData, isEditMode) {
       if (!document.getElementById('send-telegram').checked) return;
-      if (TELEGRAM_BOT_TOKEN === "YOUR_TELEGRAM_BOT_TOKEN_HERE") return;
 
       const cats = Array.isArray(movieData.category) ? movieData.category.join(', ') : movieData.category;
       let hasNewEp = movieData.episodes && movieData.episodes.some(e => e.isNew);
