@@ -3,43 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - Anime Download</title>
+  <title>Admin Panel - Anime Download Pro</title>
   <style>
     * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
-    body { background: #0f172a; color: #f8fafc; padding: 15px; }
-    .container { max-width: 650px; margin: auto; background: #1e293b; padding: 20px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-    h2 { text-align: center; margin-bottom: 15px; color: #38bdf8; }
+    body { background: #0b0f19; color: #f8fafc; padding: 12px; }
+    .container { max-width: 650px; margin: auto; background: #151d30; padding: 20px; border-radius: 16px; border: 1px solid #1e293b; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
+    h2 { text-align: center; margin-bottom: 15px; color: #38bdf8; font-size: 22px; font-weight: 800; }
     
     /* Nav Tabs */
-    .nav-tabs { display: flex; gap: 8px; margin-bottom: 20px; background: #0f172a; padding: 6px; border-radius: 8px; border: 1px solid #334155; }
-    .tab-btn { flex: 1; padding: 10px; background: transparent; color: #94a3b8; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 0; }
-    .tab-btn.active { background: #0284c7; color: #fff; }
+    .nav-tabs { display: flex; gap: 8px; margin-bottom: 20px; background: #0b0f19; padding: 6px; border-radius: 10px; border: 1px solid #1e293b; }
+    .tab-btn { flex: 1; padding: 12px; background: transparent; color: #94a3b8; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 0; font-size: 14px; }
+    .tab-btn.active { background: linear-gradient(135deg, #0284c7, #2563eb); color: #fff; box-shadow: 0 4px 12px rgba(2,132,199,0.3); }
 
     .form-group { margin-bottom: 15px; }
-    label { display: block; margin-bottom: 5px; font-size: 14px; color: #cbd5e1; font-weight: 600; }
-    input, select, textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #fff; font-size: 14px; }
-    button { width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+    label { display: block; margin-bottom: 6px; font-size: 13px; color: #cbd5e1; font-weight: 600; }
+    input, select, textarea { width: 100%; padding: 11px; border-radius: 8px; border: 1px solid #1e293b; background: #0b0f19; color: #fff; font-size: 14px; outline: none; }
+    input:focus, select:focus, textarea:focus { border-color: #38bdf8; }
+    button { width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; font-size: 15px; }
     button:hover { background: #1d4ed8; }
     
-    /* Analytics Dashboard Grid */
+    /* Ultra Professional Analytics Dashboard */
     .analytics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 25px; }
-    .stat-card { background: #0f172a; border: 1px solid #334155; padding: 12px; border-radius: 8px; text-align: center; }
-    .stat-card.full-width { grid-column: span 2; border-color: #38bdf8; background: #111e38; }
-    .stat-num { font-size: 20px; font-weight: bold; color: #38bdf8; margin-top: 4px; }
-    .stat-label { font-size: 12px; color: #94a3b8; font-weight: 600; }
-    .stat-details { font-size: 12px; color: #cbd5e1; margin-top: 6px; text-align: left; line-height: 1.5; max-height: 100px; overflow-y: auto; background: #0f172a; padding: 8px; border-radius: 6px; }
+    .stat-card { background: #0b0f19; border: 1px solid #1e293b; padding: 12px; border-radius: 12px; text-align: center; position: relative; overflow: hidden; }
+    .stat-card.full-width { grid-column: span 2; border-color: #0284c7; background: linear-gradient(180deg, #0f172a, #0b0f19); }
+    .stat-num { font-size: 22px; font-weight: 800; color: #38bdf8; margin-top: 4px; }
+    .stat-label { font-size: 12px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    /* Live Pulse Badge */
+    .live-pulse { display: inline-block; width: 10px; height: 10px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; margin-right: 6px; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16,185,129,0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16,185,129,0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16,185,129,0); } }
+
+    /* Breakdown Progress Bars UI */
+    .breakdown-box { background: #0b0f19; padding: 12px; border-radius: 10px; margin-top: 6px; }
+    .breakdown-item { margin-bottom: 10px; }
+    .breakdown-item:last-child { margin-bottom: 0; }
+    .breakdown-info { display: flex; justify-content: space-between; font-size: 12px; color: #cbd5e1; margin-bottom: 4px; font-weight: 600; }
+    .progress-bar-bg { width: 100%; background: #1e293b; height: 8px; border-radius: 10px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #38bdf8, #2563eb); transition: width 0.5s ease-in-out; }
 
     /* AI Processor Box */
-    .ai-box { background: #091e3a; border: 1px dashed #38bdf8; border-radius: 10px; padding: 15px; margin-bottom: 20px; }
+    .ai-box { background: #091e3a; border: 1px dashed #38bdf8; border-radius: 12px; padding: 15px; margin-bottom: 20px; }
     .ai-box h3 { color: #38bdf8; font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
 
     /* Multiple Category Checkbox Grid */
-    .category-checkbox-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid #334155; }
+    .category-checkbox-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; background: #0b0f19; padding: 12px; border-radius: 8px; border: 1px solid #1e293b; }
     .cat-check-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #cbd5e1; cursor: pointer; font-weight: 500; }
     .cat-check-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: #0284c7; cursor: pointer; }
 
-    /* Episode Box Styling Fixed UI */
-    .ep-box { background: #0f172a; border: 1px solid #38bdf8; border-radius: 10px; padding: 15px; margin-top: 15px; }
+    /* Episode Box Styling */
+    .ep-box { background: #0b0f19; border: 1px solid #38bdf8; border-radius: 12px; padding: 15px; margin-top: 15px; }
     .ep-header-checkboxes { display: flex; gap: 15px; margin-bottom: 10px; flex-wrap: wrap; }
     .checkbox-label { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #ef4444; cursor: pointer; white-space: nowrap; font-weight: bold; }
     .checkbox-label.tg-ep-label { color: #229ed9; }
@@ -47,7 +59,7 @@
     .ep-name-input { width: 100%; font-weight: bold; color: #38bdf8; margin-bottom: 10px; }
 
     /* Quality Row Styling */
-    .quality-container { background: #1e293b; border-radius: 8px; padding: 10px; margin-top: 10px; }
+    .quality-container { background: #151d30; border-radius: 8px; padding: 10px; margin-top: 10px; }
     .quality-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
     .quality-row input { flex: 1; }
     .btn-remove-q { background: #dc2626; color: #fff; border: none; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 12px; width: auto; margin: 0; }
@@ -58,28 +70,28 @@
     .btn-remove-ep { background: #b91c1c; font-size: 12px; padding: 6px 12px; width: auto; margin-top: 10px; }
     .btn-cancel { background: #64748b; margin-top: 5px; }
     
-    .login-box { max-width: 350px; margin: 100px auto; background: #1e293b; padding: 25px; border-radius: 10px; text-align: center; }
+    .login-box { max-width: 350px; margin: 100px auto; background: #151d30; padding: 25px; border-radius: 12px; text-align: center; border: 1px solid #1e293b; }
     .hidden { display: none !important; }
     
     /* Published Items & Search Styling */
-    .movie-list { margin-top: 30px; border-top: 2px dashed #334155; padding-top: 20px; }
-    .admin-search-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #38bdf8; background: #0f172a; color: #fff; font-size: 14px; margin-bottom: 15px; outline: none; }
+    .movie-list { margin-top: 30px; border-top: 2px dashed #1e293b; padding-top: 20px; }
+    .admin-search-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #38bdf8; background: #0b0f19; color: #fff; font-size: 14px; margin-bottom: 15px; outline: none; }
     
     .total-posts-badge { background: #0284c7; color: #ffffff; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
 
     /* Redesigned Movie Item Card Layout */
-    .movie-item { display: flex; flex-direction: column; background: #0f172a; padding: 12px; margin-top: 10px; border-radius: 8px; border: 1px solid #334155; }
+    .movie-item { display: flex; flex-direction: column; background: #0b0f19; padding: 12px; margin-top: 10px; border-radius: 10px; border: 1px solid #1e293b; }
     .movie-item-top { display: flex; gap: 12px; align-items: flex-start; }
-    .admin-thumb-img { width: 55px; height: 75px; object-fit: cover; border-radius: 6px; flex-shrink: 0; border: 1px solid #38bdf8; background: #1e293b; }
+    .admin-thumb-img { width: 55px; height: 75px; object-fit: cover; border-radius: 6px; flex-shrink: 0; border: 1px solid #38bdf8; background: #151d30; }
     .admin-item-info { flex: 1; font-size: 14px; line-height: 1.4; word-break: break-word; }
-    .action-btns { display: flex; gap: 6px; margin-top: 10px; padding-top: 8px; border-top: 1px solid #1e293b; flex-wrap: wrap; }
-    .btn-sm { padding: 6px 10px; font-size: 12px; width: auto; margin: 0; flex: 1; text-align: center; }
+    .action-btns { display: flex; gap: 6px; margin-top: 10px; padding-top: 8px; border-top: 1px solid #151d30; flex-wrap: wrap; }
+    .btn-sm { padding: 6px 10px; font-size: 12px; width: auto; margin: 0; flex: 1; text-align: center; border-radius: 6px; }
     .btn-bump { background: #0284c7; }
     .btn-move { background: #334155; max-width: 45px; }
     .btn-edit { background: #d97706; }
     .btn-delete { background: #dc2626; }
 
-    .blue-tick { display: inline-block; width: 16px; height: 16px; background: #38bdf8; color: #0f172a; border-radius: 50%; text-align: center; line-height: 16px; font-size: 11px; font-weight: bold; margin-left: 2px; }
+    .blue-tick { display: inline-block; width: 16px; height: 16px; background: #38bdf8; color: #0b0f19; border-radius: 50%; text-align: center; line-height: 16px; font-size: 11px; font-weight: bold; margin-left: 2px; }
     .pin-tag { color: #f59e0b; font-weight: bold; font-size: 12px; margin-left: 2px; }
     
     .btn-auto-kw { background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff; font-size: 12px; padding: 6px 12px; width: auto; margin-top: 5px; }
@@ -109,7 +121,7 @@
     <!-- Realtime Analytics Dashboard (Only in Standard View) -->
     <div id="analytics-section" class="analytics-grid">
       <div class="stat-card full-width">
-        <div class="stat-label">🟢 বর্তমানে লাইভ অনলাইন ইউজার</div>
+        <div class="stat-label"><span class="live-pulse"></span>অনলাইন লাইভ ইউজার</div>
         <div class="stat-num" id="stat-live" style="color: #10b981;">0</div>
       </div>
       <div class="stat-card">
@@ -131,14 +143,14 @@
 
       <!-- Traffic Source Breakdown -->
       <div class="stat-card full-width">
-        <div class="stat-label">🚀 ট্রাফিক সোর্স (ভিজিটর কোথা থেকে আসছে)</div>
-        <div id="stat-sources" class="stat-details">লোডিং...</div>
+        <div class="stat-label" style="color:#38bdf8;">🚀 ট্রাফিক সোর্স (ভিজিটর কোথা থেকে আসছে)</div>
+        <div id="stat-sources" class="breakdown-box">ডেটা বিশ্লেষণ করা হচ্ছে...</div>
       </div>
 
       <!-- Country Breakdown -->
       <div class="stat-card full-width">
-        <div class="stat-label">🌍 কান্ট্রি ট্র্যাকিং (কোন দেশ থেকে আসছে)</div>
-        <div id="stat-countries" class="stat-details">লোডিং...</div>
+        <div class="stat-label" style="color:#38bdf8;">🌍 কান্ট্রি ট্র্যাকিং (কোন দেশ থেকে আসছে)</div>
+        <div id="stat-countries" class="breakdown-box">ডেটা বিশ্লেষণ করা হচ্ছে...</div>
       </div>
     </div>
 
@@ -207,7 +219,7 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       </div>
 
       <!-- Options: Verified Blue Tick, Pin to Top & Telegram Switch -->
-      <div class="form-group" style="background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid #38bdf8; display: flex; flex-direction: column; gap: 10px;">
+      <div class="form-group" style="background: #0b0f19; padding: 12px; border-radius: 8px; border: 1px solid #38bdf8; display: flex; flex-direction: column; gap: 10px;">
         <label class="cat-check-item" style="color: #38bdf8; font-weight: bold;">
           <input type="checkbox" id="is-verified"> 🟦 External Link Badge (Blue Tick চিহ্নিত করুন)
         </label>
@@ -216,7 +228,7 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
         </label>
         
         <!-- Telegram Mode -->
-        <div style="border-top: 1px solid #334155; padding-top: 8px;">
+        <div style="border-top: 1px solid #1e293b; padding-top: 8px;">
           <label style="color: #229ed9; font-weight: bold; margin-bottom: 4px;">✈️ Telegram Notification Mode:</label>
           <select id="telegram-mode" style="border-color: #229ed9;">
             <option value="ALWAYS">Always Enable (সবসময় টেলিগ্রামে নোটিফিকেশন যাবে)</option>
@@ -294,8 +306,7 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       projectId: "moviebox-6dca4",
       storageBucket: "moviebox-6dca4.firebasestorage.app",
       messagingSenderId: "573703773546",
-      appId: "1:573703773546:web:04f01416cba5ff483ad913",
-      measurementId: "G-1KR5NJ9T61"
+      appId: "1:573703773546:web:04f01416cba5ff483ad913"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -388,32 +399,71 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
         document.getElementById('stat-30days').innerText = last30Total;
       });
 
-      // Fetch Country Tracking
-      onValue(ref(db, 'analytics/countries'), (snapshot) => {
-        const div = document.getElementById('stat-countries');
+      // Professional Breakdown for Sources
+      onValue(ref(db, 'analytics/sources'), (snapshot) => {
+        const div = document.getElementById('stat-sources');
         if (!snapshot.exists()) {
-          div.innerHTML = "এখনো কোনো কান্ট্রি ডেটা নেই।";
+          div.innerHTML = "<span style='color:#94a3b8; font-size:12px;'>এখনো কোনো সোর্স ডেটা নেই।</span>";
           return;
         }
-        let html = "";
         const data = snapshot.val();
-        for (let country in data) {
-          html += `<div>• <strong>${country}:</strong> ${data[country]} জন</div>`;
+        let total = 0;
+        for (let k in data) total += data[k];
+
+        let html = "";
+        const iconMap = {
+          "Google Search": "🔍",
+          "Telegram": "✈️",
+          "Facebook": "📘",
+          "YouTube": "▶️",
+          "Direct (সরাসরি লিংক)": "🔗"
+        };
+
+        for (let src in data) {
+          let count = data[src];
+          let pct = total > 0 ? Math.round((count / total) * 100) : 0;
+          let icon = iconMap[src] || "🌐";
+          html += `
+            <div class="breakdown-item">
+              <div class="breakdown-info">
+                <span>${icon} ${src}</span>
+                <span>${count} জন (${pct}%)</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: ${pct}%;"></div>
+              </div>
+            </div>
+          `;
         }
         div.innerHTML = html;
       });
 
-      // Fetch Traffic Sources Tracking
-      onValue(ref(db, 'analytics/sources'), (snapshot) => {
-        const div = document.getElementById('stat-sources');
+      // Professional Breakdown for Countries
+      onValue(ref(db, 'analytics/countries'), (snapshot) => {
+        const div = document.getElementById('stat-countries');
         if (!snapshot.exists()) {
-          div.innerHTML = "এখনো কোনো সোর্স ডেটা নেই।";
+          div.innerHTML = "<span style='color:#94a3b8; font-size:12px;'>এখনো কোনো কান্ট্রি ডেটা নেই।</span>";
           return;
         }
-        let html = "";
         const data = snapshot.val();
-        for (let src in data) {
-          html += `<div>• <strong>${src}:</strong> ${data[src]} জন</div>`;
+        let total = 0;
+        for (let k in data) total += data[k];
+
+        let html = "";
+        for (let cName in data) {
+          let count = data[cName];
+          let pct = total > 0 ? Math.round((count / total) * 100) : 0;
+          html += `
+            <div class="breakdown-item">
+              <div class="breakdown-info">
+                <span>${cName}</span>
+                <span>${count} জন (${pct}%)</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: ${pct}%; background: linear-gradient(90deg, #10b981, #059669);"></div>
+              </div>
+            </div>
+          `;
         }
         div.innerHTML = html;
       });
@@ -476,9 +526,9 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       let captionText = "";
 
       if (specificEpName) {
-        captionText = `🔥 <b>NEW EPISODE RELEASED!</b> 🔥\n\n📌 <b>Anime:</b> ${movieData.title}\n🎉 <b>Episode:</b> ${specificEpName}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️ <b>Download Episode Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+        captionText = `🔥 <b>NEW EPISODE RELEASED!</b> 🔥\n\n📌 <b>Anime:</b> ${movieData.title}\n🎉 <b>Episode:</b> ${specificEpName}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️️ <b>Download Episode Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
       } else if (isEditMode) {
-        captionText = `🎬 <b>ANIME UPDATED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️️ <b>Watch & Download Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+        captionText = `🎬 <b>ANIME UPDATED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️ <b>Watch & Download Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
       } else {
         captionText = `🎬 <b>NEW ANIME UPLOADED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n✨ Watch & Download in HD Quality (480p, 720p, 1080p)\n\n⬇️ <b>Watch & Download Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
       }
@@ -568,7 +618,6 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       if (qualities && qualities.length > 0) {
         qualities.forEach(q => addQualityRowDirect(qList, q.label, q.url));
       } else {
-        // Always populate default 3 qualities!
         addQualityRowDirect(qList, "480p x264 [Size: 120mb]", "");
         addQualityRowDirect(qList, "720p x264 [Size: 242mb]", "");
         addQualityRowDirect(qList, "1080p x265 [Size: 460mb]", "");
@@ -721,7 +770,6 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       renderAdminList(filtered);
     };
 
-    // REDESIGNED: Movie Item List Layout
     function renderAdminList(list) {
       const itemsDiv = document.getElementById('movie-items');
       itemsDiv.innerHTML = "";
