@@ -66,14 +66,15 @@
     
     .total-posts-badge { background: #0284c7; color: #ffffff; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
 
-    /* Movie Item */
-    .movie-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; background: #0f172a; padding: 10px; margin-top: 8px; border-radius: 8px; border: 1px solid #334155; }
-    .admin-item-info { flex: 1; overflow: hidden; padding-right: 4px; }
-    .admin-thumb-img { width: 45px; height: 60px; object-fit: cover; border-radius: 6px; flex-shrink: 0; border: 1px solid #38bdf8; background: #1e293b; }
-    .action-btns { display: flex; gap: 3px; flex-shrink: 0; flex-wrap: wrap; }
-    .btn-sm { padding: 5px 7px; font-size: 11px; width: auto; margin: 0; }
+    /* Redesigned Movie Item Card Layout */
+    .movie-item { display: flex; flex-direction: column; background: #0f172a; padding: 12px; margin-top: 10px; border-radius: 8px; border: 1px solid #334155; }
+    .movie-item-top { display: flex; gap: 12px; align-items: flex-start; }
+    .admin-thumb-img { width: 55px; height: 75px; object-fit: cover; border-radius: 6px; flex-shrink: 0; border: 1px solid #38bdf8; background: #1e293b; }
+    .admin-item-info { flex: 1; font-size: 14px; line-height: 1.4; word-break: break-word; }
+    .action-btns { display: flex; gap: 6px; margin-top: 10px; padding-top: 8px; border-top: 1px solid #1e293b; flex-wrap: wrap; }
+    .btn-sm { padding: 6px 10px; font-size: 12px; width: auto; margin: 0; flex: 1; text-align: center; }
     .btn-bump { background: #0284c7; }
-    .btn-move { background: #475569; }
+    .btn-move { background: #334155; max-width: 45px; }
     .btn-edit { background: #d97706; }
     .btn-delete { background: #dc2626; }
 
@@ -122,7 +123,7 @@
         <div class="stat-label">📅 গত ৩০ দিন (১ মাস)</div>
         <div class="stat-num" id="stat-30days">0</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card full-width">
         <div class="stat-label">🌐 সর্বমোট ভিজিটর</div>
         <div class="stat-num" id="stat-total">0</div>
       </div>
@@ -145,7 +146,7 @@
         </select>
       </div>
       <div class="form-group">
-        <label>📋 একসাথে সব ডাউনলোড লিংক পেস্ট করুন (ধারাবাহিকভােব):</label>
+        <label>📋 একসাথে সব ডাউনলোড লিংক পেস্ট করুন (নিচে নিচে বা এক লাইনে):</label>
         <textarea id="ai-raw-links" rows="5" placeholder="https://hubcloud.ist/drive/svob4vgbmvsvnq3
 https://hubcloud.ist/drive/llv4alnpqt7qqpa
 https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
@@ -287,11 +288,9 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // EXACT TELEGRAM & GEMINI API CREDENTIALS
     const TELEGRAM_BOT_TOKEN = "8841045606:AAFmQGtoc7yylALdEyDFvOGCi72TVBl6MkY";
     const TELEGRAM_CHAT_ID = "@animedownloadweb";
     const TARGET_WEBSITE = "https://anime-download-seven.vercel.app/";
-    const GEMINI_API_KEY = "AQ.Ab8RN6I6POOChmLJaVUyi6NomofBEmp1M1-c_E1nAycQY10Nxw";
 
     const SECRET_PASS = "arafat01721313101";
     let editingId = null;
@@ -377,7 +376,7 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       });
     }
 
-    // AI Bulk Link Processing Function
+    // Advanced Link Parsing: Handles newlines AND concatenated links (like ...abchttps://...)
     window.processAILinks = function() {
       const prefix = document.getElementById('ai-prefix').value.trim() || "https://";
       const qualityTag = document.getElementById('ai-quality-tag').value;
@@ -388,18 +387,16 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
         return;
       }
 
-      // Split raw lines and filter links containing prefix
-      const lines = rawText.split('\n');
+      const escapedPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(`(?=${escapedPrefix})`, 'g');
+      let rawParts = rawText.split(regex);
       const extractedLinks = [];
 
-      lines.forEach(line => {
-        let trimmed = line.trim();
-        if (trimmed.includes(prefix)) {
-          let linkStartIndex = trimmed.indexOf(prefix);
-          let link = trimmed.substring(linkStartIndex).trim();
-          if (link) extractedLinks.push(link);
-        } else if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
-          extractedLinks.push(trimmed);
+      rawParts.forEach(part => {
+        let trimmed = part.trim();
+        if (trimmed.startsWith(prefix) || trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+          let cleanUrl = trimmed.split(/\s+/)[0];
+          if (cleanUrl) extractedLinks.push(cleanUrl);
         }
       });
 
@@ -414,12 +411,10 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
         let existingBoxes = container.querySelectorAll('.ep-box');
         
         if (index < existingBoxes.length) {
-          // Append quality row to existing episode box
           let epBox = existingBoxes[index];
           let qList = epBox.querySelector('.qualities-list');
           addQualityRowDirect(qList, qualityTag, linkUrl);
         } else {
-          // Create new episode box and append quality
           let epNum = index + 1;
           let epNameStr = `Episode: ${epNum < 10 ? '0' + epNum : epNum}`;
           addEpisodeBox(epNameStr, false, "30/09/2026", [{ label: qualityTag, url: linkUrl }]);
@@ -430,7 +425,6 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       document.getElementById('ai-raw-links').value = "";
     };
 
-    // Auto Telegram Notification Sender
     function sendTelegramNotification(movieData, isEditMode, specificEpName) {
       const tgMode = document.getElementById('telegram-mode').value;
       if (tgMode === 'OFF' && !specificEpName) return;
@@ -489,7 +483,7 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       alert("⚡ ১০টি র‍্যাঙ্কিং SEO কিওয়ার্ড অটো-জেনারেট করা হয়েছে!");
     };
 
-    // FIXED Episode Box Layout
+    // RESTORED: Default 3 Quality Rows on Episode Box Creation
     window.addEpisodeBox = function(epName = "", isNew = false, epDate = "", qualities = [], notifyTg = false) {
       const container = document.getElementById('episodes-container');
       const epDiv = document.createElement('div');
@@ -530,12 +524,17 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       const qList = epDiv.querySelector('.qualities-list');
       if (qualities && qualities.length > 0) {
         qualities.forEach(q => addQualityRowDirect(qList, q.label, q.url));
+      } else {
+        // Always populate default 3 qualities!
+        addQualityRowDirect(qList, "480p x264 [Size: 120mb]", "");
+        addQualityRowDirect(qList, "720p x264 [Size: 242mb]", "");
+        addQualityRowDirect(qList, "1080p x265 [Size: 460mb]", "");
       }
     };
 
     window.addQualityRow = function(btn) {
       const qList = btn.previousElementSibling;
-      addQualityRowDirect(qList, "480p x264 [Size: 120mb]", "");
+      addQualityRowDirect(qList, "", "");
     };
 
     function addQualityRowDirect(qListElement, labelVal = "", urlVal = "") {
@@ -679,6 +678,7 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       renderAdminList(filtered);
     };
 
+    // REDESIGNED: Movie Item List Layout
     function renderAdminList(list) {
       const itemsDiv = document.getElementById('movie-items');
       itemsDiv.innerHTML = "";
@@ -688,7 +688,7 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
         return;
       }
 
-      list.forEach((movie, idx) => {
+      list.forEach((movie) => {
         const catDisplay = Array.isArray(movie.category) ? movie.category.join(', ') : (movie.category || '');
         const tickBadge = movie.isVerified ? `<span class="blue-tick" title="External Link Marked">✓</span>` : '';
         const pinBadge = movie.isPinned ? `<span class="pin-tag" title="Pinned to Top">📌</span>` : '';
@@ -696,10 +696,13 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
 
         itemsDiv.innerHTML += `
           <div class="movie-item">
-            <div class="admin-item-info">
-              <strong>${movie.title}</strong> ${pinBadge} ${tickBadge} <br><small style="color:#38bdf8;">[${catDisplay}]</small>
+            <div class="movie-item-top">
+              <img src="${posterUrl}" alt="Poster" class="admin-thumb-img" onerror="this.onerror=null;this.src='https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png';">
+              <div class="admin-item-info">
+                <strong style="color:#f8fafc;">${movie.title}</strong> ${pinBadge} ${tickBadge} <br>
+                <small style="color:#38bdf8;">[${catDisplay}]</small>
+              </div>
             </div>
-            <img src="${posterUrl}" alt="Poster" class="admin-thumb-img" onerror="this.onerror=null;this.src='https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png';">
             <div class="action-btns">
               <button class="btn-sm btn-move" title="উপরে সরান" onclick="movePostPosition('${movie.id}', 'up')">⬆️</button>
               <button class="btn-sm btn-move" title="নিচে সরান" onclick="movePostPosition('${movie.id}', 'down')">⬇️</button>
@@ -712,7 +715,6 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       });
     }
 
-    // Up / Down Reordering Function
     window.movePostPosition = function(id, direction) {
       const idx = allAdminMoviesList.findIndex(m => m.id === id);
       if (idx === -1) return;
@@ -727,7 +729,6 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       const currentMovie = allAdminMoviesList[idx];
       const targetMovie = allAdminMoviesList[targetIdx];
 
-      // Swap timestamps in Database to re-order
       const tempTime = currentMovie.timestamp || Date.now();
       const targetTime = targetMovie.timestamp || (Date.now() - 1000);
 
@@ -800,4 +801,4 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
     addEpisodeBox();
   </script>
 </body>
-                                          </html>
+        </html>
