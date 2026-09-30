@@ -73,9 +73,10 @@
 
     /* Episode Box Styling */
     .ep-box { background: #0f172a; border: 1px solid #38bdf8; border-radius: 10px; padding: 15px; margin-top: 15px; }
-    .ep-header-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+    .ep-header-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
     .ep-header-row input[type="text"] { flex: 2; font-weight: bold; color: #38bdf8; }
-    .checkbox-label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #ef4444; cursor: pointer; white-space: nowrap; font-weight: bold; }
+    .checkbox-label { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #ef4444; cursor: pointer; white-space: nowrap; font-weight: bold; }
+    .checkbox-label.tg-ep-label { color: #229ed9; }
     .checkbox-label input { width: auto; }
 
     /* Quality Row Styling */
@@ -265,16 +266,23 @@
       </div>
 
       <!-- Options: Verified Blue Tick, Pin to Top & Telegram Switch -->
-      <div class="form-group" style="background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid #38bdf8; display: flex; flex-direction: column; gap: 8px;">
+      <div class="form-group" style="background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid #38bdf8; display: flex; flex-direction: column; gap: 10px;">
         <label class="cat-check-item" style="color: #38bdf8; font-weight: bold;">
           <input type="checkbox" id="is-verified"> 🟦 External Link Badge (Blue Tick চিহ্নিত করুন)
         </label>
         <label class="cat-check-item" style="color: #f59e0b; font-weight: bold;">
           <input type="checkbox" id="is-pinned"> 📌 Pin to Top (ইউজার প্যানেলে সবার উপরে পিন রাখুন)
         </label>
-        <label class="cat-check-item" style="color: #229ed9; font-weight: bold;">
-          <input type="checkbox" id="send-telegram" checked> ✈️ Send Telegram Notification (টেলিগ্রাম চ্যানেলে অটো মেসেজ পাঠান)
-        </label>
+        
+        <!-- Telegram Mode 3-Way Selection -->
+        <div style="border-top: 1px solid #334155; padding-top: 8px;">
+          <label style="color: #229ed9; font-weight: bold; margin-bottom: 4px;">✈️ Telegram Notification Mode:</label>
+          <select id="telegram-mode" style="border-color: #229ed9;">
+            <option value="ALWAYS">Always Enable (সবসময় টেলিগ্রামে নোটিফিকেশন যাবে)</option>
+            <option value="ONCE">Send Once (শুধু এই পোস্টের জন্য যাবে, পরে বন্ধ হবে)</option>
+            <option value="OFF" selected>OFF (টেলিগ্রামে কোনো মেসেজ পাঠাবে না)</option>
+          </select>
+        </div>
       </div>
 
       <div style="display: flex; gap: 10px;">
@@ -352,8 +360,8 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // EXACT EMBEDDED TELEGRAM BOT CONFIGURATION
-    const TELEGRAM_BOT_TOKEN = "8841045606:AAFmQGtoc7yylALdEyDFvOGCi72TVB16mkY";
+    // EXACT TELEGRAM BOT CREDENTIALS EMBEDDED
+    const TELEGRAM_BOT_TOKEN = "8841045606:AAFmQGtoc7yylALdEyDFvOGCi72TVBl6MkY";
     const TELEGRAM_CHAT_ID = "@animedownloadweb";
 
     const SECRET_PASS = "arafat01721313101";
@@ -418,18 +426,18 @@
       });
     }
 
-    // Auto Telegram Notification Sender
-    function sendTelegramNotification(movieData, isEditMode) {
-      if (!document.getElementById('send-telegram').checked) return;
+    // Advanced Auto Telegram Notification Logic
+    function sendTelegramNotification(movieData, isEditMode, specificEpName) {
+      const tgMode = document.getElementById('telegram-mode').value;
+      if (tgMode === 'OFF' && !specificEpName) return;
 
       const cats = Array.isArray(movieData.category) ? movieData.category.join(', ') : movieData.category;
-      let hasNewEp = movieData.episodes && movieData.episodes.some(e => e.isNew);
-      let latestEpName = hasNewEp ? movieData.episodes.find(e => e.isNew).episodeName : "";
-
       let captionText = "";
 
-      if (isEditMode && hasNewEp) {
-        captionText = `🔥 <b>NEW EPISODE RELEASED!</b> 🔥\n\n📌 <b>Anime:</b> ${movieData.title}\n🎉 <b>Episode:</b> ${latestEpName} [NEW]\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️ <b>Download Episode Now:</b>\nhttps://limon11.github.io\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+      if (specificEpName) {
+        captionText = `🔥 <b>NEW EPISODE RELEASED!</b> 🔥\n\n📌 <b>Anime:</b> ${movieData.title}\n🎉 <b>Episode:</b> ${specificEpName}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️ <b>Download Episode Now:</b>\nhttps://limon11.github.io\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+      } else if (isEditMode) {
+        captionText = `🎬 <b>ANIME UPDATED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️ <b>Watch & Download Now:</b>\nhttps://limon11.github.io\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
       } else {
         captionText = `🎬 <b>NEW ANIME UPLOADED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n✨ Watch & Download in HD Quality (480p, 720p, 1080p)\n\n⬇️ <b>Download Link:</b>\nhttps://limon11.github.io\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
       }
@@ -443,7 +451,15 @@
           caption: captionText,
           parse_mode: 'HTML'
         })
-      }).catch(err => console.error("Telegram Post Failed:", err));
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log("Telegram Response:", data);
+        if (tgMode === 'ONCE') {
+          document.getElementById('telegram-mode').value = 'OFF';
+        }
+      })
+      .catch(err => console.error("Telegram Post Error:", err));
     }
 
     window.generateAutoKeywords = function() {
@@ -470,7 +486,7 @@
       alert("⚡ ১০টি র‍্যাঙ্কিং SEO কিওয়ার্ড অটো-জেনারেট করা হয়েছে!");
     };
 
-    window.addEpisodeBox = function(epName = "", isNew = false, epDate = "", qualities = []) {
+    window.addEpisodeBox = function(epName = "", isNew = false, epDate = "", qualities = [], notifyTg = false) {
       const container = document.getElementById('episodes-container');
       const epDiv = document.createElement('div');
       epDiv.className = 'ep-box';
@@ -483,6 +499,9 @@
           <input type="text" placeholder="এপিসোড নাম (যেমন: Episode: 01)" class="ep-name" value="${defaultName}" required>
           <label class="checkbox-label">
             <input type="checkbox" class="ep-is-new" ${isNew ? 'checked' : ''}> [New] Tag
+          </label>
+          <label class="checkbox-label tg-ep-label">
+            <input type="checkbox" class="ep-notify-tg" ${notifyTg ? 'checked' : ''}> ✈️ Alert Telegram
           </label>
         </div>
         <div class="ep-header-row">
@@ -532,7 +551,7 @@
       document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = false);
       document.getElementById('is-verified').checked = false;
       document.getElementById('is-pinned').checked = false;
-      document.getElementById('send-telegram').checked = true;
+      document.getElementById('telegram-mode').value = 'OFF';
       document.getElementById('submit-btn').innerText = "Publish Anime";
       document.getElementById('cancel-edit-btn').classList.add('hidden');
       document.getElementById('episodes-container').innerHTML = '';
@@ -554,12 +573,18 @@
 
       const epBoxes = document.querySelectorAll('.ep-box');
       const episodes = [];
+      let tgEpNotifyName = null;
 
       epBoxes.forEach(box => {
         const epName = box.querySelector('.ep-name').value;
         const isNew = box.querySelector('.ep-is-new').checked;
+        const notifyTg = box.querySelector('.ep-notify-tg').checked;
         const epDate = box.querySelector('.ep-date').value || "30/09/2026";
         
+        if (notifyTg && epName) {
+          tgEpNotifyName = epName;
+        }
+
         const qLabels = box.querySelectorAll('.q-label');
         const qUrls = box.querySelectorAll('.q-url');
         const qualities = [];
@@ -603,14 +628,14 @@
 
       if (editingId) {
         set(ref(db, 'movies/' + editingId), movieData).then(() => {
-          sendTelegramNotification(movieData, isEdit);
+          sendTelegramNotification(movieData, isEdit, tgEpNotifyName);
           alert("সফলভাবে আপডেট করা হয়েছে!");
           resetForm();
         });
       } else {
         const newRef = push(ref(db, 'movies'));
         set(newRef, movieData).then(() => {
-          sendTelegramNotification(movieData, false);
+          sendTelegramNotification(movieData, false, tgEpNotifyName);
           alert("সফলভাবে পোস্ট করা হয়েছে!");
           resetForm();
         });
@@ -699,7 +724,7 @@
       document.getElementById('poster').value = movie.poster || '';
       document.getElementById('is-verified').checked = !!movie.isVerified;
       document.getElementById('is-pinned').checked = !!movie.isPinned;
-      document.getElementById('send-telegram').checked = true;
+      document.getElementById('telegram-mode').value = 'OFF';
 
       document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = false);
       if (movie.category) {
@@ -722,10 +747,10 @@
       
       if (movie.episodes && movie.episodes.length > 0) {
         movie.episodes.forEach(ep => {
-          addEpisodeBox(ep.episodeName, ep.isNew, ep.date, ep.qualities);
+          addEpisodeBox(ep.episodeName, ep.isNew, ep.date, ep.qualities, false);
         });
       } else if (movie.links && movie.links.length > 0) {
-        addEpisodeBox("Episode: 01", false, "30/09/2026", movie.links);
+        addEpisodeBox("Episode: 01", false, "30/09/2026", movie.links, false);
       } else {
         addEpisodeBox();
       }
@@ -744,4 +769,4 @@
     addEpisodeBox();
   </script>
 </body>
-          </html>
+  </html>
