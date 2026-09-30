@@ -110,6 +110,17 @@
       box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
     }
     
+    .total-posts-badge {
+      background: #0284c7;
+      color: #ffffff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
     /* Movie Item with Thumbnail */
     .movie-item { 
       display: flex; 
@@ -160,6 +171,15 @@
       font-weight: bold;
       font-size: 12px;
       margin-left: 2px;
+    }
+    
+    .btn-auto-kw {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      color: #fff;
+      font-size: 12px;
+      padding: 6px 12px;
+      width: auto;
+      margin-top: 5px;
     }
   </style>
 </head>
@@ -225,7 +245,7 @@
         <input type="url" id="poster" placeholder="https://i.ibb.co/..." required>
       </div>
 
-      <!-- Multiple Category Checkbox Section (Updated Adult 18+) -->
+      <!-- Multiple Category Checkbox Grid -->
       <div class="form-group">
         <label>ক্যাটাগরি / Genre (একাধিক সিলেক্ট করুন):</label>
         <div class="category-checkbox-grid">
@@ -239,6 +259,8 @@
           <label class="cat-check-item"><input type="checkbox" value="Sci-Fi" class="cat-checkbox"> Sci-Fi</label>
           <label class="cat-check-item"><input type="checkbox" value="Supernatural" class="cat-checkbox"> Supernatural</label>
           <label class="cat-check-item"><input type="checkbox" value="Drama" class="cat-checkbox"> Drama</label>
+          <label class="cat-check-item"><input type="checkbox" value="Comedy" class="cat-checkbox"> Comedy</label>
+          <label class="cat-check-item"><input type="checkbox" value="Movies" class="cat-checkbox"> Movies</label>
         </div>
       </div>
 
@@ -269,8 +291,11 @@
       </div>
 
       <div class="form-group">
-        <label>SEO Keywords (Google Search Console-এর জন্য)</label>
-        <textarea id="keywords" rows="2" placeholder="কমা দিয়ে আলাদা করে কিওয়ার্ড লিখুন... যেমন: solo leveling episode 1 hindi, solo leveling download 720p"></textarea>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <label>SEO Keywords (Google Search Console-এর জন্য)</label>
+          <button type="button" class="btn-auto-kw" onclick="generateAutoKeywords()">⚡ Auto-Generate Keywords</button>
+        </div>
+        <textarea id="keywords" rows="3" placeholder="কমা দিয়ে আলাদা করে কিওয়ার্ড লিখুন... অথবা ওপরের Auto-Generate বাটনে চাপ দিন"></textarea>
       </div>
 
       <div class="form-group">
@@ -291,7 +316,9 @@
 
     <!-- Published Anime Items & Search -->
     <div class="movie-list">
-      <h3 style="color: #38bdf8; margin-bottom: 12px;">🔍 পোস্ট করা এনিমেশন এডিট বা খুজুন</h3>
+      <h3 style="color: #38bdf8; margin-bottom: 8px;">🔍 পোস্ট করা এনিমেশন এডিট বা খুজুন</h3>
+      
+      <div id="total-post-count" class="total-posts-badge">সর্বমোট এনিমেশন পোস্ট: 0 টি</div>
       
       <input type="text" id="admin-search-input" class="admin-search-input" placeholder="এনিমেশনের নাম লিখে খুঁজুন..." oninput="filterAdminMovies()">
       
@@ -304,7 +331,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, push, set, update, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // AUTOMATICALLY MARK THIS DEVICE AS ADMIN
     try {
       localStorage.setItem('isAdminDevice', 'true');
     } catch(e) { console.error(e); }
@@ -385,6 +411,35 @@
       });
     }
 
+    // Auto Generate Keywords Logic
+    window.generateAutoKeywords = function() {
+      const title = document.getElementById('title').value.trim();
+      const lang = document.getElementById('language').value.trim() || "Hindi Dub";
+      
+      if (!title) {
+        alert("অনুগ্রহ করে আগে এনিমেশনের নাম (Title) লিখুন!");
+        return;
+      }
+
+      const tLower = title.toLowerCase();
+      const kwSet = [
+        tLower,
+        `${tLower} download`,
+        `${tLower} hindi dubbed`,
+        `${tLower} english subbed`,
+        `${tLower} 480p 720p 1080p`,
+        `${tLower} all episodes download`,
+        `${tLower} direct download link`,
+        `${tLower} watch online`,
+        `${tLower} HD download`,
+        `${tLower} anime download bd`
+      ];
+
+      document.getElementById('keywords').value = kwSet.join(', ');
+      alert("⚡ ১০টি র‍্যাঙ্কিং SEO কিওয়ার্ড অটো-জেনারেট করা হয়েছে!");
+    };
+
+    // Default 3 Quality Option Boxes (480p, 720p, 1080p)
     window.addEpisodeBox = function(epName = "", isNew = false, epDate = "", qualities = []) {
       const container = document.getElementById('episodes-container');
       const epDiv = document.createElement('div');
@@ -419,6 +474,7 @@
       if (qualities && qualities.length > 0) {
         qualities.forEach(q => addQualityRowDirect(qList, q.label, q.url));
       } else {
+        addQualityRowDirect(qList, "480p x264 [Size: 120mb]", "");
         addQualityRowDirect(qList, "720p x264 [Size: 242mb]", "");
         addQualityRowDirect(qList, "1080p x265 [Size: 460mb]", "");
       }
@@ -433,7 +489,7 @@
       const qRow = document.createElement('div');
       qRow.className = 'quality-row';
       qRow.innerHTML = `
-        <input type="text" placeholder="কোয়ালিটি/সাইজ (যেমন: 720p 250MB)" class="q-label" value="${labelVal}" required>
+        <input type="text" placeholder="কোয়ালিটি/সাইজ (যেমন: 480p 120MB)" class="q-label" value="${labelVal}" required>
         <input type="url" placeholder="আসল ডাউনলোড লিংক" class="q-url" value="${urlVal}" required>
         <button type="button" class="btn-remove-q" onclick="this.parentElement.remove()">✕</button>
       `;
@@ -545,6 +601,7 @@
           return (b.timestamp || 0) - (a.timestamp || 0);
         });
 
+        document.getElementById('total-post-count').innerText = `সর্বমোট এনিমেশন পোস্ট: ${allAdminMoviesList.length} টি`;
         renderAdminList(allAdminMoviesList);
       });
     }
@@ -589,7 +646,6 @@
       });
     }
 
-    // Quick Bump to Top Function
     window.bumpToTop = function(id) {
       update(ref(db, 'movies/' + id), {
         timestamp: Date.now()
@@ -652,4 +708,4 @@
     addEpisodeBox();
   </script>
 </body>
-                                                 </html>
+          </html>
