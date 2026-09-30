@@ -3,12 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Secret Admin Panel - Anime Download</title>
+  <title>Admin Panel - Anime Download</title>
   <style>
     * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
     body { background: #0f172a; color: #f8fafc; padding: 15px; }
     .container { max-width: 650px; margin: auto; background: #1e293b; padding: 20px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-    h2 { text-align: center; margin-bottom: 20px; color: #38bdf8; }
+    h2 { text-align: center; margin-bottom: 15px; color: #38bdf8; }
+    
+    /* Nav Tabs */
+    .nav-tabs { display: flex; gap: 8px; margin-bottom: 20px; background: #0f172a; padding: 6px; border-radius: 8px; border: 1px solid #334155; }
+    .tab-btn { flex: 1; padding: 10px; background: transparent; color: #94a3b8; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 0; }
+    .tab-btn.active { background: #0284c7; color: #fff; }
+
     .form-group { margin-bottom: 15px; }
     label { display: block; margin-bottom: 5px; font-size: 14px; color: #cbd5e1; font-weight: 600; }
     input, select, textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #fff; font-size: 14px; }
@@ -16,68 +22,28 @@
     button:hover { background: #1d4ed8; }
     
     /* Analytics Dashboard Grid */
-    .analytics-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 25px;
-    }
-    .stat-card {
-      background: #0f172a;
-      border: 1px solid #334155;
-      padding: 12px;
-      border-radius: 8px;
-      text-align: center;
-    }
+    .analytics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 25px; }
+    .stat-card { background: #0f172a; border: 1px solid #334155; padding: 12px; border-radius: 8px; text-align: center; }
     .stat-card.full-width { grid-column: span 2; border-color: #38bdf8; background: #111e38; }
     .stat-num { font-size: 20px; font-weight: bold; color: #38bdf8; margin-top: 4px; }
     .stat-label { font-size: 12px; color: #94a3b8; font-weight: 600; }
 
-    .admin-device-badge {
-      background: #065f46;
-      color: #34d399;
-      border: 1px solid #059669;
-      padding: 8px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 15px;
-    }
+    /* AI Processor Box */
+    .ai-box { background: #091e3a; border: 1px dashed #38bdf8; border-radius: 10px; padding: 15px; margin-bottom: 20px; }
+    .ai-box h3 { color: #38bdf8; font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
 
     /* Multiple Category Checkbox Grid */
-    .category-checkbox-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      background: #0f172a;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #334155;
-    }
-    .cat-check-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: #cbd5e1;
-      cursor: pointer;
-      font-weight: 500;
-    }
-    .cat-check-item input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: #0284c7;
-      cursor: pointer;
-    }
+    .category-checkbox-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid #334155; }
+    .cat-check-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #cbd5e1; cursor: pointer; font-weight: 500; }
+    .cat-check-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: #0284c7; cursor: pointer; }
 
-    /* Episode Box Styling */
+    /* Episode Box Styling Fixed UI */
     .ep-box { background: #0f172a; border: 1px solid #38bdf8; border-radius: 10px; padding: 15px; margin-top: 15px; }
-    .ep-header-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
-    .ep-header-row input[type="text"] { flex: 2; font-weight: bold; color: #38bdf8; }
+    .ep-header-checkboxes { display: flex; gap: 15px; margin-bottom: 10px; flex-wrap: wrap; }
     .checkbox-label { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #ef4444; cursor: pointer; white-space: nowrap; font-weight: bold; }
     .checkbox-label.tg-ep-label { color: #229ed9; }
     .checkbox-label input { width: auto; }
+    .ep-name-input { width: 100%; font-weight: bold; color: #38bdf8; margin-bottom: 10px; }
 
     /* Quality Row Styling */
     .quality-container { background: #1e293b; border-radius: 8px; padding: 10px; margin-top: 10px; }
@@ -92,96 +58,29 @@
     .btn-cancel { background: #64748b; margin-top: 5px; }
     
     .login-box { max-width: 350px; margin: 100px auto; background: #1e293b; padding: 25px; border-radius: 10px; text-align: center; }
-    .hidden { display: none; }
+    .hidden { display: none !important; }
     
     /* Published Items & Search Styling */
     .movie-list { margin-top: 30px; border-top: 2px dashed #334155; padding-top: 20px; }
-    .admin-search-input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #38bdf8;
-      background: #0f172a;
-      color: #fff;
-      font-size: 14px;
-      margin-bottom: 15px;
-      outline: none;
-    }
-    .admin-search-input:focus {
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
-    }
+    .admin-search-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #38bdf8; background: #0f172a; color: #fff; font-size: 14px; margin-bottom: 15px; outline: none; }
     
-    .total-posts-badge {
-      background: #0284c7;
-      color: #ffffff;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: bold;
-      display: inline-block;
-      margin-bottom: 10px;
-    }
+    .total-posts-badge { background: #0284c7; color: #ffffff; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
 
-    /* Movie Item with Thumbnail */
-    .movie-item { 
-      display: flex; 
-      align-items: center; 
-      justify-content: space-between;
-      gap: 8px; 
-      background: #0f172a; 
-      padding: 10px; 
-      margin-top: 8px; 
-      border-radius: 8px; 
-      border: 1px solid #334155; 
-    }
-    .admin-item-info {
-      flex: 1;
-      overflow: hidden;
-      padding-right: 4px;
-    }
-    .admin-thumb-img {
-      width: 45px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 6px;
-      flex-shrink: 0;
-      border: 1px solid #38bdf8;
-      background: #1e293b;
-    }
-    .action-btns { display: flex; gap: 4px; flex-shrink: 0; }
-    .btn-bump { background: #0284c7; padding: 6px 8px; font-size: 11px; width: auto; margin: 0; }
-    .btn-edit { background: #d97706; padding: 6px 8px; font-size: 11px; width: auto; margin: 0; }
-    .btn-delete { background: #dc2626; padding: 6px 8px; font-size: 11px; width: auto; margin: 0; }
+    /* Movie Item */
+    .movie-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; background: #0f172a; padding: 10px; margin-top: 8px; border-radius: 8px; border: 1px solid #334155; }
+    .admin-item-info { flex: 1; overflow: hidden; padding-right: 4px; }
+    .admin-thumb-img { width: 45px; height: 60px; object-fit: cover; border-radius: 6px; flex-shrink: 0; border: 1px solid #38bdf8; background: #1e293b; }
+    .action-btns { display: flex; gap: 3px; flex-shrink: 0; flex-wrap: wrap; }
+    .btn-sm { padding: 5px 7px; font-size: 11px; width: auto; margin: 0; }
+    .btn-bump { background: #0284c7; }
+    .btn-move { background: #475569; }
+    .btn-edit { background: #d97706; }
+    .btn-delete { background: #dc2626; }
 
-    /* Badges */
-    .blue-tick {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      background: #38bdf8;
-      color: #0f172a;
-      border-radius: 50%;
-      text-align: center;
-      line-height: 16px;
-      font-size: 11px;
-      font-weight: bold;
-      margin-left: 2px;
-    }
-    .pin-tag {
-      color: #f59e0b;
-      font-weight: bold;
-      font-size: 12px;
-      margin-left: 2px;
-    }
+    .blue-tick { display: inline-block; width: 16px; height: 16px; background: #38bdf8; color: #0f172a; border-radius: 50%; text-align: center; line-height: 16px; font-size: 11px; font-weight: bold; margin-left: 2px; }
+    .pin-tag { color: #f59e0b; font-weight: bold; font-size: 12px; margin-left: 2px; }
     
-    .btn-auto-kw {
-      background: linear-gradient(135deg, #d97706, #f59e0b);
-      color: #fff;
-      font-size: 12px;
-      padding: 6px 12px;
-      width: auto;
-      margin-top: 5px;
-    }
+    .btn-auto-kw { background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff; font-size: 12px; padding: 6px 12px; width: auto; margin-top: 5px; }
   </style>
 </head>
 <body>
@@ -197,14 +96,16 @@
 
   <!-- মূল এডমিন ড্যাশবোর্ড -->
   <div id="admin-dashboard" class="container hidden">
-    <h2>Anime Download Admin Panel</h2>
+    <h2>Anime Admin Panel</h2>
     
-    <div class="admin-device-badge">
-      🛡️ আপনার এই মোবাইলটি ভিজিটর গণনা থেকে ১০০% মুক্ত (Excluded from Analytics)
+    <!-- Tab Navigation -->
+    <div class="nav-tabs">
+      <button type="button" id="tab-btn-standard" class="tab-btn active" onclick="switchAdminTab('standard')">📊 Standard Admin</button>
+      <button type="button" id="tab-btn-ai" class="tab-btn" onclick="switchAdminTab('ai')">🤖 AI Admin</button>
     </div>
 
-    <!-- Realtime Analytics Dashboard -->
-    <div class="analytics-grid">
+    <!-- Realtime Analytics Dashboard (Only in Standard View) -->
+    <div id="analytics-section" class="analytics-grid">
       <div class="stat-card full-width">
         <div class="stat-label">🟢 বর্তমানে লাইভ অনলাইন ইউজার</div>
         <div class="stat-num" id="stat-live" style="color: #10b981;">0</div>
@@ -227,6 +128,32 @@
       </div>
     </div>
 
+    <!-- AI Bulk Link Processor Box (Only in AI View) -->
+    <div id="ai-importer-section" class="ai-box hidden">
+      <h3>🤖 Google AI Studio - Bulk Link Processor</h3>
+      <div class="form-group">
+        <label>🔗 Link Starter / Custom Prefix (লিংকের শুরু চিহ্নিত করুন):</label>
+        <input type="text" id="ai-prefix" value="https://" placeholder="যেমন: https:// বা https://hubcloud.ist/">
+      </div>
+      <div class="form-group">
+        <label>🎯 কোয়ালিটি ট্যাগ সিলেক্ট করুন:</label>
+        <select id="ai-quality-tag">
+          <option value="480p x264 [Size: 120mb]">480p x264 [Size: 120mb]</option>
+          <option value="720p x264 [Size: 242mb]">720p x264 [Size: 242mb]</option>
+          <option value="1080p x265 [Size: 460mb]">1080p x265 [Size: 460mb]</option>
+          <option value="4K UHD [Size: 1.2GB]">4K UHD [Size: 1.2GB]</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>📋 একসাথে সব ডাউনলোড লিংক পেস্ট করুন (ধারাবাহিকভােব):</label>
+        <textarea id="ai-raw-links" rows="5" placeholder="https://hubcloud.ist/drive/svob4vgbmvsvnq3
+https://hubcloud.ist/drive/llv4alnpqt7qqpa
+https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
+      </div>
+      <button type="button" style="background: linear-gradient(135deg, #0284c7, #2563eb);" onclick="processAILinks()">⚡ Process & Append Links To Episodes</button>
+    </div>
+
+    <!-- Main Entry Form -->
     <form id="movie-form">
       <div class="form-group">
         <label>টাইপ (Type)</label>
@@ -274,7 +201,7 @@
           <input type="checkbox" id="is-pinned"> 📌 Pin to Top (ইউজার প্যানেলে সবার উপরে পিন রাখুন)
         </label>
         
-        <!-- Telegram Mode 3-Way Selection -->
+        <!-- Telegram Mode -->
         <div style="border-top: 1px solid #334155; padding-top: 8px;">
           <label style="color: #229ed9; font-weight: bold; margin-bottom: 4px;">✈️ Telegram Notification Mode:</label>
           <select id="telegram-mode" style="border-color: #229ed9;">
@@ -325,9 +252,9 @@
       <button type="button" id="cancel-edit-btn" class="btn-cancel hidden" onclick="resetForm()">Cancel Editing</button>
     </form>
 
-    <!-- Published Anime Items & Search -->
-    <div class="movie-list">
-      <h3 style="color: #38bdf8; margin-bottom: 8px;">🔍 পোস্ট করা এনিমেশন এডিট বা খুজুন</h3>
+    <!-- Published Anime Items & Search (Only in Standard View) -->
+    <div id="published-list-section" class="movie-list">
+      <h3 style="color: #38bdf8; margin-bottom: 8px;">🔍 পোস্ট করা এনিমেশন এডিট, রি-অর্ডার বা খুজুন</h3>
       
       <div id="total-post-count" class="total-posts-badge">সর্বমোট এনিমেশন পোস্ট: 0 টি</div>
       
@@ -360,10 +287,11 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // EXACT TELEGRAM BOT CREDENTIALS EMBEDDED
+    // EXACT TELEGRAM & GEMINI API CREDENTIALS
     const TELEGRAM_BOT_TOKEN = "8841045606:AAFmQGtoc7yylALdEyDFvOGCi72TVBl6MkY";
     const TELEGRAM_CHAT_ID = "@animedownloadweb";
     const TARGET_WEBSITE = "https://anime-download-seven.vercel.app/";
+    const GEMINI_API_KEY = "AQ.Ab8RN6I6POOChmLJaVUyi6NomofBEmp1M1-c_E1nAycQY10Nxw";
 
     const SECRET_PASS = "arafat01721313101";
     let editingId = null;
@@ -380,6 +308,28 @@
         loadAnalytics();
       } else {
         alert("ভুল পাসওয়ার্ড!");
+      }
+    };
+
+    window.switchAdminTab = function(mode) {
+      const btnStd = document.getElementById('tab-btn-standard');
+      const btnAi = document.getElementById('tab-btn-ai');
+      const sectionAnalytics = document.getElementById('analytics-section');
+      const sectionAiImporter = document.getElementById('ai-importer-section');
+      const sectionPubList = document.getElementById('published-list-section');
+
+      if (mode === 'ai') {
+        btnAi.classList.add('active');
+        btnStd.classList.remove('active');
+        sectionAnalytics.classList.add('hidden');
+        sectionPubList.classList.add('hidden');
+        sectionAiImporter.classList.remove('hidden');
+      } else {
+        btnStd.classList.add('active');
+        btnAi.classList.remove('active');
+        sectionAnalytics.classList.remove('hidden');
+        sectionPubList.classList.remove('hidden');
+        sectionAiImporter.classList.add('hidden');
       }
     };
 
@@ -427,6 +377,59 @@
       });
     }
 
+    // AI Bulk Link Processing Function
+    window.processAILinks = function() {
+      const prefix = document.getElementById('ai-prefix').value.trim() || "https://";
+      const qualityTag = document.getElementById('ai-quality-tag').value;
+      const rawText = document.getElementById('ai-raw-links').value.trim();
+
+      if (!rawText) {
+        alert("অনুগ্রহ করে কিছু ডাউনলোড লিংক পেস্ট করুন!");
+        return;
+      }
+
+      // Split raw lines and filter links containing prefix
+      const lines = rawText.split('\n');
+      const extractedLinks = [];
+
+      lines.forEach(line => {
+        let trimmed = line.trim();
+        if (trimmed.includes(prefix)) {
+          let linkStartIndex = trimmed.indexOf(prefix);
+          let link = trimmed.substring(linkStartIndex).trim();
+          if (link) extractedLinks.push(link);
+        } else if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+          extractedLinks.push(trimmed);
+        }
+      });
+
+      if (extractedLinks.length === 0) {
+        alert(`কোনো লিংক খুঁজে পাওয়া যায়নি! নিশ্চিত করুন লিংকের মধ্যে "${prefix}" রয়েছে।`);
+        return;
+      }
+
+      const container = document.getElementById('episodes-container');
+      
+      extractedLinks.forEach((linkUrl, index) => {
+        let existingBoxes = container.querySelectorAll('.ep-box');
+        
+        if (index < existingBoxes.length) {
+          // Append quality row to existing episode box
+          let epBox = existingBoxes[index];
+          let qList = epBox.querySelector('.qualities-list');
+          addQualityRowDirect(qList, qualityTag, linkUrl);
+        } else {
+          // Create new episode box and append quality
+          let epNum = index + 1;
+          let epNameStr = `Episode: ${epNum < 10 ? '0' + epNum : epNum}`;
+          addEpisodeBox(epNameStr, false, "30/09/2026", [{ label: qualityTag, url: linkUrl }]);
+        }
+      });
+
+      alert(`⚡ সফলভাবে ${extractedLinks.length} টি এপিসোডে [${qualityTag}] লিংক যুক্ত করা হয়েছে!`);
+      document.getElementById('ai-raw-links').value = "";
+    };
+
     // Auto Telegram Notification Sender
     function sendTelegramNotification(movieData, isEditMode, specificEpName) {
       const tgMode = document.getElementById('telegram-mode').value;
@@ -455,7 +458,6 @@
       })
       .then(res => res.json())
       .then(data => {
-        console.log("Telegram Response:", data);
         if (tgMode === 'ONCE') {
           document.getElementById('telegram-mode').value = 'OFF';
         }
@@ -487,17 +489,17 @@
       alert("⚡ ১০টি র‍্যাঙ্কিং SEO কিওয়ার্ড অটো-জেনারেট করা হয়েছে!");
     };
 
+    // FIXED Episode Box Layout
     window.addEpisodeBox = function(epName = "", isNew = false, epDate = "", qualities = [], notifyTg = false) {
       const container = document.getElementById('episodes-container');
       const epDiv = document.createElement('div');
       epDiv.className = 'ep-box';
 
       const defaultDate = epDate || "30/09/2026";
-      const defaultName = epName || `Episode: 0${container.children.length + 1}`;
+      const defaultName = epName || `Episode: ${container.children.length + 1 < 10 ? '0' + (container.children.length + 1) : container.children.length + 1}`;
 
       epDiv.innerHTML = `
-        <div class="ep-header-row">
-          <input type="text" placeholder="এপিসোড নাম (যেমন: Episode: 01)" class="ep-name" value="${defaultName}" required>
+        <div class="ep-header-checkboxes">
           <label class="checkbox-label">
             <input type="checkbox" class="ep-is-new" ${isNew ? 'checked' : ''}> [New] Tag
           </label>
@@ -505,12 +507,17 @@
             <input type="checkbox" class="ep-notify-tg" ${notifyTg ? 'checked' : ''}> ✈️ Alert Telegram
           </label>
         </div>
-        <div class="ep-header-row">
+        
+        <div>
+          <input type="text" placeholder="এপিসোড নাম (যেমন: Episode: 01)" class="ep-name ep-name-input" value="${defaultName}" required>
+        </div>
+
+        <div style="margin-bottom: 10px;">
           <input type="text" placeholder="আপলোড তারিখ (যেমন: 30/09/2026)" class="ep-date" value="${defaultDate}">
         </div>
         
         <div class="quality-container">
-          <label style="font-size:12px; color:#94a3b8; margin-bottom:5px;">ডাউনলোড লিংক ও কোয়ালিটিসমূহ:</label>
+          <label style="font-size:12px; color:#94a3b8; margin-bottom:5px; display:block;">ডাউনলোড লিংক ও কোয়ালিটিসমূহ:</label>
           <div class="qualities-list"></div>
           <button type="button" class="btn-add-q" onclick="addQualityRow(this)">+ কোয়ালিটি লিংক যোগ করুন</button>
         </div>
@@ -523,16 +530,12 @@
       const qList = epDiv.querySelector('.qualities-list');
       if (qualities && qualities.length > 0) {
         qualities.forEach(q => addQualityRowDirect(qList, q.label, q.url));
-      } else {
-        addQualityRowDirect(qList, "480p x264 [Size: 120mb]", "");
-        addQualityRowDirect(qList, "720p x264 [Size: 242mb]", "");
-        addQualityRowDirect(qList, "1080p x265 [Size: 460mb]", "");
       }
     };
 
     window.addQualityRow = function(btn) {
       const qList = btn.previousElementSibling;
-      addQualityRowDirect(qList, "", "");
+      addQualityRowDirect(qList, "480p x264 [Size: 120mb]", "");
     };
 
     function addQualityRowDirect(qListElement, labelVal = "", urlVal = "") {
@@ -685,7 +688,7 @@
         return;
       }
 
-      list.forEach(movie => {
+      list.forEach((movie, idx) => {
         const catDisplay = Array.isArray(movie.category) ? movie.category.join(', ') : (movie.category || '');
         const tickBadge = movie.isVerified ? `<span class="blue-tick" title="External Link Marked">✓</span>` : '';
         const pinBadge = movie.isPinned ? `<span class="pin-tag" title="Pinned to Top">📌</span>` : '';
@@ -698,14 +701,41 @@
             </div>
             <img src="${posterUrl}" alt="Poster" class="admin-thumb-img" onerror="this.onerror=null;this.src='https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png';">
             <div class="action-btns">
-              <button class="btn-bump" title="সবচেয়ে উপরে নিয়ে আসুন" onclick="bumpToTop('${movie.id}')">⬆️ Bump</button>
-              <button class="btn-edit" onclick="editMovie('${movie.id}')">Edit</button>
-              <button class="btn-delete" onclick="deleteMovie('${movie.id}')">Delete</button>
+              <button class="btn-sm btn-move" title="উপরে সরান" onclick="movePostPosition('${movie.id}', 'up')">⬆️</button>
+              <button class="btn-sm btn-move" title="নিচে সরান" onclick="movePostPosition('${movie.id}', 'down')">⬇️</button>
+              <button class="btn-sm btn-bump" title="সবচেয়ে উপরে নিয়ে আসুন" onclick="bumpToTop('${movie.id}')">Bump</button>
+              <button class="btn-sm btn-edit" onclick="editMovie('${movie.id}')">Edit</button>
+              <button class="btn-sm btn-delete" onclick="deleteMovie('${movie.id}')">Delete</button>
             </div>
           </div>
         `;
       });
     }
+
+    // Up / Down Reordering Function
+    window.movePostPosition = function(id, direction) {
+      const idx = allAdminMoviesList.findIndex(m => m.id === id);
+      if (idx === -1) return;
+
+      let targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+
+      if (targetIdx < 0 || targetIdx >= allAdminMoviesList.length) {
+        alert("আর সরানো সম্ভব নয়!");
+        return;
+      }
+
+      const currentMovie = allAdminMoviesList[idx];
+      const targetMovie = allAdminMoviesList[targetIdx];
+
+      // Swap timestamps in Database to re-order
+      const tempTime = currentMovie.timestamp || Date.now();
+      const targetTime = targetMovie.timestamp || (Date.now() - 1000);
+
+      update(ref(db, 'movies/' + currentMovie.id), { timestamp: targetTime });
+      update(ref(db, 'movies/' + targetMovie.id), { timestamp: tempTime }).then(() => {
+        alert("পজিশন সফলভাবে পরিবর্তন করা হয়েছে!");
+      });
+    };
 
     window.bumpToTop = function(id) {
       update(ref(db, 'movies/' + id), {
@@ -770,4 +800,4 @@
     addEpisodeBox();
   </script>
 </body>
-  </html>
+          </html>
