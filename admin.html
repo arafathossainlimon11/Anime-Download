@@ -363,6 +363,7 @@
     // EXACT TELEGRAM BOT CREDENTIALS EMBEDDED
     const TELEGRAM_BOT_TOKEN = "8841045606:AAFmQGtoc7yylALdEyDFvOGCi72TVBl6MkY";
     const TELEGRAM_CHAT_ID = "@animedownloadweb";
+    const WEBSITE_URL = "https://anime-download-seven.vercel.app/";
 
     const SECRET_PASS = "arafat01721313101";
     let editingId = null;
@@ -435,11 +436,11 @@
       let captionText = "";
 
       if (specificEpName) {
-        captionText = `🔥 <b>NEW EPISODE RELEASED!</b> 🔥\n\n📌 <b>Anime:</b> ${movieData.title}\n🎉 <b>Episode:</b> ${specificEpName}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️ <b>Download Episode Now:</b>\nhttps://limon11.github.io\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+        captionText = `🔥 <b>NEW EPISODE RELEASED!</b> 🔥\n\n📌 <b>Anime:</b> ${movieData.title}\n🎉 <b>Episode:</b> ${specificEpName}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️ <b>Download Episode Now:</b>\n${WEBSITE_URL}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
       } else if (isEditMode) {
-        captionText = `🎬 <b>ANIME UPDATED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️ <b>Watch & Download Now:</b>\nhttps://limon11.github.io\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+        captionText = `🎬 <b>ANIME UPDATED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️ <b>Watch & Download Now:</b>\n${WEBSITE_URL}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
       } else {
-        captionText = `🎬 <b>NEW ANIME UPLOADED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n✨ Watch & Download in HD Quality (480p, 720p, 1080p)\n\n⬇️ <b>Download Link:</b>\nhttps://limon11.github.io\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+        captionText = `🎬 <b>NEW ANIME UPLOADED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n✨ Watch & Download in HD Quality (480p, 720p, 1080p)\n\n⬇️ <b>Download Link:</b>\n${WEBSITE_URL}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
       }
 
       fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
@@ -769,4 +770,4 @@
     addEpisodeBox();
   </script>
 </body>
-  </html>
+                                                  </html>
