@@ -433,6 +433,7 @@
     window.handleHeaderLogoClick = function() {
       popAd();
       showView('home-view');
+      filterCategory('All', null, false);
 
       logoClickCount++;
       clearTimeout(clickTimer);
@@ -471,6 +472,7 @@
     let selectedLink = "";
     let selectedTitle = "";
     let realDlAdClicked = false;
+    let currentCategory = "All";
 
     const DIRECT_AD_LINK = "https://www.profitableratecpmnetwork.com/ug9nqqybq?key=9f2fdc24609da9c7f62de27790487d6c";
 
@@ -586,11 +588,19 @@
       img.classList.add('loaded');
     };
 
+    // 📱 Mobile Physical Back Button Event Handling Fix
     window.onpopstate = function(event) {
-      if (event.state && event.state.view) {
-        showView(event.state.view, true);
+      if (event.state) {
+        if (event.state.view) {
+          showView(event.state.view, true);
+        }
+        if (event.state.view === 'home-view') {
+          const targetCat = event.state.cat || 'All';
+          filterCategory(targetCat, null, true);
+        }
       } else {
         showView('home-view', true);
+        filterCategory('All', null, true);
       }
     };
 
@@ -608,16 +618,24 @@
         return (b.timestamp || 0) - (a.timestamp || 0);
       });
 
-      filteredMovies = [...allMovies];
-      renderGrid();
+      filterCategory(currentCategory, null, true);
     });
 
-    window.filterCategory = function(cat, el) {
-      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-      if(el) el.classList.add('active');
+    // 🎯 Category Filter with Adult Exclusion & Back Button History Update
+    window.filterCategory = function(cat, el, isBack = false) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(b => {
+        const btnText = b.innerText.trim();
+        if (btnText === cat || (cat === 'All' && btnText === 'Home')) {
+          b.classList.add('active');
+        } else {
+          b.classList.remove('active');
+        }
+      });
       
       if(cat === 'All') {
-        filteredMovies = [...allMovies];
+        // Exclude Adult-only posts from Main Homepage
+        filteredMovies = allMovies.filter(m => !m.hideFromHome);
       } else {
         filteredMovies = allMovies.filter(m => {
           if (!m.category) return false;
@@ -630,14 +648,19 @@
       }
       currentPage = 1;
       renderGrid();
+
+      if (!isBack) {
+        history.pushState({ view: 'home-view', cat: cat }, '', '#cat-' + encodeURIComponent(cat));
+      }
     };
 
     window.handleSearch = function() {
       const q = document.getElementById('search-input').value.toLowerCase().trim();
-      filteredMovies = allMovies.filter(m => 
-        m.title.toLowerCase().includes(q) || 
-        (m.keywords && m.keywords.toLowerCase().includes(q))
-      );
+      filteredMovies = allMovies.filter(m => {
+        const matchTitle = m.title.toLowerCase().includes(q);
+        const matchKw = m.keywords && m.keywords.toLowerCase().includes(q);
+        return (matchTitle || matchKw) && !m.hideFromHome;
+      });
       currentPage = 1;
       renderGrid();
     };
@@ -858,12 +881,12 @@
       window.scrollTo(0, 0);
 
       if (!isBack) {
-        history.pushState({ view: viewId }, '', '#' + viewId);
+        history.pushState({ view: viewId, cat: currentCategory }, '', '#' + viewId);
       }
     }
 
     window.showView = showView;
-    history.replaceState({ view: 'home-view' }, '', '#home-view');
+    history.replaceState({ view: 'home-view', cat: 'All' }, '', '#home-view');
   </script>
 </body>
-    </html>
+  </html>
