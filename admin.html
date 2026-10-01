@@ -129,7 +129,7 @@
         <div class="stat-num" id="stat-today">0</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">🗓️ গত ৭ দিন</div>
+        <div class="stat-label">🗓️️ গত ৭ দিন</div>
         <div class="stat-num" id="stat-7days">0</div>
       </div>
       <div class="stat-card">
@@ -171,10 +171,9 @@
         </select>
       </div>
       <div class="form-group">
-        <label>📋 একসাথে সব ডাউনলোড লিংক পেস্ট করুন (নিচে নিচে বা এক লাইনে জোড়া লাগা):</label>
+        <label>📋 একসাথে সব ডাউনলোড লিংক পেস্ট করুন:</label>
         <textarea id="ai-raw-links" rows="5" placeholder="https://hubcloud.ist/drive/svob4vgbmvsvnq3
-https://hubcloud.ist/drive/llv4alnpqt7qqpa
-https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
+https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       </div>
       <button type="button" style="background: linear-gradient(135deg, #0284c7, #2563eb);" onclick="processAILinks()">⚡ Process & Append Links To Episodes</button>
     </div>
@@ -218,8 +217,14 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
         </div>
       </div>
 
-      <!-- Options: Verified Blue Tick, Pin to Top & Telegram Switch -->
+      <!-- Options: Adult Visibility, Verified Blue Tick, Pin to Top & Telegram Switch -->
       <div class="form-group" style="background: #0b0f19; padding: 12px; border-radius: 8px; border: 1px solid #38bdf8; display: flex; flex-direction: column; gap: 10px;">
+        
+        <!-- Adult 18+ Display Switch -->
+        <label class="cat-check-item" style="color: #ef4444; font-weight: bold;">
+          <input type="checkbox" id="hide-from-home"> 🔞 কেবল Adult 18+ সেকশনে দেখাবে (হোমপেজে লুকানো থাকবে)
+        </label>
+
         <label class="cat-check-item" style="color: #38bdf8; font-weight: bold;">
           <input type="checkbox" id="is-verified"> 🟦 External Link Badge (Blue Tick চিহ্নিত করুন)
         </label>
@@ -259,7 +264,7 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
           <label>SEO Keywords (Google Search Console-এর জন্য)</label>
           <button type="button" class="btn-auto-kw" onclick="generateAutoKeywords()">⚡ Auto-Generate Keywords</button>
         </div>
-        <textarea id="keywords" rows="3" placeholder="কমা দিয়ে আলাদা করে কিওয়ার্ড লিখুন... অথবা ওপরের Auto-Generate বাটনে চাপ দিন"></textarea>
+        <textarea id="keywords" rows="3" placeholder="কমা দিয়ে আলাদা করে কিওয়ার্ড লিখুন..."></textarea>
       </div>
 
       <div class="form-group">
@@ -469,7 +474,6 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       });
     }
 
-    // Advanced Link Parsing: Handles newlines AND concatenated links
     window.processAILinks = function() {
       const prefix = document.getElementById('ai-prefix').value.trim() || "https://";
       const qualityTag = document.getElementById('ai-quality-tag').value;
@@ -494,7 +498,7 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       });
 
       if (extractedLinks.length === 0) {
-        alert(`কোনো লিংক খুঁজে পাওয়া যায়নি! নিশ্চিত করুন লিংকের মধ্যে "${prefix}" রয়েছে।`);
+        alert(`কোনো লিংক খুঁজে পাওয়া যায়নি!`);
         return;
       }
 
@@ -514,7 +518,7 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
         }
       });
 
-      alert(`⚡ সফলভাবে ${extractedLinks.length} টি এপিসোডে [${qualityTag}] লিংক যুক্ত করা হয়েছে!`);
+      alert(`⚡ সফলভাবে ${extractedLinks.length} টি এপিসোডে লিংক যুক্ত করা হয়েছে!`);
       document.getElementById('ai-raw-links').value = "";
     };
 
@@ -526,11 +530,11 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       let captionText = "";
 
       if (specificEpName) {
-        captionText = `🔥 <b>NEW EPISODE RELEASED!</b> 🔥\n\n📌 <b>Anime:</b> ${movieData.title}\n🎉 <b>Episode:</b> ${specificEpName}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️️ <b>Download Episode Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+        captionText = `🔥 <b>NEW EPISODE RELEASED!</b> 🔥\n\n📌 <b>Anime:</b> ${movieData.title}\n🎉 <b>Episode:</b> ${specificEpName}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇ <b>Download Episode Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
       } else if (isEditMode) {
         captionText = `🎬 <b>ANIME UPDATED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️ <b>Watch & Download Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
       } else {
-        captionText = `🎬 <b>NEW ANIME UPLOADED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n✨ Watch & Download in HD Quality (480p, 720p, 1080p)\n\n⬇️ <b>Watch & Download Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+        captionText = `🎬 <b>NEW ANIME UPLOADED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n✨ Watch & Download in HD Quality\n\n⬇️ <b>Watch & Download Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
       }
 
       fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
@@ -555,7 +559,7 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
     window.generateAutoKeywords = function() {
       const title = document.getElementById('title').value.trim();
       if (!title) {
-        alert("অনুগ্রহ করে আগে এনিমেশনের নাম (Title) লিখুন!");
+        alert("অনুগ্রহ করে আগে এনিমেশনের নাম লিখুন!");
         return;
       }
       const tLower = title.toLowerCase();
@@ -576,7 +580,6 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       alert("⚡ ১০টি র‍্যাঙ্কিং SEO কিওয়ার্ড অটো-জেনারেট করা হয়েছে!");
     };
 
-    // RESTORED: Default 3 Quality Rows on Episode Box Creation
     window.addEpisodeBox = function(epName = "", isNew = false, epDate = "", qualities = [], notifyTg = false) {
       const container = document.getElementById('episodes-container');
       const epDiv = document.createElement('div');
@@ -633,7 +636,7 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       const qRow = document.createElement('div');
       qRow.className = 'quality-row';
       qRow.innerHTML = `
-        <input type="text" placeholder="কোয়ালিটি/সাইজ (যেমন: 480p 120MB)" class="q-label" value="${labelVal}" required>
+        <input type="text" placeholder="কোয়ালিটি/সাইজ" class="q-label" value="${labelVal}" required>
         <input type="url" placeholder="আসল ডাউনলোড লিংক" class="q-url" value="${urlVal}" required>
         <button type="button" class="btn-remove-q" onclick="this.parentElement.remove()">✕</button>
       `;
@@ -644,6 +647,7 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       editingId = null;
       document.getElementById('movie-form').reset();
       document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = false);
+      document.getElementById('hide-from-home').checked = false;
       document.getElementById('is-verified').checked = false;
       document.getElementById('is-pinned').checked = false;
       document.getElementById('telegram-mode').value = 'OFF';
@@ -708,6 +712,7 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
         title: document.getElementById('title').value,
         poster: document.getElementById('poster').value,
         category: selectedCategories,
+        hideFromHome: document.getElementById('hide-from-home').checked,
         isVerified: document.getElementById('is-verified').checked,
         isPinned: document.getElementById('is-pinned').checked,
         rating: document.getElementById('rating').value || "N/A",
@@ -783,6 +788,7 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
         const catDisplay = Array.isArray(movie.category) ? movie.category.join(', ') : (movie.category || '');
         const tickBadge = movie.isVerified ? `<span class="blue-tick" title="External Link Marked">✓</span>` : '';
         const pinBadge = movie.isPinned ? `<span class="pin-tag" title="Pinned to Top">📌</span>` : '';
+        const adultTag = movie.hideFromHome ? `<span style="color:#ef4444; font-size:11px; font-weight:bold;"> [🔞 Adult Only]</span>` : '';
         const posterUrl = movie.poster || 'https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png';
 
         itemsDiv.innerHTML += `
@@ -790,7 +796,7 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
             <div class="movie-item-top">
               <img src="${posterUrl}" alt="Poster" class="admin-thumb-img" onerror="this.onerror=null;this.src='https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png';">
               <div class="admin-item-info">
-                <strong style="color:#f8fafc;">${movie.title}</strong> ${pinBadge} ${tickBadge} <br>
+                <strong style="color:#f8fafc;">${movie.title}</strong> ${pinBadge} ${tickBadge} ${adultTag} <br>
                 <small style="color:#38bdf8;">[${catDisplay}]</small>
               </div>
             </div>
@@ -845,6 +851,7 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
       document.getElementById('type').value = movie.type || 'Anime Series';
       document.getElementById('title').value = movie.title || '';
       document.getElementById('poster').value = movie.poster || '';
+      document.getElementById('hide-from-home').checked = !!movie.hideFromHome;
       document.getElementById('is-verified').checked = !!movie.isVerified;
       document.getElementById('is-pinned').checked = !!movie.isPinned;
       document.getElementById('telegram-mode').value = 'OFF';
@@ -892,4 +899,4 @@ https://hubcloud.ist/drive/c1ercdpkyadtfkf"></textarea>
     addEpisodeBox();
   </script>
 </body>
-          </html>
+  </html>
