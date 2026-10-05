@@ -22,18 +22,16 @@
     button { width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; font-size: 15px; }
     button:hover { background: #1d4ed8; }
     
-    /* Ultra Professional Analytics Dashboard */
+    /* Analytics Dashboard */
     .analytics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 25px; }
     .stat-card { background: #0b0f19; border: 1px solid #1e293b; padding: 12px; border-radius: 12px; text-align: center; position: relative; overflow: hidden; }
     .stat-card.full-width { grid-column: span 2; border-color: #0284c7; background: linear-gradient(180deg, #0f172a, #0b0f19); }
     .stat-num { font-size: 22px; font-weight: 800; color: #38bdf8; margin-top: 4px; }
     .stat-label { font-size: 12px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
     
-    /* Live Pulse Badge */
     .live-pulse { display: inline-block; width: 10px; height: 10px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; margin-right: 6px; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16,185,129,0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16,185,129,0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16,185,129,0); } }
 
-    /* Breakdown Progress Bars UI */
     .breakdown-box { background: #0b0f19; padding: 12px; border-radius: 10px; margin-top: 6px; }
     .breakdown-item { margin-bottom: 10px; }
     .breakdown-item:last-child { margin-bottom: 0; }
@@ -45,12 +43,10 @@
     .ai-box { background: #091e3a; border: 1px dashed #38bdf8; border-radius: 12px; padding: 15px; margin-bottom: 20px; }
     .ai-box h3 { color: #38bdf8; font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
 
-    /* Multiple Category Checkbox Grid */
     .category-checkbox-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; background: #0b0f19; padding: 12px; border-radius: 8px; border: 1px solid #1e293b; }
     .cat-check-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #cbd5e1; cursor: pointer; font-weight: 500; }
     .cat-check-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: #0284c7; cursor: pointer; }
 
-    /* Episode Box Styling */
     .ep-box { background: #0b0f19; border: 1px solid #38bdf8; border-radius: 12px; padding: 15px; margin-top: 15px; }
     .ep-header-checkboxes { display: flex; gap: 15px; margin-bottom: 10px; flex-wrap: wrap; }
     .checkbox-label { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #ef4444; cursor: pointer; white-space: nowrap; font-weight: bold; }
@@ -58,7 +54,6 @@
     .checkbox-label input { width: auto; }
     .ep-name-input { width: 100%; font-weight: bold; color: #38bdf8; margin-bottom: 10px; }
 
-    /* Quality Row Styling */
     .quality-container { background: #151d30; border-radius: 8px; padding: 10px; margin-top: 10px; }
     .quality-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
     .quality-row input { flex: 1; }
@@ -73,13 +68,10 @@
     .login-box { max-width: 350px; margin: 100px auto; background: #151d30; padding: 25px; border-radius: 12px; text-align: center; border: 1px solid #1e293b; }
     .hidden { display: none !important; }
     
-    /* Published Items & Search Styling */
     .movie-list { margin-top: 30px; border-top: 2px dashed #1e293b; padding-top: 20px; }
     .admin-search-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #38bdf8; background: #0b0f19; color: #fff; font-size: 14px; margin-bottom: 15px; outline: none; }
-    
     .total-posts-badge { background: #0284c7; color: #ffffff; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
 
-    /* Redesigned Movie Item Card Layout */
     .movie-item { display: flex; flex-direction: column; background: #0b0f19; padding: 12px; margin-top: 10px; border-radius: 10px; border: 1px solid #1e293b; }
     .movie-item-top { display: flex; gap: 12px; align-items: flex-start; }
     .admin-thumb-img { width: 55px; height: 75px; object-fit: cover; border-radius: 6px; flex-shrink: 0; border: 1px solid #38bdf8; background: #151d30; }
@@ -93,13 +85,11 @@
 
     .blue-tick { display: inline-block; width: 16px; height: 16px; background: #38bdf8; color: #0b0f19; border-radius: 50%; text-align: center; line-height: 16px; font-size: 11px; font-weight: bold; margin-left: 2px; }
     .pin-tag { color: #f59e0b; font-weight: bold; font-size: 12px; margin-left: 2px; }
-    
     .btn-auto-kw { background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff; font-size: 12px; padding: 6px 12px; width: auto; margin-top: 5px; }
   </style>
 </head>
 <body>
 
-  <!-- গোপন লগইন সেকশন -->
   <div id="login-section" class="login-box">
     <h2>Anime Admin Login</h2>
     <div class="form-group">
@@ -108,17 +98,14 @@
     <button onclick="login()">Login</button>
   </div>
 
-  <!-- মূল এডমিন ড্যাশবোর্ড -->
   <div id="admin-dashboard" class="container hidden">
     <h2>Anime Admin Panel</h2>
     
-    <!-- Tab Navigation -->
     <div class="nav-tabs">
       <button type="button" id="tab-btn-standard" class="tab-btn active" onclick="switchAdminTab('standard')">📊 Standard Admin</button>
       <button type="button" id="tab-btn-ai" class="tab-btn" onclick="switchAdminTab('ai')">🤖 AI Admin</button>
     </div>
 
-    <!-- Realtime Analytics Dashboard (Only in Standard View) -->
     <div id="analytics-section" class="analytics-grid">
       <div class="stat-card full-width">
         <div class="stat-label"><span class="live-pulse"></span>অনলাইন লাইভ ইউজার</div>
@@ -129,7 +116,7 @@
         <div class="stat-num" id="stat-today">0</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">🗓️️ গত ৭ দিন</div>
+        <div class="stat-label">🗓 গত ৭ দিন</div>
         <div class="stat-num" id="stat-7days">0</div>
       </div>
       <div class="stat-card">
@@ -141,20 +128,18 @@
         <div class="stat-num" id="stat-total">0</div>
       </div>
 
-      <!-- Traffic Source Breakdown -->
       <div class="stat-card full-width">
         <div class="stat-label" style="color:#38bdf8;">🚀 ট্রাফিক সোর্স (ভিজিটর কোথা থেকে আসছে)</div>
         <div id="stat-sources" class="breakdown-box">ডেটা বিশ্লেষণ করা হচ্ছে...</div>
       </div>
 
-      <!-- Country Breakdown -->
       <div class="stat-card full-width">
         <div class="stat-label" style="color:#38bdf8;">🌍 কান্ট্রি ট্র্যাকিং (কোন দেশ থেকে আসছে)</div>
         <div id="stat-countries" class="breakdown-box">ডেটা বিশ্লেষণ করা হচ্ছে...</div>
       </div>
     </div>
 
-    <!-- AI Bulk Link Processor Box (Only in AI View) -->
+    <!-- AI Bulk Link Processor Box (Updated Quality Dropdown) -->
     <div id="ai-importer-section" class="ai-box hidden">
       <h3>🤖 Google AI Studio - Bulk Link Processor</h3>
       <div class="form-group">
@@ -167,6 +152,7 @@
           <option value="480p x264 [Size: 120mb]">480p x264 [Size: 120mb]</option>
           <option value="720p x264 [Size: 242mb]">720p x264 [Size: 242mb]</option>
           <option value="1080p x265 [Size: 460mb]">1080p x265 [Size: 460mb]</option>
+          <option value="1080p x264 HQ [Size: 650mb]">1080p x264 HQ [Size: 650mb]</option>
           <option value="4K UHD [Size: 1.2GB]">4K UHD [Size: 1.2GB]</option>
         </select>
       </div>
@@ -178,7 +164,6 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       <button type="button" style="background: linear-gradient(135deg, #0284c7, #2563eb);" onclick="processAILinks()">⚡ Process & Append Links To Episodes</button>
     </div>
 
-    <!-- Main Entry Form -->
     <form id="movie-form">
       <div class="form-group">
         <label>টাইপ (Type)</label>
@@ -198,7 +183,6 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         <input type="url" id="poster" placeholder="https://i.ibb.co/..." required>
       </div>
 
-      <!-- Multiple Category Checkbox Grid -->
       <div class="form-group">
         <label>ক্যাটাগরি / Genre (একাধিক সিলেক্ট করুন):</label>
         <div class="category-checkbox-grid">
@@ -217,14 +201,10 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         </div>
       </div>
 
-      <!-- Options: Adult Visibility, Verified Blue Tick, Pin to Top & Telegram Switch -->
       <div class="form-group" style="background: #0b0f19; padding: 12px; border-radius: 8px; border: 1px solid #38bdf8; display: flex; flex-direction: column; gap: 10px;">
-        
-        <!-- Adult 18+ Display Switch -->
         <label class="cat-check-item" style="color: #ef4444; font-weight: bold;">
           <input type="checkbox" id="hide-from-home"> 🔞 কেবল Adult 18+ সেকশনে দেখাবে (হোমপেজে লুকানো থাকবে)
         </label>
-
         <label class="cat-check-item" style="color: #38bdf8; font-weight: bold;">
           <input type="checkbox" id="is-verified"> 🟦 External Link Badge (Blue Tick চিহ্নিত করুন)
         </label>
@@ -232,7 +212,6 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
           <input type="checkbox" id="is-pinned"> 📌 Pin to Top (ইউজার প্যানেলে সবার উপরে পিন রাখুন)
         </label>
         
-        <!-- Telegram Mode -->
         <div style="border-top: 1px solid #1e293b; padding-top: 8px;">
           <label style="color: #229ed9; font-weight: bold; margin-bottom: 4px;">✈️ Telegram Notification Mode:</label>
           <select id="telegram-mode" style="border-color: #229ed9;">
@@ -272,7 +251,6 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         <textarea id="synopsis" rows="3" placeholder="সংক্ষিপ্ত বিবরণ..."></textarea>
       </div>
 
-      <!-- Episode Box Section -->
       <div class="form-group">
         <label style="font-size: 16px; color: #38bdf8;">এপিসোড ও ডাউনলোড লিংকসমূহ</label>
         <div id="episodes-container"></div>
@@ -283,19 +261,14 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       <button type="button" id="cancel-edit-btn" class="btn-cancel hidden" onclick="resetForm()">Cancel Editing</button>
     </form>
 
-    <!-- Published Anime Items & Search (Only in Standard View) -->
     <div id="published-list-section" class="movie-list">
       <h3 style="color: #38bdf8; margin-bottom: 8px;">🔍 পোস্ট করা এনিমেশন এডিট, রি-অর্ডার বা খুজুন</h3>
-      
       <div id="total-post-count" class="total-posts-badge">সর্বমোট এনিমেশন পোস্ট: 0 টি</div>
-      
       <input type="text" id="admin-search-input" class="admin-search-input" placeholder="এনিমেশনের নাম লিখে খুঁজুন..." oninput="filterAdminMovies()">
-      
       <div id="movie-items"></div>
     </div>
   </div>
 
-  <!-- Firebase Scripts -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, push, set, update, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -404,7 +377,6 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         document.getElementById('stat-30days').innerText = last30Total;
       });
 
-      // Professional Breakdown for Sources
       onValue(ref(db, 'analytics/sources'), (snapshot) => {
         const div = document.getElementById('stat-sources');
         if (!snapshot.exists()) {
@@ -443,7 +415,6 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         div.innerHTML = html;
       });
 
-      // Professional Breakdown for Countries
       onValue(ref(db, 'analytics/countries'), (snapshot) => {
         const div = document.getElementById('stat-countries');
         if (!snapshot.exists()) {
@@ -624,6 +595,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         addQualityRowDirect(qList, "480p x264 [Size: 120mb]", "");
         addQualityRowDirect(qList, "720p x264 [Size: 242mb]", "");
         addQualityRowDirect(qList, "1080p x265 [Size: 460mb]", "");
+        addQualityRowDirect(qList, "1080p x264 HQ [Size: 650mb]", "");
       }
     };
 
@@ -899,4 +871,4 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
     addEpisodeBox();
   </script>
 </body>
-  </html>
+                                                                                           </html>
