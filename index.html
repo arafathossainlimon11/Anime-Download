@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,13 +24,32 @@
   <meta property="og:image" content="https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png">
   <meta property="og:type" content="website">
 
+  <!-- Dynamic JSON-LD Schema Markup for Google Search Ranking -->
+  <script type="application/ld+json" id="schema-json-ld">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Anime Download",
+    "url": "https://anime-download-seven.vercel.app/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://anime-download-seven.vercel.app/?search={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
   <!-- Updated Social Bar Script -->
   <script src="https://pl31665396.profitableratecpmnetwork.com/9c/19/48/9c19486e08980e84d8936ff7d09cd354.js"></script>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #0d1117; color: #c9d1d9; font-size: 14px; }
+    body { background-color: #0d1117; color: #c9d1d9; font-size: 14px; padding-bottom: 70px; }
     
+    /* Welcome AdBlocker Notice Banner */
+    .top-notice-bar { background: linear-gradient(90deg, #1e293b, #0f172a); border-bottom: 1px solid #38bdf8; color: #f8fafc; font-size: 12px; padding: 8px 12px; text-align: center; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .close-notice-btn { background: transparent; border: none; color: #ef4444; font-weight: bold; font-size: 14px; cursor: pointer; padding: 0 4px; }
+
     header { background: #161b22; padding: 12px; text-align: center; border-bottom: 1px solid #30363d; position: sticky; top: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
     .header-top { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
     .header-logo-img { width: 34px; height: 34px; border-radius: 6px; object-fit: cover; }
@@ -300,6 +319,7 @@
       margin-bottom: 4px; 
     }
     .tag-new { color: #ef4444; font-weight: 800; margin-left: 4px; }
+    .tag-watched { color: #10b981; font-size: 12px; font-weight: 800; margin-left: 6px; }
     .upload-date-text { color: #ef4444; font-size: 13px; font-weight: 600; margin-bottom: 15px; }
 
     .quality-option {
@@ -310,9 +330,53 @@
       margin-bottom: 10px;
     }
     .quality-title { color: #38bdf8; font-weight: bold; margin-bottom: 6px; font-size: 13px; }
+
+    /* Digital Countdown Box Styles */
+    .countdown-wrapper { background: #161b22; border: 1px solid #38bdf8; border-radius: 12px; padding: 15px; text-align: center; margin-bottom: 20px; }
+    .countdown-header { color: #38bdf8; font-weight: bold; font-size: 14px; letter-spacing: 0.5px; margin-bottom: 12px; }
+    .countdown-boxes { display: flex; justify-content: center; gap: 8px; }
+    .timer-box { background: #0b0f19; border: 1px solid #1e293b; border-radius: 8px; padding: 8px 12px; min-width: 60px; text-align: center; }
+    .timer-num { font-size: 20px; font-weight: 900; color: #ffffff; line-height: 1.2; }
+    .timer-unit { font-size: 10px; color: #94a3b8; font-weight: 700; text-transform: uppercase; margin-top: 2px; }
+
+    .status-banner-box { background: #161b22; border: 1px solid #f59e0b; border-radius: 12px; padding: 15px; text-align: center; margin-bottom: 20px; }
+    .status-banner-title { color: #f59e0b; font-size: 16px; font-weight: bold; margin-bottom: 4px; }
+    .status-banner-sub { color: #cbd5e1; font-size: 12px; }
+
+    .report-link-btn { background: transparent; border: none; color: #ef4444; font-size: 11px; cursor: pointer; margin-top: 6px; text-decoration: underline; }
+
+    /* Floating PWA Shortcut Bar */
+    .floating-pwa-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #161b22;
+      border-top: 2px solid #2563eb;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      z-index: 9999;
+      box-shadow: 0 -5px 25px rgba(0,0,0,0.8);
+    }
+    .pwa-info { display: flex; align-items: center; gap: 8px; }
+    .pwa-icon { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; }
+    .pwa-text-title { color: #ffffff; font-size: 12px; font-weight: bold; }
+    .pwa-text-sub { color: #94a3b8; font-size: 10px; }
+    .pwa-btn { background: linear-gradient(135deg, #dc2626, #ef4444); color: #fff; border: none; border-radius: 20px; padding: 8px 14px; font-size: 11px; font-weight: bold; cursor: pointer; white-space: nowrap; }
+    .pwa-close { color: #94a3b8; background: transparent; border: none; font-size: 16px; font-weight: bold; cursor: pointer; padding: 0 4px; }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
+
+  <!-- Top Welcome & Notice Banner -->
+  <div id="top-notice" class="top-notice-bar">
+    <span>📢 Welcome! If download links fail to load, please check your internet or disable AdBlocker.</span>
+    <button class="close-notice-btn" onclick="document.getElementById('top-notice').classList.add('hidden')">✕</button>
+  </div>
 
   <header>
     <div class="header-top" onclick="handleHeaderLogoClick()">
@@ -363,6 +427,9 @@
     <p id="det-meta" style="color: #38bdf8; margin-bottom: 12px;"></p>
     <p id="det-synopsis" style="color: #8b949e; margin-bottom: 20px; line-height: 1.5; white-space: pre-line;"></p>
 
+    <!-- Status or Countdown Container -->
+    <div id="status-container"></div>
+
     <h3 style="color: #f0f6fc; margin-bottom: 15px; text-align: center;">Available Quality / Episodes</h3>
     <div id="det-links-container"></div>
   </div>
@@ -379,11 +446,24 @@
   <div id="download-view" class="view-section" style="text-align: center;">
     <h2 id="dl-title" style="color: #f0f6fc; margin-bottom: 20px; line-height: 1.3;">Choose Server</h2>
     
-    <a id="ad-dl-btn" href="#" target="_blank" class="glow-btn" style="background: linear-gradient(135deg, #dc2626, #f59e0b);" onclick="popAd()">[⚡ FAST SPONSOR SERVER DOWNLOAD (ADS OPTION)]</a>
-    
     <div id="ad-300-slot-p4" style="margin: 20px 0; background: #161b22; padding: 10px; border-radius: 8px; display: flex; justify-content: center; min-height: 250px; align-items: center;"></div>
 
     <a id="real-dl-btn" href="#" target="_blank" class="jump-dl-btn" onclick="handleRealDownloadClick(event)">[⬇ ORIGINAL DIRECT SERVER DOWNLOAD]</a>
+  </div>
+
+  <!-- Floating Add to Phone Home Screen Bar -->
+  <div id="pwa-bar" class="floating-pwa-bar">
+    <div class="pwa-info">
+      <img src="https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png" class="pwa-icon" alt="App Icon">
+      <div>
+        <div class="pwa-text-title">📱 Add to Phone Home Screen</div>
+        <div class="pwa-text-sub">Get 1-click quick access from your home screen</div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <button class="pwa-btn" onclick="triggerPWAInstall()">📲 ADD TO HOME SCREEN</button>
+      <button class="pwa-close" onclick="document.getElementById('pwa-bar').classList.add('hidden')">✕</button>
+    </div>
   </div>
 
   <script type="module">
@@ -441,6 +521,29 @@
     let selectedTitle = "";
     let realDlAdClicked = false;
     let currentCategory = "All";
+    let activeTimerInterval = null;
+    let deferredPrompt = null;
+
+    /* PWA Prompt Listener */
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById('pwa-bar').classList.remove('hidden');
+    });
+
+    window.triggerPWAInstall = function() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            document.getElementById('pwa-bar').classList.add('hidden');
+          }
+          deferredPrompt = null;
+        });
+      } else {
+        alert("To add shortcut: Open browser menu (3 dots) -> Tap 'Add to Home screen'");
+      }
+    };
 
     /* Updated Smartlink URL */
     const DIRECT_AD_LINK = "https://www.profitableratecpmnetwork.com/r3n8h36k9p?key=f40772438c844d1cb86e8b550c1fe521";
@@ -509,9 +612,28 @@
       openDetails(id);
     };
 
-    window.triggerDownloadAction = function(title, url) {
+    window.triggerDownloadAction = function(animeTitle, epName, url) {
+      /* Mark as watched in LocalStorage */
+      let watched = JSON.parse(localStorage.getItem('watched_episodes') || '[]');
+      let key = `${animeTitle}_${epName}`;
+      if (!watched.includes(key)) {
+        watched.push(key);
+        localStorage.setItem('watched_episodes', JSON.stringify(watched));
+      }
+
       popAd();
-      startBuffer(title, url);
+      startBuffer(`${animeTitle} - ${epName}`, url);
+    };
+
+    window.reportLink = function(animeTitle, epName, quality) {
+      push(ref(db, 'reports'), {
+        animeTitle: animeTitle,
+        epName: epName,
+        quality: quality,
+        timestamp: serverTimestamp()
+      }).then(() => {
+        alert("Report submitted successfully! We will fix the link as soon as possible.");
+      });
     };
 
     window.handleBufferClick = function() {
@@ -636,12 +758,12 @@
         grid.innerHTML = `
           <div class="not-found-card">
             <div style="font-size: 36px; margin-bottom: 8px;">🔍</div>
-            <h3 style="color: #f0f6fc; font-size: 16px; margin-bottom: 6px;">কাঙ্খিত এনিমেশনটি খুঁজে পাওয়া যায়নি? / Anime Not Found?</h3>
+            <h3 style="color: #f0f6fc; font-size: 16px; margin-bottom: 6px;">🔍 Anime Not Found</h3>
             <p style="color: #8b949e; font-size: 13px; line-height: 1.5; margin-bottom: 16px;">
-              আপনার পছন্দের এনিমেশনটি না পেয়ে থাকলে আমাদের ফেসবুক বা টেলিগ্রাম চ্যানেলে জয়েন করে রিকোয়েস্ট করুন! আমরা দ্রুত আপলোড করে দেব।
+              Couldn't find the anime you're looking for? Join our Telegram channel or Facebook group to send your request, and we will upload it for you as soon as possible!
             </p>
             <a href="https://t.me/animedownloadweb" target="_blank" class="tg-banner" style="font-size: 13px; padding: 10px 18px;" onclick="popAd()">
-              Join Telegram Channel
+              ✈️ Request Anime on Telegram
             </a>
           </div>
         `;
@@ -760,6 +882,25 @@
         document.getElementById('dynamic-seo-keywords').content = movie.keywords;
       }
 
+      /* Update Dynamic JSON-LD Schema Markup */
+      const schemaScript = document.getElementById('schema-json-ld');
+      if (schemaScript) {
+        schemaScript.textContent = JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "TVSeries",
+          "name": movie.title,
+          "image": movie.poster,
+          "description": movie.synopsis || "Watch and download latest episodes on Anime Download.",
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": movie.rating && movie.rating !== "N/A" ? movie.rating.replace("⭐", "").trim() : "9.0",
+            "bestRating": "10",
+            "worstRating": "1",
+            "ratingCount": "150"
+          }
+        });
+      }
+
       const catDisplay = Array.isArray(movie.category) ? movie.category.join(', ') : (movie.category || '');
       const tickBadge = movie.isVerified ? `<span class="blue-tick">✓</span>` : '';
 
@@ -768,12 +909,19 @@
       document.getElementById('det-meta').innerText = `⭐ ${movie.rating} | ${movie.year} | ${movie.language} | ${catDisplay}`;
       document.getElementById('det-synopsis').innerText = movie.synopsis || "No synopsis available.";
 
+      /* Render Status / Digital Timer */
+      renderStatusOrTimer(movie);
+
       const container = document.getElementById('det-links-container');
       container.innerHTML = "";
+
+      let watchedList = JSON.parse(localStorage.getItem('watched_episodes') || '[]');
 
       if (movie.episodes && movie.episodes.length > 0) {
         movie.episodes.forEach(ep => {
           const isNewTag = ep.isNew ? '<span class="tag-new">[New]</span>' : '';
+          const isWatched = watchedList.includes(`${movie.title}_${ep.episodeName}`);
+          const watchedTag = isWatched ? '<span class="tag-watched">✓ Watched</span>' : '';
           const dateText = `<div class="upload-date-text">[Upload Date: ${ep.date || '28/09/2026'}]</div>`;
 
           let qualitiesHtml = '';
@@ -781,14 +929,15 @@
             qualitiesHtml += `
               <div class="quality-option">
                 <div class="quality-title">${q.label}</div>
-                <button class="glow-btn" style="margin:0; font-size:13px; padding:10px;" onclick="triggerDownloadAction('${movie.title} - ${ep.episodeName}', '${q.url}')">[▶ DOWNLOAD]</button>
+                <button class="glow-btn" style="margin:0; font-size:13px; padding:10px;" onclick="triggerDownloadAction('${movie.title}', '${ep.episodeName}', '${q.url}')">[▶ DOWNLOAD]</button>
+                <button class="report-link-btn" onclick="event.stopPropagation(); reportLink('${movie.title}', '${ep.episodeName}', '${q.label}')">⚠️ Report Link</button>
               </div>
             `;
           });
 
           container.innerHTML += `
-            <div class="episode-card">
-              <div class="ep-title-header">${ep.episodeName} ${isNewTag}</div>
+            <div class="episode-card" style="${isWatched ? 'border-color: #10b981; background: #0f172a;' : ''}">
+              <div class="ep-title-header">${ep.episodeName} ${isNewTag} ${watchedTag}</div>
               ${dateText}
               ${qualitiesHtml}
             </div>
@@ -800,7 +949,8 @@
           qualitiesHtml += `
             <div class="quality-option">
               <div class="quality-title">${link.label}</div>
-              <button class="glow-btn" style="margin:0; font-size:13px; padding:10px;" onclick="triggerDownloadAction('${movie.title}', '${link.url}')">[▶ DOWNLOAD]</button>
+              <button class="glow-btn" style="margin:0; font-size:13px; padding:10px;" onclick="triggerDownloadAction('${movie.title}', 'Full Movie', '${link.url}')">[▶ DOWNLOAD]</button>
+              <button class="report-link-btn" onclick="event.stopPropagation(); reportLink('${movie.title}', 'Full Movie', '${link.label}')">⚠️ Report Link</button>
             </div>
           `;
         });
@@ -815,6 +965,73 @@
       }
 
       showView('details-view');
+    }
+
+    function renderStatusOrTimer(movie) {
+      const statusDiv = document.getElementById('status-container');
+      statusDiv.innerHTML = "";
+      if (activeTimerInterval) clearInterval(activeTimerInterval);
+
+      const mode = movie.statusMode || "NONE";
+
+      if (mode === "SEASON_ENDED") {
+        statusDiv.innerHTML = `
+          <div class="status-banner-box">
+            <div class="status-banner-title">🏁 SEASON ENDED</div>
+            <div class="status-banner-sub">Stay tuned for the upcoming season updates!</div>
+          </div>
+        `;
+      } else if (mode === "SERIES_COMPLETED") {
+        statusDiv.innerHTML = `
+          <div class="status-banner-box" style="border-color: #10b981;">
+            <div class="status-banner-title" style="color: #10b981;">✅ SERIES COMPLETED</div>
+            <div class="status-banner-sub">All episodes are now available for streaming & download.</div>
+          </div>
+        `;
+      } else if (mode === "COUNTDOWN" && movie.countdownTime) {
+        statusDiv.innerHTML = `
+          <div class="countdown-wrapper">
+            <div class="countdown-header">⏳ NEXT EPISODE RELEASING IN</div>
+            <div id="countdown-timer-display" class="countdown-boxes">
+              <div class="timer-box"><div class="timer-num" id="cd-days">00</div><div class="timer-unit">DAYS</div></div>
+              <div class="timer-box"><div class="timer-num" id="cd-hrs">00</div><div class="timer-unit">HRS</div></div>
+              <div class="timer-box"><div class="timer-num" id="cd-min">00</div><div class="timer-unit">MIN</div></div>
+              <div class="timer-box"><div class="timer-num" id="cd-sec">00</div><div class="timer-unit">SEC</div></div>
+            </div>
+          </div>
+        `;
+
+        const targetTime = new Date(movie.countdownTime).getTime();
+
+        function updateCountdown() {
+          const now = new Date().getTime();
+          const diff = targetTime - now;
+
+          if (diff <= 0) {
+            clearInterval(activeTimerInterval);
+            statusDiv.innerHTML = `
+              <div class="status-banner-box" style="border-color: #ef4444;">
+                <div class="status-banner-title" style="color: #ef4444;">⏳ EPISODE PROCESSING</div>
+                <div class="status-banner-sub">We are currently preparing the episode for you. Please check back in a few minutes!</div>
+              </div>
+            `;
+            return;
+          }
+
+          const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+          const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+          document.getElementById('cd-days').innerText = String(d).padStart(2, '0');
+          document.getElementById('cd-hrs').innerText = String(h).padStart(2, '0');
+          document.getElementById('cd-min').innerText = String(m).padStart(2, '0');
+          document.getElementById('cd-sec').innerText = String(s).padStart(2, '0');
+        }
+
+        updateCountdown();
+        activeTimerInterval = setInterval(updateCountdown, 1000);
+      }
     }
 
     function startBuffer(title, url) {
@@ -832,7 +1049,6 @@
       realDlAdClicked = false;
       document.getElementById('dl-title').innerText = selectedTitle;
       document.getElementById('real-dl-btn').href = selectedLink;
-      document.getElementById('ad-dl-btn').href = DIRECT_AD_LINK;
       
       /* Render Banner 300x250 Ad Key */
       renderAdInContainer(document.getElementById('ad-300-slot-p4'), 'cf986fb60314a23b372b310ee892495c', 300, 250);
@@ -854,4 +1070,4 @@
     history.replaceState({ view: 'home-view', cat: 'All' }, '', '#home-view');
   </script>
 </body>
-  </html>
+    </html>
