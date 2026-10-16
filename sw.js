@@ -1,4 +1,4 @@
-const CACHE_NAME = 'anime-download-cache-v2';
+const CACHE_NAME = 'anime-download-v3';
 const urlsToCache = [
   './',
   './index.html',
@@ -15,7 +15,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate & Clear Old Caches (v1 to v2)
+// Activate & Clear Old Caches (v1/v2 to v3)
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -39,17 +39,21 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Handle Push Notification Click Event
+// Dynamic Notification Click Handling (Always Opens Current Active Host)
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
+
+  const currentOrigin = self.location.origin;
+
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      if (clientList.length > 0) {
-        let client = clientList[0];
-        if ('focus' in client) return client.focus();
+      for (let client of clientList) {
+        if (client.url.includes(currentOrigin) && 'focus' in client) {
+          return client.focus();
+        }
       }
       if (clients.openWindow) {
-        return clients.openWindow('./index.html');
+        return clients.openWindow(currentOrigin + '/index.html');
       }
     })
   );
