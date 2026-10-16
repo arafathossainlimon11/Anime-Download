@@ -92,6 +92,9 @@
     .report-title { color: #f8fafc; font-weight: bold; font-size: 15px; margin-bottom: 4px; }
     .report-meta { color: #94a3b8; font-size: 12px; margin-bottom: 8px; line-height: 1.4; }
     .btn-fix-report { background: #10b981; color: #fff; padding: 6px 12px; font-size: 12px; width: auto; border-radius: 6px; margin-top: 4px; }
+
+    .timer-inputs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+    .timer-inputs-grid input { text-align: center; font-weight: bold; color: #38bdf8; }
   </style>
 </head>
 <body>
@@ -157,27 +160,28 @@
       </div>
     </div>
 
-    <!-- AI Bulk Link Processor Box -->
-    <div id="ai-importer-section" class="ai-box hidden">
-      <h3>🤖 Google AI Studio - Bulk Link Processor</h3>
-      <div class="form-group">
-        <label>🔗 Link Starter / Custom Prefix (লিংকের শুরু চিহ্নিত করুন):</label>
-        <input type="text" id="ai-prefix" value="https://" placeholder="যেমন: https:// বা https://hubcloud.ist/">
-      </div>
-      <div class="form-group">
-        <label>🎯 কোয়ালিটি ট্যাগ সিলেক্ট বা কাস্টম সাইজ লিখুন:</label>
-        <input type="text" id="ai-quality-tag" value="480p x264 [Size: 120mb]" placeholder="যেমন: 720p x264 [Size: 242mb] বা 4K UHD [Size: 1.2GB]">
-      </div>
-      <div class="form-group">
-        <label>📋 একসাথে সব ডাউনলোড লিংক পেস্ট করুন:</label>
-        <textarea id="ai-raw-links" rows="5" placeholder="https://hubcloud.ist/drive/svob4vgbmvsvnq3
+    <!-- Main Shared Form for Standard and AI Admin -->
+    <div id="form-wrapper-section">
+      
+      <!-- AI Bulk Link Processor Box (Visible ONLY under AI Admin Tab) -->
+      <div id="ai-importer-section" class="ai-box hidden">
+        <h3>🤖 Google AI Studio - Bulk Link Processor</h3>
+        <div class="form-group">
+          <label>🔗 Link Starter / Custom Prefix (লিংকের শুরু চিহ্নিত করুন):</label>
+          <input type="text" id="ai-prefix" value="https://" placeholder="যেমন: https:// বা https://hubcloud.ist/">
+        </div>
+        <div class="form-group">
+          <label>🎯 কোয়ালিটি ট্যাগ সিলেক্ট বা কাস্টম সাইজ লিখুন:</label>
+          <input type="text" id="ai-quality-tag" value="480p x264 [Size: 120mb]" placeholder="যেমন: 720p x264 [Size: 242mb] বা 4K UHD [Size: 1.2GB]">
+        </div>
+        <div class="form-group">
+          <label>📋 একসাথে সব ডাউনলোড লিংক পেস্ট করুন:</label>
+          <textarea id="ai-raw-links" rows="5" placeholder="https://hubcloud.ist/drive/svob4vgbmvsvnq3
 https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
+        </div>
+        <button type="button" style="background: linear-gradient(135deg, #0284c7, #2563eb);" onclick="processAILinks()">⚡ Process & Append Links To Episodes</button>
       </div>
-      <button type="button" style="background: linear-gradient(135deg, #0284c7, #2563eb);" onclick="processAILinks()">⚡ Process & Append Links To Episodes</button>
-    </div>
 
-    <!-- Standard Admin Main Form Section -->
-    <div id="standard-admin-section">
       <form id="movie-form">
         <div class="form-group">
           <label>টাইপ (Type)</label>
@@ -271,7 +275,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
           <button type="button" class="btn-add-ep" onclick="addEpisodeBox()">+ নতুন এপিসোড বক্স যোগ করুন</button>
         </div>
 
-        <!-- 📌 সিজন / এপিসোড স্ট্যাটাস ও কাউন্টডাউন টাইমার সেটআপ -->
+        <!-- 📌 সিজন / এপিসোড স্ট্যাটাস ও সহজ টাইমার সেটআপ (Days, Hours, Minutes) -->
         <div class="form-group" style="background: #0b0f19; padding: 12px; border-radius: 8px; border: 1px solid #0284c7; margin-top: 15px;">
           <label style="color: #38bdf8; font-weight: bold;">📌 সিজন / নতুন এপিসোড স্ট্যাটাস ও টাইমার সেটআপ:</label>
           <select id="status-mode" onchange="toggleCountdownBox()">
@@ -282,8 +286,21 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
           </select>
 
           <div id="countdown-picker-box" class="hidden" style="margin-top: 10px;">
-            <label style="color: #f59e0b;">📅 পরবর্তী এপিসোড প্রকাশের তারিখ ও সময় বেছে নিন:</label>
-            <input type="datetime-local" id="countdown-datetime">
+            <label style="color: #f59e0b;">⏱️ কত সময় পর নতুন এপিসোড আসবে তা লিখুন:</label>
+            <div class="timer-inputs-grid">
+              <div>
+                <label style="font-size:11px; text-align:center;">Days (দিন)</label>
+                <input type="number" id="cd-days-input" min="0" placeholder="0">
+              </div>
+              <div>
+                <label style="font-size:11px; text-align:center;">Hours (ঘণ্টা)</label>
+                <input type="number" id="cd-hrs-input" min="0" max="23" placeholder="0">
+              </div>
+              <div>
+                <label style="font-size:11px; text-align:center;">Minutes (মিনিট)</label>
+                <input type="number" id="cd-min-input" min="0" max="59" placeholder="0">
+              </div>
+            </div>
           </div>
         </div>
 
@@ -360,26 +377,29 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       const btnAnalytics = document.getElementById('tab-btn-analytics');
       const btnReports = document.getElementById('tab-btn-reports');
 
-      const sectionStd = document.getElementById('standard-admin-section');
-      const sectionAi = document.getElementById('ai-importer-section');
+      const sectionForm = document.getElementById('form-wrapper-section');
+      const sectionAiImporter = document.getElementById('ai-importer-section');
       const sectionAnalytics = document.getElementById('analytics-section');
       const sectionReports = document.getElementById('link-reports-section');
 
       [btnStd, btnAi, btnAnalytics, btnReports].forEach(b => b.classList.remove('active'));
-      [sectionStd, sectionAi, sectionAnalytics, sectionReports].forEach(s => s.classList.add('hidden'));
+      [sectionAnalytics, sectionReports].forEach(s => s.classList.add('hidden'));
 
       if (mode === 'ai') {
         btnAi.classList.add('active');
-        sectionAi.classList.remove('hidden');
+        sectionForm.classList.remove('hidden');
+        sectionAiImporter.classList.remove('hidden');
       } else if (mode === 'analytics') {
         btnAnalytics.classList.add('active');
-        sectionAnalytics.classList.remove('hidden');
+        sectionForm.classList.add('hidden');
       } else if (mode === 'reports') {
         btnReports.classList.add('active');
+        sectionForm.classList.add('hidden');
         sectionReports.classList.remove('hidden');
       } else {
         btnStd.classList.add('active');
-        sectionStd.classList.remove('hidden');
+        sectionForm.classList.remove('hidden');
+        sectionAiImporter.classList.add('hidden');
       }
     };
 
@@ -706,6 +726,9 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       document.getElementById('telegram-mode').value = 'OFF';
       document.getElementById('status-mode').value = 'NONE';
       document.getElementById('countdown-picker-box').classList.add('hidden');
+      document.getElementById('cd-days-input').value = '';
+      document.getElementById('cd-hrs-input').value = '';
+      document.getElementById('cd-min-input').value = '';
       document.getElementById('submit-btn').innerText = "Publish Anime";
       document.getElementById('cancel-edit-btn').classList.add('hidden');
       document.getElementById('episodes-container').innerHTML = '';
@@ -762,6 +785,17 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         }
       });
 
+      const statusModeVal = document.getElementById('status-mode').value || "NONE";
+      let computedTargetTime = 0;
+
+      if (statusModeVal === "COUNTDOWN") {
+        const dVal = parseInt(document.getElementById('cd-days-input').value || 0);
+        const hVal = parseInt(document.getElementById('cd-hrs-input').value || 0);
+        const mVal = parseInt(document.getElementById('cd-min-input').value || 0);
+        const totalMs = ((dVal * 86400) + (hVal * 3600) + (mVal * 60)) * 1000;
+        computedTargetTime = Date.now() + totalMs;
+      }
+
       const movieData = {
         type: document.getElementById('type').value,
         title: document.getElementById('title').value,
@@ -775,8 +809,8 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         language: document.getElementById('language').value || "Dual Audio",
         keywords: document.getElementById('keywords').value || "",
         synopsis: document.getElementById('synopsis').value || "",
-        statusMode: document.getElementById('status-mode').value || "NONE",
-        countdownTime: document.getElementById('countdown-datetime').value || "",
+        statusMode: statusModeVal,
+        targetTimestamp: computedTargetTime,
         episodes: episodes,
         timestamp: Date.now()
       };
@@ -913,7 +947,6 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       document.getElementById('is-pinned').checked = !!movie.isPinned;
       document.getElementById('telegram-mode').value = 'OFF';
       document.getElementById('status-mode').value = movie.statusMode || 'NONE';
-      document.getElementById('countdown-datetime').value = movie.countdownTime || '';
       toggleCountdownBox();
 
       document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = false);
@@ -960,4 +993,4 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
     addEpisodeBox();
   </script>
 </body>
-        </html>
+  </html>
