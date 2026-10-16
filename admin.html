@@ -7,12 +7,12 @@
   <style>
     * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
     body { background: #0b0f19; color: #f8fafc; padding: 12px; }
-    .container { max-width: 650px; margin: auto; background: #151d30; padding: 20px; border-radius: 16px; border: 1px solid #1e293b; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
+    .container { max-width: 680px; margin: auto; background: #151d30; padding: 20px; border-radius: 16px; border: 1px solid #1e293b; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
     h2 { text-align: center; margin-bottom: 15px; color: #38bdf8; font-size: 22px; font-weight: 800; }
     
     /* Nav Tabs */
-    .nav-tabs { display: flex; gap: 8px; margin-bottom: 20px; background: #0b0f19; padding: 6px; border-radius: 10px; border: 1px solid #1e293b; }
-    .tab-btn { flex: 1; padding: 12px; background: transparent; color: #94a3b8; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 0; font-size: 14px; }
+    .nav-tabs { display: flex; gap: 6px; margin-bottom: 20px; background: #0b0f19; padding: 6px; border-radius: 10px; border: 1px solid #1e293b; overflow-x: auto; }
+    .tab-btn { flex: 1; padding: 10px 8px; background: transparent; color: #94a3b8; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 0; font-size: 13px; white-space: nowrap; }
     .tab-btn.active { background: linear-gradient(135deg, #0284c7, #2563eb); color: #fff; box-shadow: 0 4px 12px rgba(2,132,199,0.3); }
 
     .form-group { margin-bottom: 15px; }
@@ -32,7 +32,7 @@
     .live-pulse { display: inline-block; width: 10px; height: 10px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; margin-right: 6px; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16,185,129,0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16,185,129,0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16,185,129,0); } }
 
-    .breakdown-box { background: #0b0f19; padding: 12px; border-radius: 10px; margin-top: 6px; }
+    .breakdown-box { background: #0b0f19; padding: 12px; border-radius: 10px; margin-top: 6px; max-height: 250px; overflow-y: auto; }
     .breakdown-item { margin-bottom: 10px; }
     .breakdown-item:last-child { margin-bottom: 0; }
     .breakdown-info { display: flex; justify-content: space-between; font-size: 12px; color: #cbd5e1; margin-bottom: 4px; font-weight: 600; }
@@ -86,6 +86,12 @@
     .blue-tick { display: inline-block; width: 16px; height: 16px; background: #38bdf8; color: #0b0f19; border-radius: 50%; text-align: center; line-height: 16px; font-size: 11px; font-weight: bold; margin-left: 2px; }
     .pin-tag { color: #f59e0b; font-weight: bold; font-size: 12px; margin-left: 2px; }
     .btn-auto-kw { background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff; font-size: 12px; padding: 6px 12px; width: auto; margin-top: 5px; }
+
+    /* Report Card Styling */
+    .report-card { background: #0b0f19; border: 1px solid #ef4444; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+    .report-title { color: #f8fafc; font-weight: bold; font-size: 15px; margin-bottom: 4px; }
+    .report-meta { color: #94a3b8; font-size: 12px; margin-bottom: 8px; line-height: 1.4; }
+    .btn-fix-report { background: #10b981; color: #fff; padding: 6px 12px; font-size: 12px; width: auto; border-radius: 6px; margin-top: 4px; }
   </style>
 </head>
 <body>
@@ -101,12 +107,16 @@
   <div id="admin-dashboard" class="container hidden">
     <h2>Anime Admin Panel</h2>
     
+    <!-- 4 Navigation Tabs -->
     <div class="nav-tabs">
       <button type="button" id="tab-btn-standard" class="tab-btn active" onclick="switchAdminTab('standard')">📊 Standard Admin</button>
       <button type="button" id="tab-btn-ai" class="tab-btn" onclick="switchAdminTab('ai')">🤖 AI Admin</button>
+      <button type="button" id="tab-btn-analytics" class="tab-btn" onclick="switchAdminTab('analytics')">📈 Analytics / Views</button>
+      <button type="button" id="tab-btn-reports" class="tab-btn" onclick="switchAdminTab('reports')">🚨 Link Reports</button>
     </div>
 
-    <div id="analytics-section" class="analytics-grid">
+    <!-- Analytics Tab Section -->
+    <div id="analytics-section" class="analytics-grid hidden">
       <div class="stat-card full-width">
         <div class="stat-label"><span class="live-pulse"></span>অনলাইন লাইভ ইউজার</div>
         <div class="stat-num" id="stat-live" style="color: #10b981;">0</div>
@@ -139,7 +149,15 @@
       </div>
     </div>
 
-    <!-- AI Bulk Link Processor Box (Updated Quality Dropdown) -->
+    <!-- Link Reports Section -->
+    <div id="link-reports-section" class="hidden">
+      <h3 style="color: #ef4444; margin-bottom: 12px;">🚨 ইউজারদের পাঠানো নষ্ট লিংক রিপোর্টসমূহ</h3>
+      <div id="link-reports-list">
+        <p style="color: #94a3b8; font-size: 13px;">কোনো লিংক রিপোর্ট নেই!</p>
+      </div>
+    </div>
+
+    <!-- AI Bulk Link Processor Box -->
     <div id="ai-importer-section" class="ai-box hidden">
       <h3>🤖 Google AI Studio - Bulk Link Processor</h3>
       <div class="form-group">
@@ -147,14 +165,8 @@
         <input type="text" id="ai-prefix" value="https://" placeholder="যেমন: https:// বা https://hubcloud.ist/">
       </div>
       <div class="form-group">
-        <label>🎯 কোয়ালিটি ট্যাগ সিলেক্ট করুন:</label>
-        <select id="ai-quality-tag">
-          <option value="480p x264 [Size: 120mb]">480p x264 [Size: 120mb]</option>
-          <option value="720p x264 [Size: 242mb]">720p x264 [Size: 242mb]</option>
-          <option value="1080p x265 [Size: 460mb]">1080p x265 [Size: 460mb]</option>
-          <option value="1080p x264 HQ [Size: 650mb]">1080p x264 HQ [Size: 650mb]</option>
-          <option value="4K UHD [Size: 1.2GB]">4K UHD [Size: 1.2GB]</option>
-        </select>
+        <label>🎯 কোয়ালিটি ট্যাগ সিলেক্ট বা কাস্টম সাইজ লিখুন:</label>
+        <input type="text" id="ai-quality-tag" value="480p x264 [Size: 120mb]" placeholder="যেমন: 720p x264 [Size: 242mb] বা 4K UHD [Size: 1.2GB]">
       </div>
       <div class="form-group">
         <label>📋 একসাথে সব ডাউনলোড লিংক পেস্ট করুন:</label>
@@ -164,108 +176,127 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       <button type="button" style="background: linear-gradient(135deg, #0284c7, #2563eb);" onclick="processAILinks()">⚡ Process & Append Links To Episodes</button>
     </div>
 
-    <form id="movie-form">
-      <div class="form-group">
-        <label>টাইপ (Type)</label>
-        <select id="type">
-          <option value="Anime Series">Anime Series</option>
-          <option value="Anime Movie">Anime Movie</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>এনিমেশনের নাম (Title)</label>
-        <input type="text" id="title" placeholder="যেমন: Solo Leveling Season 01" required>
-      </div>
-
-      <div class="form-group">
-        <label>ImgBB পোস্টার / ব্যানার ডাইরেক্ট লিংক</label>
-        <input type="url" id="poster" placeholder="https://i.ibb.co/..." required>
-      </div>
-
-      <div class="form-group">
-        <label>ক্যাটাগরি / Genre (একাধিক সিলেক্ট করুন):</label>
-        <div class="category-checkbox-grid">
-          <label class="cat-check-item"><input type="checkbox" value="Hindi Dub" class="cat-checkbox"> Hindi Dub</label>
-          <label class="cat-check-item"><input type="checkbox" value="English Dub" class="cat-checkbox"> English Dub</label>
-          <label class="cat-check-item"><input type="checkbox" value="Action" class="cat-checkbox"> Action</label>
-          <label class="cat-check-item"><input type="checkbox" value="Romance" class="cat-checkbox"> Romance</label>
-          <label class="cat-check-item"><input type="checkbox" value="Adventure" class="cat-checkbox"> Adventure</label>
-          <label class="cat-check-item"><input type="checkbox" value="Fantasy" class="cat-checkbox"> Fantasy</label>
-          <label class="cat-check-item"><input type="checkbox" value="Adult 18+" class="cat-checkbox"> Adult 18+</label>
-          <label class="cat-check-item"><input type="checkbox" value="Sci-Fi" class="cat-checkbox"> Sci-Fi</label>
-          <label class="cat-check-item"><input type="checkbox" value="Supernatural" class="cat-checkbox"> Supernatural</label>
-          <label class="cat-check-item"><input type="checkbox" value="Drama" class="cat-checkbox"> Drama</label>
-          <label class="cat-check-item"><input type="checkbox" value="Comedy" class="cat-checkbox"> Comedy</label>
-          <label class="cat-check-item"><input type="checkbox" value="Movies" class="cat-checkbox"> Movies</label>
-        </div>
-      </div>
-
-      <div class="form-group" style="background: #0b0f19; padding: 12px; border-radius: 8px; border: 1px solid #38bdf8; display: flex; flex-direction: column; gap: 10px;">
-        <label class="cat-check-item" style="color: #ef4444; font-weight: bold;">
-          <input type="checkbox" id="hide-from-home"> 🔞 কেবল Adult 18+ সেকশনে দেখাবে (হোমপেজে লুকানো থাকবে)
-        </label>
-        <label class="cat-check-item" style="color: #38bdf8; font-weight: bold;">
-          <input type="checkbox" id="is-verified"> 🟦 External Link Badge (Blue Tick চিহ্নিত করুন)
-        </label>
-        <label class="cat-check-item" style="color: #f59e0b; font-weight: bold;">
-          <input type="checkbox" id="is-pinned"> 📌 Pin to Top (ইউজার প্যানেলে সবার উপরে পিন রাখুন)
-        </label>
-        
-        <div style="border-top: 1px solid #1e293b; padding-top: 8px;">
-          <label style="color: #229ed9; font-weight: bold; margin-bottom: 4px;">✈️ Telegram Notification Mode:</label>
-          <select id="telegram-mode" style="border-color: #229ed9;">
-            <option value="ALWAYS">Always Enable (সবসময় টেলিগ্রামে নোটিফিকেশন যাবে)</option>
-            <option value="ONCE">Send Once (শুধু এই পোস্টের জন্য যাবে, পরে বন্ধ হবে)</option>
-            <option value="OFF" selected>OFF (টেলিগ্রামে কোনো মেসেজ পাঠাবে না)</option>
+    <!-- Standard Admin Main Form Section -->
+    <div id="standard-admin-section">
+      <form id="movie-form">
+        <div class="form-group">
+          <label>টাইপ (Type)</label>
+          <select id="type">
+            <option value="Anime Series">Anime Series</option>
+            <option value="Anime Movie">Anime Movie</option>
           </select>
         </div>
-      </div>
 
-      <div style="display: flex; gap: 10px;">
-        <div class="form-group" style="flex: 1;">
-          <label>রেটিং (Rating)</label>
-          <input type="text" id="rating" placeholder="⭐ 9.5">
+        <div class="form-group">
+          <label>এনিমেশনের নাম (Title)</label>
+          <input type="text" id="title" placeholder="যেমন: Solo Leveling Season 01" required>
         </div>
-        <div class="form-group" style="flex: 1;">
-          <label>রিলিজ বছর (Year)</label>
-          <input type="text" id="year" placeholder="2026">
+
+        <div class="form-group">
+          <label>ImgBB পোস্টার / ব্যানার ডাইরেক্ট লিংক</label>
+          <input type="url" id="poster" placeholder="https://i.ibb.co/..." required>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label>অডিও ট্র্যাক / ভাষা (Audio Language)</label>
-        <input type="text" id="language" placeholder="Hindi, Japanese, English">
-      </div>
-
-      <div class="form-group">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <label>SEO Keywords (Google Search Console-এর জন্য)</label>
-          <button type="button" class="btn-auto-kw" onclick="generateAutoKeywords()">⚡ Auto-Generate Keywords</button>
+        <div class="form-group">
+          <label>ক্যাটাগরি / Genre (একাধিক সিলেক্ট করুন):</label>
+          <div class="category-checkbox-grid">
+            <label class="cat-check-item"><input type="checkbox" value="Hindi Dub" class="cat-checkbox"> Hindi Dub</label>
+            <label class="cat-check-item"><input type="checkbox" value="English Dub" class="cat-checkbox"> English Dub</label>
+            <label class="cat-check-item"><input type="checkbox" value="Action" class="cat-checkbox"> Action</label>
+            <label class="cat-check-item"><input type="checkbox" value="Romance" class="cat-checkbox"> Romance</label>
+            <label class="cat-check-item"><input type="checkbox" value="Adventure" class="cat-checkbox"> Adventure</label>
+            <label class="cat-check-item"><input type="checkbox" value="Fantasy" class="cat-checkbox"> Fantasy</label>
+            <label class="cat-check-item"><input type="checkbox" value="Adult 18+" class="cat-checkbox"> Adult 18+</label>
+            <label class="cat-check-item"><input type="checkbox" value="Sci-Fi" class="cat-checkbox"> Sci-Fi</label>
+            <label class="cat-check-item"><input type="checkbox" value="Supernatural" class="cat-checkbox"> Supernatural</label>
+            <label class="cat-check-item"><input type="checkbox" value="Drama" class="cat-checkbox"> Drama</label>
+            <label class="cat-check-item"><input type="checkbox" value="Comedy" class="cat-checkbox"> Comedy</label>
+            <label class="cat-check-item"><input type="checkbox" value="Movies" class="cat-checkbox"> Movies</label>
+          </div>
         </div>
-        <textarea id="keywords" rows="3" placeholder="কমা দিয়ে আলাদা করে কিওয়ার্ড লিখুন..."></textarea>
+
+        <div class="form-group" style="background: #0b0f19; padding: 12px; border-radius: 8px; border: 1px solid #38bdf8; display: flex; flex-direction: column; gap: 10px;">
+          <label class="cat-check-item" style="color: #ef4444; font-weight: bold;">
+            <input type="checkbox" id="hide-from-home"> 🔞 কেবল Adult 18+ সেকশনে দেখাবে (হোমপেজে লুকানো থাকবে)
+          </label>
+          <label class="cat-check-item" style="color: #38bdf8; font-weight: bold;">
+            <input type="checkbox" id="is-verified"> 🟦 External Link Badge (Blue Tick চিহ্নিত করুন)
+          </label>
+          <label class="cat-check-item" style="color: #f59e0b; font-weight: bold;">
+            <input type="checkbox" id="is-pinned"> 📌 Pin to Top (ইউজার প্যানেলে সবার উপরে পিন রাখুন)
+          </label>
+          
+          <div style="border-top: 1px solid #1e293b; padding-top: 8px;">
+            <label style="color: #229ed9; font-weight: bold; margin-bottom: 4px;">✈️ Telegram Notification Mode:</label>
+            <select id="telegram-mode" style="border-color: #229ed9;">
+              <option value="ALWAYS">Always Enable (সবসময় টেলিগ্রামে নোটিফিকেশন যাবে)</option>
+              <option value="ONCE">Send Once (শুধু এই পোস্টের জন্য যাবে, পরে বন্ধ হবে)</option>
+              <option value="OFF" selected>OFF (টেলিগ্রামে কোনো মেসেজ পাঠাবে না)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <div class="form-group" style="flex: 1;">
+            <label>রেটিং (Rating)</label>
+            <input type="text" id="rating" placeholder="⭐ 9.5">
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>রিলিজ বছর (Year)</label>
+            <input type="text" id="year" placeholder="2026">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>অডিও ট্র্যাক / ভাষা (Audio Language)</label>
+          <input type="text" id="language" placeholder="Hindi, Japanese, English">
+        </div>
+
+        <div class="form-group">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <label>SEO Keywords (Google Search Console-এর জন্য)</label>
+            <button type="button" class="btn-auto-kw" onclick="generateAutoKeywords()">⚡ Auto-Generate Keywords</button>
+          </div>
+          <textarea id="keywords" rows="3" placeholder="কমা দিয়ে আলাদা করে কিওয়ার্ড লিখুন..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>গল্প / বিবরণ (Synopsis)</label>
+          <textarea id="synopsis" rows="3" placeholder="সংক্ষিপ্ত বিবরণ..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label style="font-size: 16px; color: #38bdf8;">এপিসোড ও ডাউনলোড লিংকসমূহ</label>
+          <div id="episodes-container"></div>
+          <button type="button" class="btn-add-ep" onclick="addEpisodeBox()">+ নতুন এপিসোড বক্স যোগ করুন</button>
+        </div>
+
+        <!-- 📌 সিজন / এপিসোড স্ট্যাটাস ও কাউন্টডাউন টাইমার সেটআপ -->
+        <div class="form-group" style="background: #0b0f19; padding: 12px; border-radius: 8px; border: 1px solid #0284c7; margin-top: 15px;">
+          <label style="color: #38bdf8; font-weight: bold;">📌 সিজন / নতুন এপিসোড স্ট্যাটাস ও টাইমার সেটআপ:</label>
+          <select id="status-mode" onchange="toggleCountdownBox()">
+            <option value="NONE">None / Normal (সাধারণ মোড)</option>
+            <option value="SEASON_ENDED">🏁 Season Ended (সিজন শেষ)</option>
+            <option value="SERIES_COMPLETED">✅ Series Completed (সম্পূর্ণ সিরিজ শেষ)</option>
+            <option value="COUNTDOWN">⏳ Next Episode Countdown (লাইভ টাইমার সেট করুন)</option>
+          </select>
+
+          <div id="countdown-picker-box" class="hidden" style="margin-top: 10px;">
+            <label style="color: #f59e0b;">📅 পরবর্তী এপিসোড প্রকাশের তারিখ ও সময় বেছে নিন:</label>
+            <input type="datetime-local" id="countdown-datetime">
+          </div>
+        </div>
+
+        <button type="submit" id="submit-btn">Publish Anime</button>
+        <button type="button" id="cancel-edit-btn" class="btn-cancel hidden" onclick="resetForm()">Cancel Editing</button>
+      </form>
+
+      <div id="published-list-section" class="movie-list">
+        <h3 style="color: #38bdf8; margin-bottom: 8px;">🔍 পোস্ট করা এনিমেশন এডিট, রি-অর্ডার বা খুজুন</h3>
+        <div id="total-post-count" class="total-posts-badge">সর্বমোট এনিমেশন পোস্ট: 0 টি</div>
+        <input type="text" id="admin-search-input" class="admin-search-input" placeholder="এনিমেশনের নাম লিখে খুঁজুন..." oninput="filterAdminMovies()">
+        <div id="movie-items"></div>
       </div>
-
-      <div class="form-group">
-        <label>গল্প / বিবরণ (Synopsis)</label>
-        <textarea id="synopsis" rows="3" placeholder="সংক্ষিপ্ত বিবরণ..."></textarea>
-      </div>
-
-      <div class="form-group">
-        <label style="font-size: 16px; color: #38bdf8;">এপিসোড ও ডাউনলোড লিংকসমূহ</label>
-        <div id="episodes-container"></div>
-        <button type="button" class="btn-add-ep" onclick="addEpisodeBox()">+ নতুন এপিসোড বক্স যোগ করুন</button>
-      </div>
-
-      <button type="submit" id="submit-btn">Publish Anime</button>
-      <button type="button" id="cancel-edit-btn" class="btn-cancel hidden" onclick="resetForm()">Cancel Editing</button>
-    </form>
-
-    <div id="published-list-section" class="movie-list">
-      <h3 style="color: #38bdf8; margin-bottom: 8px;">🔍 পোস্ট করা এনিমেশন এডিট, রি-অর্ডার বা খুজুন</h3>
-      <div id="total-post-count" class="total-posts-badge">সর্বমোট এনিমেশন পোস্ট: 0 টি</div>
-      <input type="text" id="admin-search-input" class="admin-search-input" placeholder="এনিমেশনের নাম লিখে খুঁজুন..." oninput="filterAdminMovies()">
-      <div id="movie-items"></div>
     </div>
   </div>
 
@@ -307,31 +338,82 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         document.getElementById('admin-dashboard').classList.remove('hidden');
         loadMovies();
         loadAnalytics();
+        loadReports();
       } else {
         alert("ভুল পাসওয়ার্ড!");
+      }
+    };
+
+    window.toggleCountdownBox = function() {
+      const mode = document.getElementById('status-mode').value;
+      const pBox = document.getElementById('countdown-picker-box');
+      if (mode === 'COUNTDOWN') {
+        pBox.classList.remove('hidden');
+      } else {
+        pBox.classList.add('hidden');
       }
     };
 
     window.switchAdminTab = function(mode) {
       const btnStd = document.getElementById('tab-btn-standard');
       const btnAi = document.getElementById('tab-btn-ai');
+      const btnAnalytics = document.getElementById('tab-btn-analytics');
+      const btnReports = document.getElementById('tab-btn-reports');
+
+      const sectionStd = document.getElementById('standard-admin-section');
+      const sectionAi = document.getElementById('ai-importer-section');
       const sectionAnalytics = document.getElementById('analytics-section');
-      const sectionAiImporter = document.getElementById('ai-importer-section');
-      const sectionPubList = document.getElementById('published-list-section');
+      const sectionReports = document.getElementById('link-reports-section');
+
+      [btnStd, btnAi, btnAnalytics, btnReports].forEach(b => b.classList.remove('active'));
+      [sectionStd, sectionAi, sectionAnalytics, sectionReports].forEach(s => s.classList.add('hidden'));
 
       if (mode === 'ai') {
         btnAi.classList.add('active');
-        btnStd.classList.remove('active');
-        sectionAnalytics.classList.add('hidden');
-        sectionPubList.classList.add('hidden');
-        sectionAiImporter.classList.remove('hidden');
+        sectionAi.classList.remove('hidden');
+      } else if (mode === 'analytics') {
+        btnAnalytics.classList.add('active');
+        sectionAnalytics.classList.remove('hidden');
+      } else if (mode === 'reports') {
+        btnReports.classList.add('active');
+        sectionReports.classList.remove('hidden');
       } else {
         btnStd.classList.add('active');
-        btnAi.classList.remove('active');
-        sectionAnalytics.classList.remove('hidden');
-        sectionPubList.classList.remove('hidden');
-        sectionAiImporter.classList.add('hidden');
+        sectionStd.classList.remove('hidden');
       }
+    };
+
+    function loadReports() {
+      onValue(ref(db, 'reports'), (snapshot) => {
+        const div = document.getElementById('link-reports-list');
+        div.innerHTML = "";
+        if (!snapshot.exists()) {
+          div.innerHTML = "<p style='color:#94a3b8; font-size:13px;'>কোনো নষ্ট লিংক রিপোর্ট নেই!</p>";
+          return;
+        }
+        const reportsData = snapshot.val();
+        for (let rId in reportsData) {
+          let rep = reportsData[rId];
+          let dateStr = rep.timestamp ? new Date(rep.timestamp).toLocaleString() : 'N/A';
+          div.innerHTML += `
+            <div class="report-card">
+              <div class="report-title">🔴 ${rep.animeTitle || 'Unknown Anime'}</div>
+              <div class="report-meta">
+                📌 <b>এপিসোড:</b> ${rep.epName || 'N/A'}<br>
+                🎯 <b>কোয়ালিটি/লিংক:</b> ${rep.quality || 'N/A'}<br>
+                🕒 <b>রিপোর্টের সময়:</b> ${dateStr}
+              </div>
+              <button type="button" class="btn-fix-report" onclick="markReportFixed('${rId}')">✅ Mark as Fixed / Clear</button>
+            </div>
+          `;
+        }
+      });
+    }
+
+    window.markReportFixed = function(reportId) {
+      remove(ref(db, 'reports/' + reportId)).then(() => {
+        alert("রিপোর্টটি সফলভাবে মুছে ফেলা হয়েছে!");
+      });
     };
 
     function loadAnalytics() {
@@ -346,7 +428,6 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       onValue(ref(db, 'analytics/daily'), (snapshot) => {
         if (!snapshot.exists()) return;
         const data = snapshot.val();
-        
         const now = new Date();
         const getFormattedDate = (d) => {
           const yyyy = d.getFullYear();
@@ -447,7 +528,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
 
     window.processAILinks = function() {
       const prefix = document.getElementById('ai-prefix').value.trim() || "https://";
-      const qualityTag = document.getElementById('ai-quality-tag').value;
+      const qualityTag = document.getElementById('ai-quality-tag').value.trim() || "480p x264 [Size: 120mb]";
       const rawText = document.getElementById('ai-raw-links').value.trim();
 
       if (!rawText) {
@@ -623,6 +704,8 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       document.getElementById('is-verified').checked = false;
       document.getElementById('is-pinned').checked = false;
       document.getElementById('telegram-mode').value = 'OFF';
+      document.getElementById('status-mode').value = 'NONE';
+      document.getElementById('countdown-picker-box').classList.add('hidden');
       document.getElementById('submit-btn').innerText = "Publish Anime";
       document.getElementById('cancel-edit-btn').classList.add('hidden');
       document.getElementById('episodes-container').innerHTML = '';
@@ -692,6 +775,8 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         language: document.getElementById('language').value || "Dual Audio",
         keywords: document.getElementById('keywords').value || "",
         synopsis: document.getElementById('synopsis').value || "",
+        statusMode: document.getElementById('status-mode').value || "NONE",
+        countdownTime: document.getElementById('countdown-datetime').value || "",
         episodes: episodes,
         timestamp: Date.now()
       };
@@ -827,6 +912,9 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       document.getElementById('is-verified').checked = !!movie.isVerified;
       document.getElementById('is-pinned').checked = !!movie.isPinned;
       document.getElementById('telegram-mode').value = 'OFF';
+      document.getElementById('status-mode').value = movie.statusMode || 'NONE';
+      document.getElementById('countdown-datetime').value = movie.countdownTime || '';
+      toggleCountdownBox();
 
       document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = false);
       if (movie.category) {
@@ -859,6 +947,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
 
       document.getElementById('submit-btn').innerText = "Update Content (Bump to Top)";
       document.getElementById('cancel-edit-btn').classList.remove('hidden');
+      switchAdminTab('standard');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -871,4 +960,4 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
     addEpisodeBox();
   </script>
 </body>
-                                                                                           </html>
+        </html>
