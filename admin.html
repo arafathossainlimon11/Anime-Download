@@ -32,7 +32,7 @@
     .live-pulse { display: inline-block; width: 10px; height: 10px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; margin-right: 6px; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16,185,129,0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16,185,129,0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16,185,129,0); } }
 
-    .breakdown-box { background: #0b0f19; padding: 12px; border-radius: 10px; margin-top: 6px; max-height: 250px; overflow-y: auto; }
+    .breakdown-box { background: #0b0f19; padding: 12px; border-radius: 10px; margin-top: 6px; max-height: 250px; overflow-y: auto; text-align: left; }
     .breakdown-item { margin-bottom: 10px; }
     .breakdown-item:last-child { margin-bottom: 0; }
     .breakdown-info { display: flex; justify-content: space-between; font-size: 12px; color: #cbd5e1; margin-bottom: 4px; font-weight: 600; }
@@ -48,9 +48,10 @@
     .cat-check-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: #0284c7; cursor: pointer; }
 
     .ep-box { background: #0b0f19; border: 1px solid #38bdf8; border-radius: 12px; padding: 15px; margin-top: 15px; }
-    .ep-header-checkboxes { display: flex; gap: 15px; margin-bottom: 10px; flex-wrap: wrap; }
-    .checkbox-label { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #ef4444; cursor: pointer; white-space: nowrap; font-weight: bold; }
+    .ep-header-checkboxes { display: flex; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+    .checkbox-label { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #ef4444; cursor: pointer; white-space: nowrap; font-weight: bold; }
     .checkbox-label.tg-ep-label { color: #229ed9; }
+    .checkbox-label.app-ep-label { color: #10b981; }
     .checkbox-label input { width: auto; }
     .ep-name-input { width: 100%; font-weight: bold; color: #38bdf8; margin-bottom: 10px; }
 
@@ -143,12 +144,12 @@
 
       <div class="stat-card full-width">
         <div class="stat-label" style="color:#38bdf8;">🚀 ট্রাফিক সোর্স (ভিজিটর কোথা থেকে আসছে)</div>
-        <div id="stat-sources" class="breakdown-box">ডেটা বিশ্লেষণ করা হচ্ছে...</div>
+        <div id="stat-sources" class="breakdown-box">ডেটা লোড হচ্ছে...</div>
       </div>
 
       <div class="stat-card full-width">
         <div class="stat-label" style="color:#38bdf8;">🌍 কান্ট্রি ট্র্যাকিং (কোন দেশ থেকে আসছে)</div>
-        <div id="stat-countries" class="breakdown-box">ডেটা বিশ্লেষণ করা হচ্ছে...</div>
+        <div id="stat-countries" class="breakdown-box">ডেটা লোড হচ্ছে...</div>
       </div>
     </div>
 
@@ -237,6 +238,12 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
               <option value="ONCE">Send Once (শুধু এই পোস্টের জন্য যাবে, পরে বন্ধ হবে)</option>
               <option value="OFF" selected>OFF (টেলিগ্রামে কোনো মেসেজ পাঠাবে না)</option>
             </select>
+          </div>
+
+          <div style="border-top: 1px solid #1e293b; padding-top: 8px;">
+            <label class="cat-check-item" style="color: #10b981; font-weight: bold;">
+              <input type="checkbox" id="app-notify-main"> 🔔 Send App Push Notification (নতুন এই এনিমেশনের জন্য অ্যাপ পুশ পাঠান)
+            </label>
           </div>
         </div>
 
@@ -383,7 +390,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       const sectionReports = document.getElementById('link-reports-section');
 
       [btnStd, btnAi, btnAnalytics, btnReports].forEach(b => b.classList.remove('active'));
-      [sectionAnalytics, sectionReports].forEach(s => s.classList.add('hidden'));
+      [sectionForm, sectionAnalytics, sectionReports].forEach(s => s.classList.add('hidden'));
 
       if (mode === 'ai') {
         btnAi.classList.add('active');
@@ -391,10 +398,9 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         sectionAiImporter.classList.remove('hidden');
       } else if (mode === 'analytics') {
         btnAnalytics.classList.add('active');
-        sectionForm.classList.add('hidden');
+        sectionAnalytics.classList.remove('hidden');
       } else if (mode === 'reports') {
         btnReports.classList.add('active');
-        sectionForm.classList.add('hidden');
         sectionReports.classList.remove('hidden');
       } else {
         btnStd.classList.add('active');
@@ -415,13 +421,15 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         for (let rId in reportsData) {
           let rep = reportsData[rId];
           let dateStr = rep.timestamp ? new Date(rep.timestamp).toLocaleString() : 'N/A';
+          let rCount = rep.count || 1;
           div.innerHTML += `
             <div class="report-card">
               <div class="report-title">🔴 ${rep.animeTitle || 'Unknown Anime'}</div>
               <div class="report-meta">
                 📌 <b>এপিসোড:</b> ${rep.epName || 'N/A'}<br>
                 🎯 <b>কোয়ালিটি/লিংক:</b> ${rep.quality || 'N/A'}<br>
-                🕒 <b>রিপোর্টের সময়:</b> ${dateStr}
+                🚨 <b>মোট রিপোর্ট করেছে:</b> <span style="color:#ef4444; font-weight:bold;">${rCount} জন ইউজার</span><br>
+                🕒 <b>সর্বশেষ রিপোর্ট:</b> ${dateStr}
               </div>
               <button type="button" class="btn-fix-report" onclick="markReportFixed('${rId}')">✅ Mark as Fixed / Clear</button>
             </div>
@@ -594,38 +602,57 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       document.getElementById('ai-raw-links').value = "";
     };
 
-    function sendTelegramNotification(movieData, isEditMode, specificEpName) {
+    function triggerNotifications(movieData, isEditMode, specificEpTgName, specificEpAppName) {
+      // 1. Telegram Notification
       const tgMode = document.getElementById('telegram-mode').value;
-      if (tgMode === 'OFF' && !specificEpName) return;
+      if (tgMode !== 'OFF' || specificEpTgName) {
+        const cats = Array.isArray(movieData.category) ? movieData.category.join(', ') : movieData.category;
+        let captionText = "";
 
-      const cats = Array.isArray(movieData.category) ? movieData.category.join(', ') : movieData.category;
-      let captionText = "";
+        if (specificEpTgName) {
+          captionText = `🔥 <b>NEW EPISODE RELEASED!</b> 🔥\n\n📌 <b>Anime:</b> ${movieData.title}\n🎉 <b>Episode:</b> ${specificEpTgName}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇ <b>Download Episode Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+        } else if (isEditMode) {
+          captionText = `🎬 <b>ANIME UPDATED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️ <b>Watch & Download Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+        } else {
+          captionText = `🎬 <b>NEW ANIME UPLOADED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n✨ Watch & Download in HD Quality\n\n⬇️ <b>Watch & Download Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+        }
 
-      if (specificEpName) {
-        captionText = `🔥 <b>NEW EPISODE RELEASED!</b> 🔥\n\n📌 <b>Anime:</b> ${movieData.title}\n🎉 <b>Episode:</b> ${specificEpName}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇ <b>Download Episode Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
-      } else if (isEditMode) {
-        captionText = `🎬 <b>ANIME UPDATED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️ <b>Watch & Download Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
-      } else {
-        captionText = `🎬 <b>NEW ANIME UPLOADED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n✨ Watch & Download in HD Quality\n\n⬇️ <b>Watch & Download Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+        fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            photo: movieData.poster,
+            caption: captionText,
+            parse_mode: 'HTML'
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (tgMode === 'ONCE') {
+            document.getElementById('telegram-mode').value = 'OFF';
+          }
+        })
+        .catch(err => console.error("Telegram Post Error:", err));
       }
 
-      fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
-          photo: movieData.poster,
-          caption: captionText,
-          parse_mode: 'HTML'
-        })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (tgMode === 'ONCE') {
-          document.getElementById('telegram-mode').value = 'OFF';
-        }
-      })
-      .catch(err => console.error("Telegram Post Error:", err));
+      // 2. App Push Notification
+      const sendMainAppPush = document.getElementById('app-notify-main').checked;
+
+      if (sendMainAppPush || specificEpAppName) {
+        let pushTitle = specificEpAppName ? "🔥 New Episode Release!" : "🎬 New Anime Released!";
+        let pushBody = specificEpAppName ? `${movieData.title} - ${specificEpAppName} is now available!` : `${movieData.title} (${movieData.language}) - Watch & Download Now!`;
+
+        push(ref(db, 'push_notifications'), {
+          title: pushTitle,
+          body: pushBody,
+          icon: movieData.poster,
+          animeId: editingId || 'new',
+          timestamp: Date.now()
+        }).then(() => {
+          console.log("App Push Notification Saved to Firebase!");
+        });
+      }
     }
 
     window.generateAutoKeywords = function() {
@@ -652,7 +679,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       alert("⚡ ১০টি র‍্যাঙ্কিং SEO কিওয়ার্ড অটো-জেনারেট করা হয়েছে!");
     };
 
-    window.addEpisodeBox = function(epName = "", isNew = false, epDate = "", qualities = [], notifyTg = false) {
+    window.addEpisodeBox = function(epName = "", isNew = false, epDate = "", qualities = [], notifyTg = false, notifyApp = false) {
       const container = document.getElementById('episodes-container');
       const epDiv = document.createElement('div');
       epDiv.className = 'ep-box';
@@ -667,6 +694,9 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
           </label>
           <label class="checkbox-label tg-ep-label">
             <input type="checkbox" class="ep-notify-tg" ${notifyTg ? 'checked' : ''}> ✈️ Alert Telegram
+          </label>
+          <label class="checkbox-label app-ep-label">
+            <input type="checkbox" class="ep-notify-app" ${notifyApp ? 'checked' : ''}> 🔔 Alert App
           </label>
         </div>
         
@@ -723,6 +753,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       document.getElementById('hide-from-home').checked = false;
       document.getElementById('is-verified').checked = false;
       document.getElementById('is-pinned').checked = false;
+      document.getElementById('app-notify-main').checked = false;
       document.getElementById('telegram-mode').value = 'OFF';
       document.getElementById('status-mode').value = 'NONE';
       document.getElementById('countdown-picker-box').classList.add('hidden');
@@ -751,16 +782,17 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       const epBoxes = document.querySelectorAll('.ep-box');
       const episodes = [];
       let tgEpNotifyName = null;
+      let appEpNotifyName = null;
 
       epBoxes.forEach(box => {
         const epName = box.querySelector('.ep-name').value;
         const isNew = box.querySelector('.ep-is-new').checked;
         const notifyTg = box.querySelector('.ep-notify-tg').checked;
+        const notifyApp = box.querySelector('.ep-notify-app').checked;
         const epDate = box.querySelector('.ep-date').value || "30/09/2026";
         
-        if (notifyTg && epName) {
-          tgEpNotifyName = epName;
-        }
+        if (notifyTg && epName) tgEpNotifyName = epName;
+        if (notifyApp && epName) appEpNotifyName = epName;
 
         const qLabels = box.querySelectorAll('.q-label');
         const qUrls = box.querySelectorAll('.q-url');
@@ -819,14 +851,14 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
 
       if (editingId) {
         set(ref(db, 'movies/' + editingId), movieData).then(() => {
-          sendTelegramNotification(movieData, isEdit, tgEpNotifyName);
+          triggerNotifications(movieData, isEdit, tgEpNotifyName, appEpNotifyName);
           alert("সফলভাবে আপডেট করা হয়েছে!");
           resetForm();
         });
       } else {
         const newRef = push(ref(db, 'movies'));
         set(newRef, movieData).then(() => {
-          sendTelegramNotification(movieData, false, tgEpNotifyName);
+          triggerNotifications(movieData, false, tgEpNotifyName, appEpNotifyName);
           alert("সফলভাবে পোস্ট করা হয়েছে!");
           resetForm();
         });
@@ -945,6 +977,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       document.getElementById('hide-from-home').checked = !!movie.hideFromHome;
       document.getElementById('is-verified').checked = !!movie.isVerified;
       document.getElementById('is-pinned').checked = !!movie.isPinned;
+      document.getElementById('app-notify-main').checked = false;
       document.getElementById('telegram-mode').value = 'OFF';
       document.getElementById('status-mode').value = movie.statusMode || 'NONE';
       toggleCountdownBox();
@@ -970,10 +1003,10 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       
       if (movie.episodes && movie.episodes.length > 0) {
         movie.episodes.forEach(ep => {
-          addEpisodeBox(ep.episodeName, ep.isNew, ep.date, ep.qualities, false);
+          addEpisodeBox(ep.episodeName, ep.isNew, ep.date, ep.qualities, false, false);
         });
       } else if (movie.links && movie.links.length > 0) {
-        addEpisodeBox("Episode: 01", false, "30/09/2026", movie.links, false);
+        addEpisodeBox("Episode: 01", false, "30/09/2026", movie.links, false, false);
       } else {
         addEpisodeBox();
       }
