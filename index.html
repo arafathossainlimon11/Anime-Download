@@ -376,6 +376,7 @@
     .status-banner-sub { color: #cbd5e1; font-size: 12px; }
 
     .report-link-btn { background: transparent; border: none; color: #ef4444; font-size: 11px; cursor: pointer; margin-top: 6px; text-decoration: underline; }
+    .report-link-btn.reported-btn { color: #10b981; cursor: default; text-decoration: none; }
     .hidden { display: none !important; }
   </style>
 </head>
@@ -472,6 +473,13 @@
       });
     }
 
+    // Request Notification Permission for App Push Notifications
+    if ('Notification' in window) {
+      if (Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('admin') === '1') {
       localStorage.setItem('isAdminDevice', 'true');
@@ -525,6 +533,30 @@
     let currentCategory = "All";
     let activeTimerInterval = null;
     let deferredPrompt = null;
+
+    // Listen for App Push Notifications in Realtime
+    onValue(ref(db, 'push_notifications'), (snapshot) => {
+      if (!snapshot.exists()) return;
+      const data = snapshot.val();
+      const keys = Object.keys(data);
+      const latestKey = keys[keys.length - 1];
+      const notif = data[latestKey];
+
+      const lastSeen = localStorage.getItem('last_seen_push');
+      if (lastSeen !== latestKey) {
+        localStorage.setItem('last_seen_push', latestKey);
+        if ('Notification' in window && Notification.permission === 'granted') {
+          navigator.serviceWorker.ready.then(registration => {
+            registration.showNotification(notif.title || 'Anime Download', {
+              body: notif.body || 'New content available!',
+              icon: notif.icon || 'https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png',
+              badge: 'https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png',
+              vibrate: [200, 100, 200]
+            });
+          });
+        }
+      }
+    });
 
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -612,14 +644,41 @@
       startBuffer(`${animeTitle} - ${epName}`, url);
     };
 
-    window.reportLink = function(animeTitle, epName, quality) {
-      push(ref(db, 'reports'), {
-        animeTitle: animeTitle,
-        epName: epName,
-        quality: quality,
-        timestamp: serverTimestamp()
+    /* Anti-Spam Protected Report Link Function */
+    window.reportLink = function(animeTitle, epName, quality, btnElement) {
+      const reportKey = `reported_${animeTitle}_${epName}_${quality}`;
+      
+      if (localStorage.getItem(reportKey)) {
+        alert("আপনি ইতিপূর্বে এই লিংকটিতে রিপোর্ট করেছেন। ধন্যবাদ!");
+        return;
+      }
+
+      const confirmMsg = confirm("আপনি কি নিশ্চিত যে এই ডাউনলোড লিংকটি কাজ করছে না?");
+      if (!confirmMsg) return;
+
+      const reportId = `${animeTitle}_${epName}_${quality}`.replace(/[^a-zA-Z0-9_]/g, '_');
+
+      runTransaction(ref(db, 'reports/' + reportId), (currentData) => {
+        if (currentData) {
+          currentData.count = (currentData.count || 1) + 1;
+          currentData.timestamp = serverTimestamp();
+          return currentData;
+        } else {
+          return {
+            animeTitle: animeTitle,
+            epName: epName,
+            quality: quality,
+            count: 1,
+            timestamp: serverTimestamp()
+          };
+        }
       }).then(() => {
-        alert("Report submitted successfully! We will fix the link as soon as possible.");
+        localStorage.setItem(reportKey, 'true');
+        if (btnElement) {
+          btnElement.innerText = "✓ Reported";
+          btnElement.classList.add('reported-btn');
+        }
+        alert("রিপোর্ট সফলভাবে জমা নেওয়া হয়েছে! আমরা দ্রুত লিংকটি ঠিক করে দেব।");
       });
     };
 
@@ -908,11 +967,16 @@
 
           let qualitiesHtml = '';
           ep.qualities.forEach(q => {
+            const reportKey = `reported_${movie.title}_${ep.episodeName}_${q.label}`;
+            const isAlreadyReported = !!localStorage.getItem(reportKey);
+            const rBtnText = isAlreadyReported ? "✓ Reported" : "⚠️ Report Link";
+            const rBtnClass = isAlreadyReported ? "report-link-btn reported-btn" : "report-link-btn";
+
             qualitiesHtml += `
               <div class="quality-option">
                 <div class="quality-title">${q.label}</div>
                 <button class="glow-btn" style="margin:0; font-size:13px; padding:10px;" onclick="triggerDownloadAction('${movie.title}', '${ep.episodeName}', '${q.url}')">[▶ DOWNLOAD]</button>
-                <button class="report-link-btn" onclick="event.stopPropagation(); reportLink('${movie.title}', '${ep.episodeName}', '${q.label}')">⚠️ Report Link</button>
+                <button class="${rBtnClass}" onclick="event.stopPropagation(); reportLink('${movie.title}', '${ep.episodeName}', '${q.label}', this)">${rBtnText}</button>
               </div>
             `;
           });
@@ -928,11 +992,16 @@
       } else if (movie.links && movie.links.length > 0) {
         let qualitiesHtml = '';
         movie.links.forEach(link => {
+          const reportKey = `reported_${movie.title}_Full Movie_${link.label}`;
+          const isAlreadyReported = !!localStorage.getItem(reportKey);
+          const rBtnText = isAlreadyReported ? "✓ Reported" : "⚠️ Report Link";
+          const rBtnClass = isAlreadyReported ? "report-link-btn reported-btn" : "report-link-btn";
+
           qualitiesHtml += `
             <div class="quality-option">
               <div class="quality-title">${link.label}</div>
               <button class="glow-btn" style="margin:0; font-size:13px; padding:10px;" onclick="triggerDownloadAction('${movie.title}', 'Full Movie', '${link.url}')">[▶ DOWNLOAD]</button>
-              <button class="report-link-btn" onclick="event.stopPropagation(); reportLink('${movie.title}', 'Full Movie', '${link.label}')">⚠️ Report Link</button>
+              <button class="${rBtnClass}" onclick="event.stopPropagation(); reportLink('${movie.title}', 'Full Movie', '${link.label}', this)">${rBtnText}</button>
             </div>
           `;
         });
