@@ -347,7 +347,9 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
 
     const TELEGRAM_BOT_TOKEN = "8841045606:AAFmQGtoc7yylALdEyDFvOGCi72TVBl6MkY";
     const TELEGRAM_CHAT_ID = "@animedownloadweb";
-    const TARGET_WEBSITE = "https://anime-download-seven.vercel.app/";
+    
+    // Dynamic Origin Detection: Vercel or Custom Domain Auto-Detect
+    const TARGET_WEBSITE = window.location.origin + '/';
 
     const SECRET_PASS = "arafat01721313101";
     let editingId = null;
@@ -636,7 +638,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         .catch(err => console.error("Telegram Post Error:", err));
       }
 
-      // 2. App Push Notification
+      // 2. App Push Notification (Always sends Live Host Origin)
       const sendMainAppPush = document.getElementById('app-notify-main').checked;
 
       if (sendMainAppPush || specificEpAppName) {
@@ -647,7 +649,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
           title: pushTitle,
           body: pushBody,
           icon: movieData.poster,
-          animeId: editingId || 'new',
+          url: TARGET_WEBSITE,
           timestamp: Date.now()
         }).then(() => {
           console.log("App Push Notification Saved to Firebase!");
