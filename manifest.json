@@ -1,6 +1,6 @@
 {
-  "name": "Anime Download BD",
-  "short_name": "AnimeBD",
+  "name": "Anime Download",
+  "short_name": "Anime Download",
   "description": "Watch & Download Latest Anime Series, Movies & Hindi Dubbed Anime.",
   "start_url": "./index.html",
   "display": "standalone",
