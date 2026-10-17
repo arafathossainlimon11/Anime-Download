@@ -10,7 +10,6 @@
     .container { max-width: 680px; margin: auto; background: #151d30; padding: 20px; border-radius: 16px; border: 1px solid #1e293b; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
     h2 { text-align: center; margin-bottom: 15px; color: #38bdf8; font-size: 22px; font-weight: 800; }
     
-    /* Nav Tabs */
     .nav-tabs { display: flex; gap: 6px; margin-bottom: 20px; background: #0b0f19; padding: 6px; border-radius: 10px; border: 1px solid #1e293b; overflow-x: auto; }
     .tab-btn { flex: 1; padding: 10px 8px; background: transparent; color: #94a3b8; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 0; font-size: 13px; white-space: nowrap; }
     .tab-btn.active { background: linear-gradient(135deg, #0284c7, #2563eb); color: #fff; box-shadow: 0 4px 12px rgba(2,132,199,0.3); }
@@ -22,7 +21,6 @@
     button { width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; font-size: 15px; }
     button:hover { background: #1d4ed8; }
     
-    /* Analytics Dashboard */
     .analytics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 25px; }
     .stat-card { background: #0b0f19; border: 1px solid #1e293b; padding: 12px; border-radius: 12px; text-align: center; position: relative; overflow: hidden; }
     .stat-card.full-width { grid-column: span 2; border-color: #0284c7; background: linear-gradient(180deg, #0f172a, #0b0f19); }
@@ -107,7 +105,7 @@
       <button type="button" id="tab-btn-analytics" class="tab-btn" onclick="switchAdminTab('analytics')">📈 Analytics / Views</button>
     </div>
 
-    <!-- Analytics Tab Section with App Download Tracker -->
+    <!-- Analytics Tab Section -->
     <div id="analytics-section" class="analytics-grid hidden">
       <div class="stat-card full-width">
         <div class="stat-label"><span class="live-pulse"></span>অনলাইন লাইভ ইউজার</div>
@@ -145,7 +143,6 @@
       </div>
     </div>
 
-    <!-- Main Shared Form -->
     <div id="form-wrapper-section">
       
       <div id="ai-importer-section" class="ai-box hidden">
@@ -167,6 +164,12 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       </div>
 
       <form id="movie-form">
+        <!-- Dynamic Website Target Domain Box for Telegram Posts -->
+        <div class="form-group" style="background: #0b0f19; padding: 12px; border-radius: 8px; border: 1px solid #10b981;">
+          <label style="color: #10b981; font-weight: bold;">🌐 Telegram পোস্টের জন্য Website Domain URL (ইচ্ছা অনুযায়ী পরিবর্তন করুন):</label>
+          <input type="text" id="custom-domain-input" placeholder="https://anime-download-seven.vercel.app/" style="border-color: #10b981;" onchange="saveCustomDomain(this.value)">
+        </div>
+
         <div class="form-group">
           <label>টাইপ (Type)</label>
           <select id="type">
@@ -309,9 +312,28 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
+    // Correct Telegram Bot Credentials & Username
     const TELEGRAM_BOT_TOKEN = "8841045606:AAFmQGtoc7yylALdEyDFvOGCi72TVBl6MkY";
-    const TELEGRAM_CHAT_ID = "@animedubhindi";
-    const TARGET_WEBSITE = window.location.origin + '/';
+    const TELEGRAM_CHAT_ID = "@animedubhindiweb";
+
+    // Load or Save Custom Domain
+    const savedDomain = localStorage.getItem('customTargetDomain') || (window.location.origin + '/');
+    document.getElementById('custom-domain-input').value = savedDomain;
+
+    window.saveCustomDomain = function(val) {
+      if(val) {
+        let cleanVal = val.trim();
+        if(!cleanVal.endsWith('/')) cleanVal += '/';
+        localStorage.setItem('customTargetDomain', cleanVal);
+      }
+    };
+
+    function getTargetDomain() {
+      let inputVal = document.getElementById('custom-domain-input').value.trim();
+      if(!inputVal) return window.location.origin + '/';
+      if(!inputVal.endsWith('/')) inputVal += '/';
+      return inputVal;
+    }
 
     const SECRET_PASS = "arafat01721313101";
     let editingId = null;
@@ -520,18 +542,20 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
     };
 
     function triggerNotifications(movieData, isEditMode, specificEpTgName, specificEpAppName) {
-      // 1. Telegram Notification
+      const activeWebsiteUrl = getTargetDomain();
+
+      // 1. Send Telegram Notification using Bot API
       const tgMode = document.getElementById('telegram-mode').value;
       if (tgMode !== 'OFF' || specificEpTgName) {
         const cats = Array.isArray(movieData.category) ? movieData.category.join(', ') : movieData.category;
         let captionText = "";
 
         if (specificEpTgName) {
-          captionText = `🔥 <b>NEW EPISODE RELEASED!</b> 🔥\n\n📌 <b>Anime:</b> ${movieData.title}\n🎉 <b>Episode:</b> ${specificEpTgName}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇ <b>Download Episode Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+          captionText = `🔥 <b>NEW EPISODE RELEASED!</b> 🔥\n\n📌 <b>Anime:</b> ${movieData.title}\n🎉 <b>Episode:</b> ${specificEpTgName}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇ <b>Download Episode Now:</b>\n${activeWebsiteUrl}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
         } else if (isEditMode) {
-          captionText = `🎬 <b>ANIME UPDATED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️ <b>Watch & Download Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+          captionText = `🎬 <b>ANIME UPDATED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️ <b>Watch & Download Now:</b>\n${activeWebsiteUrl}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
         } else {
-          captionText = `🎬 <b>NEW ANIME UPLOADED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n✨ Watch & Download in HD Quality\n\n⬇️ <b>Watch & Download Now:</b>\n${TARGET_WEBSITE}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+          captionText = `🎬 <b>NEW ANIME UPLOADED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n✨ Watch & Download in HD Quality\n\n⬇️ <b>Watch & Download Now:</b>\n${activeWebsiteUrl}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
         }
 
         fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
@@ -546,6 +570,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         })
         .then(res => res.json())
         .then(data => {
+          console.log("Telegram Post Sent Successfully!", data);
           if (tgMode === 'ONCE') {
             document.getElementById('telegram-mode').value = 'OFF';
           }
@@ -560,18 +585,18 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
           title: "🎬 New Anime Released!",
           body: `${movieData.title} (${movieData.language}) - Watch & Download Now!`,
           icon: movieData.poster,
-          url: TARGET_WEBSITE,
+          url: activeWebsiteUrl,
           timestamp: Date.now()
         });
       }
 
-      // 3. Episode-Specific App Push Notification (Independent Episode Alert)
+      // 3. Episode-Specific App Push Notification (Only Episode)
       if (specificEpAppName) {
         push(ref(db, 'push_notifications'), {
           title: "🔥 New Episode Release!",
           body: `${movieData.title} - ${specificEpAppName} is now available!`,
           icon: movieData.poster,
-          url: TARGET_WEBSITE,
+          url: activeWebsiteUrl,
           timestamp: Date.now()
         });
       }
@@ -671,6 +696,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
     window.resetForm = function() {
       editingId = null;
       document.getElementById('movie-form').reset();
+      document.getElementById('custom-domain-input').value = getTargetDomain();
       document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = false);
       document.getElementById('hide-from-home').checked = false;
       document.getElementById('is-verified').checked = false;
@@ -933,4 +959,4 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
     addEpisodeBox();
   </script>
 </body>
-  </html>
+                                  </html>
