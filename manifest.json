@@ -1,7 +1,7 @@
 {
-  "name": "Anime Download",
-  "short_name": "Anime Download",
-  "description": "Watch & Download Latest Anime Series, Movies & Hindi Dubbed Anime.",
+  "name": "Anime Dub Hindi",
+  "short_name": "Anime Dub Hindi",
+  "description": "Watch & Download Free HD Hindi Dubbed Anime Series & Movies.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0d1117",
