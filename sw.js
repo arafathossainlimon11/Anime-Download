@@ -1,4 +1,4 @@
-const CACHE_NAME = 'anime-dub-hindi-v4';
+const CACHE_NAME = 'anime-dub-hindi-v5';
 const urlsToCache = [
   './',
   './index.html',
@@ -39,7 +39,7 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Dynamic Notification Click Handling
+// Handle Floating Heads-up Push Notifications
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   const currentOrigin = self.location.origin;
