@@ -361,7 +361,6 @@
     }
     .quality-title { color: #38bdf8; font-weight: bold; margin-bottom: 6px; font-size: 13px; }
 
-    /* Notice & Status Banners */
     .status-banner-box { background: #161b22; border: 1px solid #38bdf8; border-radius: 12px; padding: 16px; text-align: center; margin-top: 15px; margin-bottom: 20px; }
     .status-banner-title { color: #38bdf8; font-size: 15px; font-weight: bold; margin-bottom: 6px; }
     .status-banner-sub { color: #cbd5e1; font-size: 12px; margin-bottom: 12px; line-height: 1.4; }
@@ -386,7 +385,7 @@
         <span>Join Facebook Group for Anime Requests</span>
       </a>
 
-      <a href="https://t.me/animedubhindi" target="_blank" class="tg-banner" onclick="popAd()">
+      <a href="https://t.me/animedubhindiweb" target="_blank" class="tg-banner" onclick="popAd()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.56 8.16l-2.03 9.56c-.15.68-.55.84-1.12.52l-3.1-2.28-1.5 1.44c-.17.17-.31.31-.63.31l.22-3.18 5.79-5.23c.25-.22-.05-.34-.39-.12l-7.16 4.51-3.08-.96c-.67-.21-.68-.67.14-.99l12.05-4.64c.56-.21 1.05.13.86.99z"/></svg>
         <span>Join Telegram Channel for Daily Updates</span>
       </a>
@@ -419,7 +418,6 @@
       <button class="search-btn" onclick="event.stopPropagation(); handleSearch();">🔍 Search</button>
     </div>
 
-    <!-- Instant Loading Spinner Container -->
     <div id="movie-grid" class="movie-container">
       <div class="loader-box">
         <div class="spinner"></div>
@@ -530,6 +528,7 @@
     let deferredPrompt = null;
     let isDataFetched = false;
 
+    // Realtime Push Notification Trigger with System Banner
     onValue(ref(db, 'push_notifications'), (snapshot) => {
       if (!snapshot.exists()) return;
       const data = snapshot.val();
@@ -543,10 +542,13 @@
         if ('Notification' in window && Notification.permission === 'granted') {
           navigator.serviceWorker.ready.then(registration => {
             registration.showNotification(notif.title || 'Anime Dub Hindi', {
-              body: notif.body || 'New content available!',
+              body: notif.body || 'New anime content available!',
               icon: notif.icon || 'https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png',
               badge: 'https://i.ibb.co.com/ZpcSQ5d6/file-00000000ce2482118efd27c261ce5495.png',
-              vibrate: [200, 100, 200]
+              vibrate: [300, 100, 300],
+              tag: 'anime-push-' + latestKey,
+              renotify: true,
+              requireInteraction: true
             });
           });
         }
@@ -559,7 +561,6 @@
     });
 
     window.triggerPWAInstall = function() {
-      // Track App Install / Download in Analytics
       try {
         runTransaction(ref(db, 'analytics/appDownloads'), (current) => (current || 0) + 1);
       } catch(err) { console.error(err); }
@@ -782,7 +783,7 @@
             <p style="color: #8b949e; font-size: 13px; line-height: 1.5; margin-bottom: 16px;">
               Couldn't find the anime you're looking for? Join our Telegram channel or Facebook group to send your request, and we will upload it for you as soon as possible!
             </p>
-            <a href="https://t.me/animedubhindi" target="_blank" class="tg-banner" style="font-size: 13px; padding: 10px 18px;" onclick="popAd()">
+            <a href="https://t.me/animedubhindiweb" target="_blank" class="tg-banner" style="font-size: 13px; padding: 10px 18px;" onclick="popAd()">
               ✈️ Request Anime on Telegram
             </a>
           </div>
@@ -977,7 +978,6 @@
         `;
       }
 
-      /* Render Status or Next Episode Notice Box */
       renderStatusOrNotice(movie);
 
       showView('details-view');
@@ -1011,7 +1011,7 @@
               To get instant notifications for upcoming episodes, join our Telegram channel & install our App!
             </div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
-              <a href="https://t.me/animedubhindi" target="_blank" class="tg-banner" onclick="popAd()">✈️ Join Telegram Channel</a>
+              <a href="https://t.me/animedubhindiweb" target="_blank" class="tg-banner" onclick="popAd()">✈️ Join Telegram Channel</a>
               <button class="pwa-top-btn" onclick="triggerPWAInstall()">📲 Add App to Home Screen</button>
             </div>
           </div>
