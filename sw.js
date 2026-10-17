@@ -1,4 +1,4 @@
-const CACHE_NAME = 'anime-download-v3';
+const CACHE_NAME = 'anime-dub-hindi-v4';
 const urlsToCache = [
   './',
   './index.html',
@@ -15,7 +15,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate & Clear Old Caches (v1/v2 to v3)
+// Activate & Clear Old Caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -39,10 +39,9 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Dynamic Notification Click Handling (Always Opens Current Active Host)
+// Dynamic Notification Click Handling
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-
   const currentOrigin = self.location.origin;
 
   event.waitUntil(
