@@ -22,7 +22,7 @@
     button:hover { background: #1d4ed8; }
     
     .analytics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 25px; }
-    .stat-card { background: #0b0f19; border: 1px solid #1e293b; padding: 12px; border-radius: 12px; text-align: center; position: relative; overflow: hidden; }
+    .stat-card { background: #0b0f19; border: 1px solid #1e293b; padding: 12px; border-radius: 12px; text-align: center; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
     .stat-card.full-width { grid-column: span 2; border-color: #0284c7; background: linear-gradient(180deg, #0f172a, #0b0f19); }
     .stat-num { font-size: 22px; font-weight: 800; color: #38bdf8; margin-top: 4px; }
     .stat-label { font-size: 12px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -30,7 +30,7 @@
     .live-pulse { display: inline-block; width: 10px; height: 10px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; margin-right: 6px; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16,185,129,0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16,185,129,0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16,185,129,0); } }
 
-    .breakdown-box { background: #0b0f19; padding: 12px; border-radius: 10px; margin-top: 6px; max-height: 250px; overflow-y: auto; text-align: left; }
+    .breakdown-box { background: #0b0f19; padding: 12px; border-radius: 10px; margin-top: 6px; max-height: 250px; overflow-y: auto; text-align: left; width: 100%; }
     .breakdown-item { margin-bottom: 10px; }
     .breakdown-item:last-child { margin-bottom: 0; }
     .breakdown-info { display: flex; justify-content: space-between; font-size: 12px; color: #cbd5e1; margin-bottom: 4px; font-weight: 600; }
@@ -75,7 +75,7 @@
     .admin-thumb-img { width: 55px; height: 75px; object-fit: cover; border-radius: 6px; flex-shrink: 0; border: 1px solid #38bdf8; background: #151d30; }
     .admin-item-info { flex: 1; font-size: 14px; line-height: 1.4; word-break: break-word; }
     .action-btns { display: flex; gap: 6px; margin-top: 10px; padding-top: 8px; border-top: 1px solid #151d30; flex-wrap: wrap; }
-    .btn-sm { padding: 6px 10px; font-size: 12px; width: auto; margin: 0; flex: 1; text-align: center; border-radius: 6px; }
+    .btn-sm { padding: 6px 10px; font-size: 12px; width: auto; margin: 0; flex: 1; text-align: center; border-radius: 6px; cursor: pointer; border: none; color: #fff; }
     .btn-bump { background: #0284c7; }
     .btn-move { background: #334155; max-width: 45px; }
     .btn-edit { background: #d97706; }
@@ -84,6 +84,9 @@
     .blue-tick { display: inline-block; width: 16px; height: 16px; background: #38bdf8; color: #0b0f19; border-radius: 50%; text-align: center; line-height: 16px; font-size: 11px; font-weight: bold; margin-left: 2px; }
     .pin-tag { color: #f59e0b; font-weight: bold; font-size: 12px; margin-left: 2px; }
     .btn-auto-kw { background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff; font-size: 12px; padding: 6px 12px; width: auto; margin-top: 5px; }
+    
+    .reset-btn-mini { background: #dc2626; color: #ffffff; font-size: 11px; padding: 4px 10px; border-radius: 6px; border: none; cursor: pointer; margin-top: 8px; font-weight: bold; }
+    .reset-btn-mini:hover { background: #b91c1c; }
   </style>
 </head>
 <body>
@@ -114,31 +117,42 @@
       <div class="stat-card">
         <div class="stat-label">📊 আজকের ভিজিটর</div>
         <div class="stat-num" id="stat-today">0</div>
+        <button class="reset-btn-mini" onclick="resetMetric('analytics/daily', 'দৈনিক ভিজিটর হিস্ট্রি')">🗑️ রিসেট</button>
       </div>
       <div class="stat-card">
         <div class="stat-label">📲 অ্যাপ ইনস্টল / ডাউনলোড</div>
         <div class="stat-num" id="stat-app-downloads" style="color:#f59e0b;">0</div>
+        <button class="reset-btn-mini" onclick="resetMetric('analytics/appDownloads', 'অ্যাপ ডাউনলোড কাউন্ট')">🗑️ রিসেট</button>
       </div>
       <div class="stat-card">
         <div class="stat-label">🗓 গত ৭ দিন</div>
         <div class="stat-num" id="stat-7days">0</div>
+        <button class="reset-btn-mini" onclick="resetMetric('analytics/daily', '৭ দিনের ডেটা')">🗑️ রিসেট</button>
       </div>
       <div class="stat-card">
         <div class="stat-label">📅 গত ৩০ দিন (১ মাস)</div>
         <div class="stat-num" id="stat-30days">0</div>
+        <button class="reset-btn-mini" onclick="resetMetric('analytics/daily', '৩০ দিনের ডেটা')">🗑️ রিসেট</button>
       </div>
       <div class="stat-card full-width">
         <div class="stat-label">🌐 সর্বমোট ভিজিটর</div>
         <div class="stat-num" id="stat-total">0</div>
+        <button class="reset-btn-mini" onclick="resetMetric('analytics/totalViews', 'সর্বমোট ভিজিটর কাউন্ট')">🗑️ রিসেট সর্বমোট ভিজিটর</button>
       </div>
 
       <div class="stat-card full-width">
-        <div class="stat-label" style="color:#38bdf8;">🚀 ট্রাফিক সোর্স (ভিজিটর কোথা থেকে আসছে)</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <div class="stat-label" style="color:#38bdf8;">🚀 ট্রাফিক সোর্স (ভিজিটর কোথা থেকে আসছে)</div>
+          <button class="reset-btn-mini" onclick="resetMetric('analytics/sources', 'ট্রাফিক সোর্স হিস্ট্রি')">🗑️ রিসেট</button>
+        </div>
         <div id="stat-sources" class="breakdown-box">ডেটা লোড হচ্ছে...</div>
       </div>
 
       <div class="stat-card full-width">
-        <div class="stat-label" style="color:#38bdf8;">🌍 কান্ট্রি ট্র্যাকিং (কোন দেশ থেকে আসছে)</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <div class="stat-label" style="color:#38bdf8;">🌍 কান্ট্রি ট্র্যাকিং (কোন দেশ থেকে আসছে)</div>
+          <button class="reset-btn-mini" onclick="resetMetric('analytics/countries', 'কান্ট্রি হিস্ট্রি')">🗑️ রিসেট</button>
+        </div>
         <div id="stat-countries" class="breakdown-box">ডেটা লোড হচ্ছে...</div>
       </div>
     </div>
@@ -164,10 +178,15 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       </div>
 
       <form id="movie-form">
-        <!-- Dynamic Website Target Domain Box for Telegram Posts -->
+        <!-- Persistent Database Domain Setup -->
         <div class="form-group" style="background: #0b0f19; padding: 12px; border-radius: 8px; border: 1px solid #10b981;">
-          <label style="color: #10b981; font-weight: bold;">🌐 Telegram পোস্টের জন্য Website Domain URL (ইচ্ছা অনুযায়ী পরিবর্তন করুন):</label>
-          <input type="text" id="custom-domain-input" placeholder="https://anime-download-seven.vercel.app/" style="border-color: #10b981;" onchange="saveCustomDomain(this.value)">
+          <label style="color: #10b981; font-weight: bold;">🌐 Telegram পোস্টের জন্য Active Domain URL:</label>
+          <div style="display: flex; gap: 8px; margin-top: 5px;">
+            <input type="text" id="custom-domain-input" placeholder="https://anime-download-seven.vercel.app/" style="border-color: #10b981; flex: 1;">
+            <button type="button" style="width: auto; margin: 0; background: #0284c7; padding: 0 14px; font-size: 13px;" onclick="saveDomainToDb()">💾 Save</button>
+            <button type="button" style="width: auto; margin: 0; background: #dc2626; padding: 0 14px; font-size: 13px;" onclick="deleteDomainFromDb()">🗑️ Delete</button>
+          </div>
+          <small id="domain-status-text" style="color: #94a3b8; display: block; margin-top: 6px; font-size: 11px;"></small>
         </div>
 
         <div class="form-group">
@@ -312,28 +331,53 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // Correct Telegram Bot Credentials & Username
     const TELEGRAM_BOT_TOKEN = "8841045606:AAFmQGtoc7yylALdEyDFvOGCi72TVBl6MkY";
     const TELEGRAM_CHAT_ID = "@animedubhindiweb";
 
-    // Load or Save Custom Domain
-    const savedDomain = localStorage.getItem('customTargetDomain') || (window.location.origin + '/');
-    document.getElementById('custom-domain-input').value = savedDomain;
+    let activeSavedDomain = window.location.origin + '/';
 
-    window.saveCustomDomain = function(val) {
-      if(val) {
-        let cleanVal = val.trim();
-        if(!cleanVal.endsWith('/')) cleanVal += '/';
-        localStorage.setItem('customTargetDomain', cleanVal);
+    // Realtime Database Persistent Domain Fetching
+    onValue(ref(db, 'settings/customDomain'), (snapshot) => {
+      if (snapshot.exists() && snapshot.val()) {
+        activeSavedDomain = snapshot.val();
+        document.getElementById('custom-domain-input').value = activeSavedDomain;
+        document.getElementById('domain-status-text').innerText = "✅ Active Domain Saved in Firebase: " + activeSavedDomain;
+        document.getElementById('domain-status-text').style.color = "#10b981";
+      } else {
+        activeSavedDomain = window.location.origin + '/';
+        document.getElementById('custom-domain-input').value = "";
+        document.getElementById('domain-status-text').innerText = "⚠️ No custom domain saved. Default site URL is active.";
+        document.getElementById('domain-status-text').style.color = "#f59e0b";
+      }
+    });
+
+    window.saveDomainToDb = function() {
+      let val = document.getElementById('custom-domain-input').value.trim();
+      if (!val) {
+        alert("অনুগহ করে ডোমেইন URL লিখুন!");
+        return;
+      }
+      if (!val.endsWith('/')) val += '/';
+      set(ref(db, 'settings/customDomain'), val).then(() => {
+        alert("✅ ডোমেইন সফলভাবে সেভ করা হয়েছে এবং Firebase-এ একটিভ হয়েছে!");
+      });
+    };
+
+    window.deleteDomainFromDb = function() {
+      if (confirm("আপনি কি সত্যিই ডোমেইন নাম মুছে ফেলতে চান?")) {
+        remove(ref(db, 'settings/customDomain')).then(() => {
+          alert("🗑️ ডোমেইন মুছে ফেলা হয়েছে!");
+        });
       }
     };
 
-    function getTargetDomain() {
-      let inputVal = document.getElementById('custom-domain-input').value.trim();
-      if(!inputVal) return window.location.origin + '/';
-      if(!inputVal.endsWith('/')) inputVal += '/';
-      return inputVal;
-    }
+    window.resetMetric = function(dbPath, nameStr) {
+      if (confirm(`আপনি কি সত্যিই "${nameStr}"-এর হিস্ট্রি মুছে ফেলতে চান?`)) {
+        remove(ref(db, dbPath)).then(() => {
+          alert(`✅ ${nameStr} সফলভাবে মুছে ফেলা হয়েছে!`);
+        }).catch(err => console.error(err));
+      }
+    };
 
     const SECRET_PASS = "arafat01721313101";
     let editingId = null;
@@ -393,7 +437,12 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       });
 
       onValue(ref(db, 'analytics/daily'), (snapshot) => {
-        if (!snapshot.exists()) return;
+        if (!snapshot.exists()) {
+          document.getElementById('stat-today').innerText = 0;
+          document.getElementById('stat-7days').innerText = 0;
+          document.getElementById('stat-30days').innerText = 0;
+          return;
+        }
         const data = snapshot.val();
         const now = new Date();
         const getFormattedDate = (d) => {
@@ -499,7 +548,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       const rawText = document.getElementById('ai-raw-links').value.trim();
 
       if (!rawText) {
-        alert("অনুগ্রহ করে কিছু ডাউনলোড লিংক পেস্ট করুন!");
+        alert("অনুগহ করে কিছু ডাউনলোড লিংক পেস্ট করুন!");
         return;
       }
 
@@ -542,7 +591,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
     };
 
     function triggerNotifications(movieData, isEditMode, specificEpTgName, specificEpAppName) {
-      const activeWebsiteUrl = getTargetDomain();
+      const targetLink = activeSavedDomain;
 
       // 1. Send Telegram Notification using Bot API
       const tgMode = document.getElementById('telegram-mode').value;
@@ -551,11 +600,11 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         let captionText = "";
 
         if (specificEpTgName) {
-          captionText = `🔥 <b>NEW EPISODE RELEASED!</b> 🔥\n\n📌 <b>Anime:</b> ${movieData.title}\n🎉 <b>Episode:</b> ${specificEpTgName}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇ <b>Download Episode Now:</b>\n${activeWebsiteUrl}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+          captionText = `🔥 <b>NEW EPISODE RELEASED!</b> 🔥\n\n📌 <b>Anime:</b> ${movieData.title}\n🎉 <b>Episode:</b> ${specificEpTgName}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇ <b>Download Episode Now:</b>\n${targetLink}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
         } else if (isEditMode) {
-          captionText = `🎬 <b>ANIME UPDATED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️ <b>Watch & Download Now:</b>\n${activeWebsiteUrl}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+          captionText = `🎬 <b>ANIME UPDATED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n⬇️ <b>Watch & Download Now:</b>\n${targetLink}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
         } else {
-          captionText = `🎬 <b>NEW ANIME UPLOADED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n✨ Watch & Download in HD Quality\n\n⬇️ <b>Watch & Download Now:</b>\n${activeWebsiteUrl}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
+          captionText = `🎬 <b>NEW ANIME UPLOADED!</b> 🎬\n\n📌 <b>Title:</b> ${movieData.title}\n⭐ <b>Rating:</b> ${movieData.rating} | <b>Year:</b> ${movieData.year}\n🎙️ <b>Language:</b> ${movieData.language}\n🏷️ <b>Category:</b> ${cats}\n\n✨ Watch & Download in HD Quality\n\n⬇️ <b>Watch & Download Now:</b>\n${targetLink}\n\n📢 <b>Join Channel:</b> ${TELEGRAM_CHAT_ID}`;
         }
 
         fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
@@ -585,7 +634,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
           title: "🎬 New Anime Released!",
           body: `${movieData.title} (${movieData.language}) - Watch & Download Now!`,
           icon: movieData.poster,
-          url: activeWebsiteUrl,
+          url: targetLink,
           timestamp: Date.now()
         });
       }
@@ -596,7 +645,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
           title: "🔥 New Episode Release!",
           body: `${movieData.title} - ${specificEpAppName} is now available!`,
           icon: movieData.poster,
-          url: activeWebsiteUrl,
+          url: targetLink,
           timestamp: Date.now()
         });
       }
@@ -605,7 +654,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
     window.generateAutoKeywords = function() {
       const title = document.getElementById('title').value.trim();
       if (!title) {
-        alert("অনুগ্রহ করে আগে এনিমেশনের নাম লিখুন!");
+        alert("অনুগহ করে আগে এনিমেশনের নাম লিখুন!");
         return;
       }
       const tLower = title.toLowerCase();
@@ -696,7 +745,6 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
     window.resetForm = function() {
       editingId = null;
       document.getElementById('movie-form').reset();
-      document.getElementById('custom-domain-input').value = getTargetDomain();
       document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = false);
       document.getElementById('hide-from-home').checked = false;
       document.getElementById('is-verified').checked = false;
@@ -959,4 +1007,4 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
     addEpisodeBox();
   </script>
 </body>
-                                  </html>
+        </html>
