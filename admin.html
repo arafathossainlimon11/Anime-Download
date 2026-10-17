@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - Anime Download Pro</title>
+  <title>Admin Panel - Anime Dub Hindi Pro</title>
   <style>
     * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
     body { background: #0b0f19; color: #f8fafc; padding: 12px; }
@@ -39,7 +39,6 @@
     .progress-bar-bg { width: 100%; background: #1e293b; height: 8px; border-radius: 10px; overflow: hidden; }
     .progress-bar-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #38bdf8, #2563eb); transition: width 0.5s ease-in-out; }
 
-    /* AI Processor Box */
     .ai-box { background: #091e3a; border: 1px dashed #38bdf8; border-radius: 12px; padding: 15px; margin-bottom: 20px; }
     .ai-box h3 { color: #38bdf8; font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
 
@@ -87,21 +86,12 @@
     .blue-tick { display: inline-block; width: 16px; height: 16px; background: #38bdf8; color: #0b0f19; border-radius: 50%; text-align: center; line-height: 16px; font-size: 11px; font-weight: bold; margin-left: 2px; }
     .pin-tag { color: #f59e0b; font-weight: bold; font-size: 12px; margin-left: 2px; }
     .btn-auto-kw { background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff; font-size: 12px; padding: 6px 12px; width: auto; margin-top: 5px; }
-
-    /* Report Card Styling */
-    .report-card { background: #0b0f19; border: 1px solid #ef4444; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
-    .report-title { color: #f8fafc; font-weight: bold; font-size: 15px; margin-bottom: 4px; }
-    .report-meta { color: #94a3b8; font-size: 12px; margin-bottom: 8px; line-height: 1.4; }
-    .btn-fix-report { background: #10b981; color: #fff; padding: 6px 12px; font-size: 12px; width: auto; border-radius: 6px; margin-top: 4px; }
-
-    .timer-inputs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
-    .timer-inputs-grid input { text-align: center; font-weight: bold; color: #38bdf8; }
   </style>
 </head>
 <body>
 
   <div id="login-section" class="login-box">
-    <h2>Anime Admin Login</h2>
+    <h2>Anime Dub Hindi - Admin</h2>
     <div class="form-group">
       <input type="password" id="admin-pass" placeholder="পাসওয়ার্ড লিখুন" autocomplete="off">
     </div>
@@ -109,17 +99,15 @@
   </div>
 
   <div id="admin-dashboard" class="container hidden">
-    <h2>Anime Admin Panel</h2>
+    <h2>Anime Dub Hindi Admin Panel</h2>
     
-    <!-- 4 Navigation Tabs -->
     <div class="nav-tabs">
       <button type="button" id="tab-btn-standard" class="tab-btn active" onclick="switchAdminTab('standard')">📊 Standard Admin</button>
       <button type="button" id="tab-btn-ai" class="tab-btn" onclick="switchAdminTab('ai')">🤖 AI Admin</button>
       <button type="button" id="tab-btn-analytics" class="tab-btn" onclick="switchAdminTab('analytics')">📈 Analytics / Views</button>
-      <button type="button" id="tab-btn-reports" class="tab-btn" onclick="switchAdminTab('reports')">🚨 Link Reports</button>
     </div>
 
-    <!-- Analytics Tab Section -->
+    <!-- Analytics Tab Section with App Download Tracker -->
     <div id="analytics-section" class="analytics-grid hidden">
       <div class="stat-card full-width">
         <div class="stat-label"><span class="live-pulse"></span>অনলাইন লাইভ ইউজার</div>
@@ -130,6 +118,10 @@
         <div class="stat-num" id="stat-today">0</div>
       </div>
       <div class="stat-card">
+        <div class="stat-label">📲 অ্যাপ ইনস্টল / ডাউনলোড</div>
+        <div class="stat-num" id="stat-app-downloads" style="color:#f59e0b;">0</div>
+      </div>
+      <div class="stat-card">
         <div class="stat-label">🗓 গত ৭ দিন</div>
         <div class="stat-num" id="stat-7days">0</div>
       </div>
@@ -137,7 +129,7 @@
         <div class="stat-label">📅 গত ৩০ দিন (১ মাস)</div>
         <div class="stat-num" id="stat-30days">0</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card full-width">
         <div class="stat-label">🌐 সর্বমোট ভিজিটর</div>
         <div class="stat-num" id="stat-total">0</div>
       </div>
@@ -153,18 +145,9 @@
       </div>
     </div>
 
-    <!-- Link Reports Section -->
-    <div id="link-reports-section" class="hidden">
-      <h3 style="color: #ef4444; margin-bottom: 12px;">🚨 ইউজারদের পাঠানো নষ্ট লিংক রিপোর্টসমূহ</h3>
-      <div id="link-reports-list">
-        <p style="color: #94a3b8; font-size: 13px;">কোনো লিংক রিপোর্ট নেই!</p>
-      </div>
-    </div>
-
-    <!-- Main Shared Form for Standard and AI Admin -->
+    <!-- Main Shared Form -->
     <div id="form-wrapper-section">
       
-      <!-- AI Bulk Link Processor Box (Visible ONLY under AI Admin Tab) -->
       <div id="ai-importer-section" class="ai-box hidden">
         <h3>🤖 Google AI Studio - Bulk Link Processor</h3>
         <div class="form-group">
@@ -194,7 +177,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
 
         <div class="form-group">
           <label>এনিমেশনের নাম (Title)</label>
-          <input type="text" id="title" placeholder="যেমন: Solo Leveling Season 01" required>
+          <input type="text" id="title" placeholder="যেমন: Solo Leveling Season 01 (Hindi Dub)" required>
         </div>
 
         <div class="form-group">
@@ -205,7 +188,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         <div class="form-group">
           <label>ক্যাটাগরি / Genre (একাধিক সিলেক্ট করুন):</label>
           <div class="category-checkbox-grid">
-            <label class="cat-check-item"><input type="checkbox" value="Hindi Dub" class="cat-checkbox"> Hindi Dub</label>
+            <label class="cat-check-item"><input type="checkbox" value="Hindi Dub" class="cat-checkbox" checked> Hindi Dub</label>
             <label class="cat-check-item"><input type="checkbox" value="English Dub" class="cat-checkbox"> English Dub</label>
             <label class="cat-check-item"><input type="checkbox" value="Action" class="cat-checkbox"> Action</label>
             <label class="cat-check-item"><input type="checkbox" value="Romance" class="cat-checkbox"> Romance</label>
@@ -242,7 +225,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
 
           <div style="border-top: 1px solid #1e293b; padding-top: 8px;">
             <label class="cat-check-item" style="color: #10b981; font-weight: bold;">
-              <input type="checkbox" id="app-notify-main"> 🔔 Send App Push Notification (নতুন এই এনিমেশনের জন্য অ্যাপ পুশ পাঠান)
+              <input type="checkbox" id="app-notify-main"> 🔔 Send App Push (সমগ্র সিরিজ/মুভির জন্য অ্যাপ পুশ পাঠান)
             </label>
           </div>
         </div>
@@ -260,7 +243,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
 
         <div class="form-group">
           <label>অডিও ট্র্যাক / ভাষা (Audio Language)</label>
-          <input type="text" id="language" placeholder="Hindi, Japanese, English">
+          <input type="text" id="language" placeholder="Hindi Dub, Japanese, English">
         </div>
 
         <div class="form-group">
@@ -282,33 +265,14 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
           <button type="button" class="btn-add-ep" onclick="addEpisodeBox()">+ নতুন এপিসোড বক্স যোগ করুন</button>
         </div>
 
-        <!-- 📌 সিজন / এপিসোড স্ট্যাটাস ও সহজ টাইমার সেটআপ (Days, Hours, Minutes) -->
         <div class="form-group" style="background: #0b0f19; padding: 12px; border-radius: 8px; border: 1px solid #0284c7; margin-top: 15px;">
-          <label style="color: #38bdf8; font-weight: bold;">📌 সিজন / নতুন এপিসোড স্ট্যাটাস ও টাইমার সেটআপ:</label>
-          <select id="status-mode" onchange="toggleCountdownBox()">
+          <label style="color: #38bdf8; font-weight: bold;">📌 সিজন / নতুন এপিসোড স্ট্যাটাস ও আপডেট নোটিশ সেটআপ:</label>
+          <select id="status-mode">
             <option value="NONE">None / Normal (সাধারণ মোড)</option>
+            <option value="NEXT_EP_NOTICE">🔔 Next Episode Update Notice (টেলিগ্রাম ও অ্যাপ জয়েন নোটিশ দেখাবে)</option>
             <option value="SEASON_ENDED">🏁 Season Ended (সিজন শেষ)</option>
             <option value="SERIES_COMPLETED">✅ Series Completed (সম্পূর্ণ সিরিজ শেষ)</option>
-            <option value="COUNTDOWN">⏳ Next Episode Countdown (লাইভ টাইমার সেট করুন)</option>
           </select>
-
-          <div id="countdown-picker-box" class="hidden" style="margin-top: 10px;">
-            <label style="color: #f59e0b;">⏱️ কত সময় পর নতুন এপিসোড আসবে তা লিখুন:</label>
-            <div class="timer-inputs-grid">
-              <div>
-                <label style="font-size:11px; text-align:center;">Days (দিন)</label>
-                <input type="number" id="cd-days-input" min="0" placeholder="0">
-              </div>
-              <div>
-                <label style="font-size:11px; text-align:center;">Hours (ঘণ্টা)</label>
-                <input type="number" id="cd-hrs-input" min="0" max="23" placeholder="0">
-              </div>
-              <div>
-                <label style="font-size:11px; text-align:center;">Minutes (মিনিট)</label>
-                <input type="number" id="cd-min-input" min="0" max="59" placeholder="0">
-              </div>
-            </div>
-          </div>
         </div>
 
         <button type="submit" id="submit-btn">Publish Anime</button>
@@ -346,9 +310,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
     const db = getDatabase(app);
 
     const TELEGRAM_BOT_TOKEN = "8841045606:AAFmQGtoc7yylALdEyDFvOGCi72TVBl6MkY";
-    const TELEGRAM_CHAT_ID = "@animedownloadweb";
-    
-    // Dynamic Origin Detection: Vercel or Custom Domain Auto-Detect
+    const TELEGRAM_CHAT_ID = "@animedubhindi";
     const TARGET_WEBSITE = window.location.origin + '/';
 
     const SECRET_PASS = "arafat01721313101";
@@ -364,19 +326,8 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         document.getElementById('admin-dashboard').classList.remove('hidden');
         loadMovies();
         loadAnalytics();
-        loadReports();
       } else {
         alert("ভুল পাসওয়ার্ড!");
-      }
-    };
-
-    window.toggleCountdownBox = function() {
-      const mode = document.getElementById('status-mode').value;
-      const pBox = document.getElementById('countdown-picker-box');
-      if (mode === 'COUNTDOWN') {
-        pBox.classList.remove('hidden');
-      } else {
-        pBox.classList.add('hidden');
       }
     };
 
@@ -384,15 +335,13 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       const btnStd = document.getElementById('tab-btn-standard');
       const btnAi = document.getElementById('tab-btn-ai');
       const btnAnalytics = document.getElementById('tab-btn-analytics');
-      const btnReports = document.getElementById('tab-btn-reports');
 
       const sectionForm = document.getElementById('form-wrapper-section');
       const sectionAiImporter = document.getElementById('ai-importer-section');
       const sectionAnalytics = document.getElementById('analytics-section');
-      const sectionReports = document.getElementById('link-reports-section');
 
-      [btnStd, btnAi, btnAnalytics, btnReports].forEach(b => b.classList.remove('active'));
-      [sectionForm, sectionAnalytics, sectionReports].forEach(s => s.classList.add('hidden'));
+      [btnStd, btnAi, btnAnalytics].forEach(b => b.classList.remove('active'));
+      [sectionForm, sectionAnalytics].forEach(s => s.classList.add('hidden'));
 
       if (mode === 'ai') {
         btnAi.classList.add('active');
@@ -401,49 +350,11 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       } else if (mode === 'analytics') {
         btnAnalytics.classList.add('active');
         sectionAnalytics.classList.remove('hidden');
-      } else if (mode === 'reports') {
-        btnReports.classList.add('active');
-        sectionReports.classList.remove('hidden');
       } else {
         btnStd.classList.add('active');
         sectionForm.classList.remove('hidden');
         sectionAiImporter.classList.add('hidden');
       }
-    };
-
-    function loadReports() {
-      onValue(ref(db, 'reports'), (snapshot) => {
-        const div = document.getElementById('link-reports-list');
-        div.innerHTML = "";
-        if (!snapshot.exists()) {
-          div.innerHTML = "<p style='color:#94a3b8; font-size:13px;'>কোনো নষ্ট লিংক রিপোর্ট নেই!</p>";
-          return;
-        }
-        const reportsData = snapshot.val();
-        for (let rId in reportsData) {
-          let rep = reportsData[rId];
-          let dateStr = rep.timestamp ? new Date(rep.timestamp).toLocaleString() : 'N/A';
-          let rCount = rep.count || 1;
-          div.innerHTML += `
-            <div class="report-card">
-              <div class="report-title">🔴 ${rep.animeTitle || 'Unknown Anime'}</div>
-              <div class="report-meta">
-                📌 <b>এপিসোড:</b> ${rep.epName || 'N/A'}<br>
-                🎯 <b>কোয়ালিটি/লিংক:</b> ${rep.quality || 'N/A'}<br>
-                🚨 <b>মোট রিপোর্ট করেছে:</b> <span style="color:#ef4444; font-weight:bold;">${rCount} জন ইউজার</span><br>
-                🕒 <b>সর্বশেষ রিপোর্ট:</b> ${dateStr}
-              </div>
-              <button type="button" class="btn-fix-report" onclick="markReportFixed('${rId}')">✅ Mark as Fixed / Clear</button>
-            </div>
-          `;
-        }
-      });
-    }
-
-    window.markReportFixed = function(reportId) {
-      remove(ref(db, 'reports/' + reportId)).then(() => {
-        alert("রিপোর্টটি সফলভাবে মুছে ফেলা হয়েছে!");
-      });
     };
 
     function loadAnalytics() {
@@ -453,6 +364,10 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
 
       onValue(ref(db, 'analytics/totalViews'), (snapshot) => {
         document.getElementById('stat-total').innerText = snapshot.exists() ? snapshot.val() : 0;
+      });
+
+      onValue(ref(db, 'analytics/appDownloads'), (snapshot) => {
+        document.getElementById('stat-app-downloads').innerText = snapshot.exists() ? snapshot.val() : 0;
       });
 
       onValue(ref(db, 'analytics/daily'), (snapshot) => {
@@ -638,21 +553,26 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         .catch(err => console.error("Telegram Post Error:", err));
       }
 
-      // 2. App Push Notification (Always sends Live Host Origin)
+      // 2. Main App Push Notification (Whole Series)
       const sendMainAppPush = document.getElementById('app-notify-main').checked;
-
-      if (sendMainAppPush || specificEpAppName) {
-        let pushTitle = specificEpAppName ? "🔥 New Episode Release!" : "🎬 New Anime Released!";
-        let pushBody = specificEpAppName ? `${movieData.title} - ${specificEpAppName} is now available!` : `${movieData.title} (${movieData.language}) - Watch & Download Now!`;
-
+      if (sendMainAppPush) {
         push(ref(db, 'push_notifications'), {
-          title: pushTitle,
-          body: pushBody,
+          title: "🎬 New Anime Released!",
+          body: `${movieData.title} (${movieData.language}) - Watch & Download Now!`,
           icon: movieData.poster,
           url: TARGET_WEBSITE,
           timestamp: Date.now()
-        }).then(() => {
-          console.log("App Push Notification Saved to Firebase!");
+        });
+      }
+
+      // 3. Episode-Specific App Push Notification (Independent Episode Alert)
+      if (specificEpAppName) {
+        push(ref(db, 'push_notifications'), {
+          title: "🔥 New Episode Release!",
+          body: `${movieData.title} - ${specificEpAppName} is now available!`,
+          icon: movieData.poster,
+          url: TARGET_WEBSITE,
+          timestamp: Date.now()
         });
       }
     }
@@ -666,19 +586,19 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       const tLower = title.toLowerCase();
       const kwSet = [
         tLower,
-        `${tLower} download`,
-        `${tLower} hindi dubbed`,
+        `${tLower} hindi dub`,
+        `${tLower} hindi dubbed download`,
         `${tLower} english subbed`,
-        `${tLower} 480p 720p 1080p`,
-        `${tLower} all episodes download`,
+        `${tLower} 480p 720p 1080p hd`,
+        `${tLower} all episodes hindi`,
         `${tLower} direct download link`,
-        `${tLower} watch online`,
-        `${tLower} HD download`,
-        `${tLower} anime download bd`
+        `${tLower} watch online in hindi`,
+        `anime dub hindi`,
+        `hindi dubbed anime series`
       ];
 
       document.getElementById('keywords').value = kwSet.join(', ');
-      alert("⚡ ১০টি র‍্যাঙ্কিং SEO কিওয়ার্ড অটো-জেনারেট করা হয়েছে!");
+      alert("⚡ ১০টি উচ্চ র্যাঙ্কিং হিন্দি অ্যানিমে SEO কিওয়ার্ড জেনারেট করা হয়েছে!");
     };
 
     window.addEpisodeBox = function(epName = "", isNew = false, epDate = "", qualities = [], notifyTg = false, notifyApp = false) {
@@ -698,7 +618,7 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
             <input type="checkbox" class="ep-notify-tg" ${notifyTg ? 'checked' : ''}> ✈️ Alert Telegram
           </label>
           <label class="checkbox-label app-ep-label">
-            <input type="checkbox" class="ep-notify-app" ${notifyApp ? 'checked' : ''}> 🔔 Alert App
+            <input type="checkbox" class="ep-notify-app" ${notifyApp ? 'checked' : ''}> 🔔 Alert App (Only Episode)
           </label>
         </div>
         
@@ -758,10 +678,6 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       document.getElementById('app-notify-main').checked = false;
       document.getElementById('telegram-mode').value = 'OFF';
       document.getElementById('status-mode').value = 'NONE';
-      document.getElementById('countdown-picker-box').classList.add('hidden');
-      document.getElementById('cd-days-input').value = '';
-      document.getElementById('cd-hrs-input').value = '';
-      document.getElementById('cd-min-input').value = '';
       document.getElementById('submit-btn').innerText = "Publish Anime";
       document.getElementById('cancel-edit-btn').classList.add('hidden');
       document.getElementById('episodes-container').innerHTML = '';
@@ -820,15 +736,6 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       });
 
       const statusModeVal = document.getElementById('status-mode').value || "NONE";
-      let computedTargetTime = 0;
-
-      if (statusModeVal === "COUNTDOWN") {
-        const dVal = parseInt(document.getElementById('cd-days-input').value || 0);
-        const hVal = parseInt(document.getElementById('cd-hrs-input').value || 0);
-        const mVal = parseInt(document.getElementById('cd-min-input').value || 0);
-        const totalMs = ((dVal * 86400) + (hVal * 3600) + (mVal * 60)) * 1000;
-        computedTargetTime = Date.now() + totalMs;
-      }
 
       const movieData = {
         type: document.getElementById('type').value,
@@ -840,11 +747,10 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
         isPinned: document.getElementById('is-pinned').checked,
         rating: document.getElementById('rating').value || "N/A",
         year: document.getElementById('year').value || "2026",
-        language: document.getElementById('language').value || "Dual Audio",
+        language: document.getElementById('language').value || "Hindi Dub",
         keywords: document.getElementById('keywords').value || "",
         synopsis: document.getElementById('synopsis').value || "",
         statusMode: statusModeVal,
-        targetTimestamp: computedTargetTime,
         episodes: episodes,
         timestamp: Date.now()
       };
@@ -982,7 +888,6 @@ https://hubcloud.ist/drive/llv4alnpqt7qqpa"></textarea>
       document.getElementById('app-notify-main').checked = false;
       document.getElementById('telegram-mode').value = 'OFF';
       document.getElementById('status-mode').value = movie.statusMode || 'NONE';
-      toggleCountdownBox();
 
       document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = false);
       if (movie.category) {
